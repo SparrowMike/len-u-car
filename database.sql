@@ -8,9 +8,9 @@ CREATE TABLE users (
     email varchar(60),
     avatar varchar(60),
     user_type char(20),
-    mobile number,
+    mobile int,
     identification_card varchar(60),
-    driving_license varchar(60),
+    driving_license varchar(60)
 );
 
 CREATE TABLE cars (
@@ -24,10 +24,10 @@ CREATE TABLE cars (
     mileage varchar(60),
     engine_type char(60),
     key_features varchar(60),
-    key_rules varchar(60),
+    key_rules varchar(300),
     status char(60),
-    image varchar(60),
+    image varchar(300),
     rating int,
     review varchar(300),
-    pick_up_point varchar(300),
+    pick_up_point varchar(300)
 )
