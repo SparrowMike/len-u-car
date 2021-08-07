@@ -4,7 +4,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const pool = require("./db");
+
 
 //*===================CONFIGURATIONS======================
 require("dotenv").config();
@@ -13,6 +13,7 @@ const PORT = process.env.PORT;
 //* ==============BODY PARSER, MIDDLEWARE====================
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 //*=================CONTROLLERS/ROUTES====================
 
@@ -23,5 +24,5 @@ app.use("/cars", carsController);
 
 //*==================LISTENER=====================
 app.listen(PORT, () => {
-  console.log("Server has started on port", PORT);
+  console.log("Car rental has started on port", PORT);
 });
