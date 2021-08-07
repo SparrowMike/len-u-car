@@ -5,10 +5,16 @@
 - cd len-u-car
 - touch .env (copy everything from .env.example)
 - npm i express dotenv nodemon pg cors
+- npm i cloudinary multer
 
 ### 2. Front-End
 
 - npm ci
+- npm i react-router react-router-dom
+- npm install --save @types/react-router-dom
+- npm install --save @types/react-router
+- npm install @material-ui/core
+- npm install @material-ui/icons
 
 #### React Typesript cheatsheet
 
