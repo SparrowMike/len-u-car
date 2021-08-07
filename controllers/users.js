@@ -31,6 +31,55 @@ router.post("/", async (req,res)=>{
     }
 })
 
+
+// check username exists 
+router.post("/checkusers", async (req, res) => {
+    try {
+      // console.log( " checkusers route triggered")
+
+      const existingUsers = await pool
+        .query("SELECT * FROM users WHERE username = $1", [req.body.username])
+        .then((user ) => {
+          console.log(user.rowCount)
+
+          if (user.rowCount) {
+            console.log({ msg: "Username already been taken" });
+            return res.json({ msg: "Username already been taken" });
+          }
+          
+          console.log({ msg: "Username available." });
+          return res.json({ msg: "Username available." });
+        });
+    } catch (error) {
+      console.error(error);
+      res.status(400).json("Error: " + error);
+    }
+  });
+
+
+// check email exists 
+router.post("/checkemail", async (req, res) => {
+  // console.log( " check_EMAIL route triggered")
+
+  try {
+    const existingUsers = await pool
+      .query("SELECT * FROM users WHERE email = $1", [req.body.email])
+      .then((email) => {
+        if (email.rowCount) {
+          console.log({ msg: "Email address is in use." });
+          return res.json({ msg: "Email address is in use." });
+        }
+        console.log({ msg: "Email address is available." });
+        return res.json({ msg: "Email address is available." });
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json("Error: " + error);
+  }
+
+});
+
+
 // GET a user - GET ROUTE
 router.get("/:id", async (req,res)=>{
     try {
@@ -66,5 +115,52 @@ router.delete("/:id", async (req,res)=>{
         console.log(error.message)
     }
 })
+
+
+
+// ==== JUST ADDED ====
+
+// router.get("/checkusers", async (req, res) => {
+//     try {
+//         console.log( " checkusers route triggered")
+//       const existingUsers = await pool
+//         .query("SELECT * FROM users WHERE username = $1", [req.body.username])
+//         .then((user) => {
+//           if (user) {
+//             console.log({ msg: "Username already been taken" });
+//             return res.json({ msg: "Username already been taken" });
+//           }
+//           console.log({ msg: "Username available." });
+//           return res.json({ msg: "Username available." });
+//         });
+//     } catch (error) {
+//       console.error(err);
+//       res.status(400).json("Error: " + err);
+//     }
+//   });
+  
+//   // VALID, unique email
+//   router.get("/checkusers", async (req, res) => {
+//     try {
+//       const existingUsers = await pool
+//         .query("SELECT * FROM users WHERE email = $1", [req.body.email])
+//         // .then((email) => {
+//         //   if (email) {
+//         //     console.log({ msg: "Email address is in use." });
+//         //     return res.json({ msg: "Email address is in use." });
+//         //   }
+//         //   console.log({ msg: "Email address is available." });
+//         //   return res.json({ msg: "Email address is available." });
+//         // });
+//     } catch (error) {
+//       console.error(error);
+//       res.status(400).json("Error: " + error);
+//     }
+
+//     res.send("checkusers tiggered")
+
+//   });
+
+
 
 module.exports = router;
