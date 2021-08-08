@@ -10,10 +10,10 @@ import Login from "./Pages/Login";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#3f37c9",
+      main: "#168aad",
     },
     secondary: {
-      main: "#34a0a4",
+      main: "#d9ed92",
     },
   },
   typography: {

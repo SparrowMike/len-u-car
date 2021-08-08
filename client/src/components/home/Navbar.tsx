@@ -29,7 +29,7 @@ export default function Navbar() {
     <AppBar color="inherit" elevation={2}>
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
-          News
+          LenUCar
         </Typography>
         <Typography className={classes.temp}>
           <Link

@@ -25,7 +25,7 @@ const useStyles = makeStyles({
       password: "",
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.ChangeEvent<any>) => {
         e.preventDefault()
         console.log("login ok")
     }
@@ -42,7 +42,7 @@ const useStyles = makeStyles({
           onSubmit={handleSubmit}
         >
           <TextField
-            onChange={(e) => setSignIn({ ...signIn, username: e.target.value })}
+            onChange={(e: React.ChangeEvent<any>) => setSignIn({ ...signIn, username: e.target.value })}
             className={classes.field}
             label="Username"
             variant="outlined"
@@ -50,7 +50,7 @@ const useStyles = makeStyles({
           />
           <br />
           <TextField
-            onChange={(e) => setSignIn({ ...signIn, password: e.target.value })}
+            onChange={(e: React.ChangeEvent<any>) => setSignIn({ ...signIn, password: e.target.value })}
             className={classes.field}
             label="Password"
             type="password"
