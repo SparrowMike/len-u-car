@@ -15,7 +15,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //*=================CONTROLLERS/ROUTES====================
-
 const usersController = require("./controllers/users");
 const carsController = require("./controllers/cars");
 app.use("/users", usersController);

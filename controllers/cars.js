@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
+const upload = require("../utils/multer");
+const { cloudinary } = require("../utils/cloudinary");
 
-// Routes
-
-// READ all cars - GET ROUTE
+//*=======================READ all cars - GET ROUTE========================
 router.get("/", async (req, res) => {
   try {
     const existingCars = await pool.query("SELECT * FROM cars;");
@@ -14,14 +14,20 @@ router.get("/", async (req, res) => {
   }
 });
 
-// CREATE NEW FORM - GET ROUTE
+//*========================GREATE NEW FORM - GET ROUTE========================
 router.get("/new", async (req, res) => {
   res.send("send this to CRA");
 });
 
-// CREATE new car - POST ROUTE
-router.post("/", async (req, res) => {
+//*========================CREATE new car - POST ROUTE========================
+router.post("/", upload.single("image"), async (req, res) => {
   try {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    // console.log("cloudinary response", result);
+
+    const image = result.secure_url;
+    const cloudinary_id = result.public_id;
+
     const {
       brand,
       model,
@@ -34,13 +40,12 @@ router.post("/", async (req, res) => {
       key_features,
       key_rules,
       status,
-      image,
       rating,
       review,
       pick_up_point,
     } = req.body;
     const newCar = await pool.query(
-      "INSERT INTO cars (brand, model, type, passenger_capacity, transmission, price_per_day, mileage, engine_type, key_features, key_rules,status,image,rating,review,pick_up_point) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
+      "INSERT INTO cars (brand, model, type, passenger_capacity, transmission, price_per_day, mileage, engine_type, key_features, key_rules,status,image,cloudinary_id,rating,review,pick_up_point) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)",
       [
         brand,
         model,
@@ -54,6 +59,7 @@ router.post("/", async (req, res) => {
         key_rules,
         status,
         image,
+        cloudinary_id,
         rating,
         review,
         pick_up_point,
@@ -65,7 +71,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// GET a car - GET ROUTE
+//*========================GET a car - GET ROUTE=======================
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -79,7 +85,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// UPDATE a car - PUT ROUTE
+//!========================UPDATE a car - PUT ROUTE========================
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -127,11 +133,15 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE a car - DELETE ROUTE
+//*========================DELETE a car - DELETE ROUTE========================
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
+
+    await cloudinary.uploader.destroy("sxjly7akthazyddmedfn");
+
     const carX = await pool.query("DELETE FROM cars WHERE cars_id = $1", [id]);
+
     res.status(200).send(`Car deleted with ID: ${id}`);
   } catch (error) {
     console.log(error.message);

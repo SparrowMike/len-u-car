@@ -27,6 +27,7 @@ CREATE TABLE cars (
     key_rules varchar(300),
     status char(60),
     image varchar(300),
+    cloudinary_id varchar(300),
     rating int,
     review varchar(300),
     pick_up_point varchar(300)
