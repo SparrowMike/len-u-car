@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use( session({                                    // +
   store: HerokuRedisStore,
-  secret: process.env.SECRET || "FeedMeSeymour",
+  secret: process.env.SECRET || "test_secret",
   saveUninitialized: false,
   resave: false,
   cookie: {
