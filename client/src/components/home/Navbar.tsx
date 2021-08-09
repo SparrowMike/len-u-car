@@ -17,8 +17,6 @@ import {
   SwipeableDrawer,
 } from "@material-ui/core";
 
-import ArrowRightAltRoundedIcon from "@material-ui/icons/ArrowRightAltRounded";
-
 import MenuIcon from "@material-ui/icons/Menu";
 
 import { Link as RouterLink } from "react-router-dom";
@@ -46,8 +44,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-type Anchor = "top";
-
 export default function Navbar() {
   const classes = useStyles();
   const theme = useTheme();
@@ -55,7 +51,7 @@ export default function Navbar() {
 
   //*==========================FOR MOBILE NAVBAR==============================
   const toggleDrawer =
-    (anchor: Anchor, open: boolean) => (event: KeyboardEvent | MouseEvent) => {
+    (anchor: string, open: boolean) => (event: KeyboardEvent | MouseEvent) => {
       if (
         event &&
         event.type === "keydown" &&
@@ -69,7 +65,7 @@ export default function Navbar() {
     };
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const list = (anchor: Anchor) => (
+  const list = (anchor: string) => (
     <div
       className={clsx(classes.list, {
         [classes.fullList]: anchor === "top" || anchor === "bottom",
@@ -80,19 +76,15 @@ export default function Navbar() {
     >
       <List>
         <ListItem button component={RouterLink} to="/">
-          <ArrowRightAltRoundedIcon />
           <ListItemText primary="Home" />
         </ListItem>
         <ListItem button component={RouterLink} to="/browse">
-          <ArrowRightAltRoundedIcon />
           <ListItemText primary="Browse" />
         </ListItem>
         <ListItem button component={RouterLink} to="/register">
-          <ArrowRightAltRoundedIcon />
           <ListItemText primary="Register" />
         </ListItem>
         <ListItem button component={RouterLink} to="/login">
-          <ArrowRightAltRoundedIcon />
           <ListItemText primary="Login" />
         </ListItem>
       </List>
