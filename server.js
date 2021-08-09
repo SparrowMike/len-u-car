@@ -15,8 +15,18 @@ const PORT = process.env.PORT || 3003;
 
 const RedisStore = connectRedis(session);                         // +
 const redisClient = redis.createClient({                          // +
-  port: 6379,
-  host: 'localhost'  // need to change to heroku redis?
+  // port: 6379,
+  // host: 'localhost'  // need to change to heroku redis?
+
+  host: 'ec2-52-54-10-192.compute-1.amazonaws.com',
+  port: 16120,
+  password: 'p9a8f345c693fbbb525145c11d037fdfe2c4fc08f25452579adc4b2947d2435c8',
+  tls: {
+    rejectUnauthorized: false
+}
+});
+redisClient.on('error', err => {
+  console.log('redisClient Error ' + err);
 });
 const HerokuRedisStore = new RedisStore({client: redisClient})    // +
 
