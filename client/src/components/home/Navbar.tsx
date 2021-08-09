@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, KeyboardEvent, MouseEvent } from "react";
 import clsx from "clsx";
 import {
   createStyles,
@@ -55,13 +55,12 @@ export default function Navbar() {
 
   //*==========================FOR MOBILE NAVBAR==============================
   const toggleDrawer =
-    (anchor: Anchor, open: boolean) =>
-    (event: React.KeyboardEvent | React.MouseEvent) => {
+    (anchor: Anchor, open: boolean) => (event: KeyboardEvent | MouseEvent) => {
       if (
         event &&
         event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
+        ((event as KeyboardEvent).key === "Tab" ||
+          (event as KeyboardEvent).key === "Shift")
       ) {
         return;
       }
