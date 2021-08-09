@@ -28,6 +28,21 @@ const useStyles = makeStyles({
     const handleSubmit = (e: React.ChangeEvent<any>) => {
         e.preventDefault()
         console.log("login ok")
+
+        console.log(JSON.stringify(signIn));
+        const createNewLogin = async () => {
+          const res = await fetch("http://localhost:3003/sessions", {
+            method: "POST",
+            body: JSON.stringify(signIn),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const data = await res.json();
+          console.log(data)
+        };
+        createNewLogin();
+   
     }
 
     return (
