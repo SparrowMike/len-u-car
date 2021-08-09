@@ -16,6 +16,11 @@
 - npm install @material-ui/core
 - npm install @material-ui/icons
 
+- npm install react-slick --save
+- npm install slick-carousel --save
+- npm i @types/react-slick --save-dev
+- npm i @material-ui/lab
+
 #### React Typesript cheatsheet
 
 - https://github.com/typescript-cheatsheets/react
