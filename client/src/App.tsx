@@ -6,6 +6,7 @@ import { Route, Switch } from "react-router-dom";
 import { Container } from "@material-ui/core";
 import Register from "./Pages/Register";
 import Login from "./Pages/Login";
+import Home from "./Pages/Home";
 
 const theme = createTheme({
   palette: {
@@ -22,6 +23,15 @@ const theme = createTheme({
     fontWeightRegular: 400,
     fontWeightMedium: 500,
     fontWeightBold: 700,
+  },
+  breakpoints: {
+    values: {
+      xs: 375,
+      sm: 600,
+      md: 1250,
+      lg: 1600,
+      xl: 2260,
+    },
   },
 });
 
@@ -45,6 +55,9 @@ function App() {
             </Route>
             <Route path="/login">
               <Login />
+            </Route>
+            <Route path="/">
+              <Home />
             </Route>
           </Switch>
         </Container>
