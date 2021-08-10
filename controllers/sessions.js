@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
 
 // can test login with:
 //   username: simon
-//   password: pass
+//   password: ****
 
 // login
 router.post("/", async (req, res) => {
