@@ -54,9 +54,11 @@ app.use(
 //*=================CONTROLLERS/ROUTES====================
 const usersController = require("./controllers/users");
 const carsController = require("./controllers/cars");
+const carImagesController = require("./controllers/carImages");
 const sessionsController = require("./controllers/sessions.js"); // +
 app.use("/users", usersController);
 app.use("/cars", carsController);
+app.use("/images", carImagesController);
 app.use("/sessions", sessionsController); // +
 
 //*==================LISTENER=====================
