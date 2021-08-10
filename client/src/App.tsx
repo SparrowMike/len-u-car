@@ -26,11 +26,11 @@ const theme = createTheme({
   },
   breakpoints: {
     values: {
-      xs: 480,
-      sm: 768,
-      md: 1024,
-      lg: 1200,
-      xl: 1920,
+      xs: 375,
+      sm: 600,
+      md: 1250,
+      lg: 1600,
+      xl: 2260,
     },
   },
 });

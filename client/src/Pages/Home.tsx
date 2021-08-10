@@ -1,14 +1,12 @@
-import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import Rating from "@material-ui/lab/Rating";
-
 import Slider from "react-slick";
-
 import cars from "../data/cars";
+import Cars from "../components/cars/Cars";
 
 const useStyles = makeStyles((theme) => ({
   mainFeaturedPost: {
@@ -18,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
-    height: "350px",
+    height: "450px",
     width: "100%",
   },
   overlay: {
@@ -47,7 +45,7 @@ const Home = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 10000,
+    autoplaySpeed: 4000,
     cssEase: "linear",
     arrows: false,
   };
@@ -55,48 +53,51 @@ const Home = () => {
   const classes = useStyles();
 
   return (
-    <Slider {...slickSettings}>
-      {cars.map((car, index) => {
-        return (
-          <Paper key={index}>
-            <div
-              className={classes.mainFeaturedPost}
-              style={{ backgroundImage: `url(${car.image})` }}
-            >
-              <div className={classes.overlay} />
-              <Grid container>
-                <Grid item md={6}>
-                  <div className={classes.mainFeaturedPostContent}>
-                    <Typography
-                      component="h2"
-                      variant="h4"
-                      color="inherit"
-                      gutterBottom
-                    >
-                      Brand: {car.brand}
-                    </Typography>
-                    <Typography variant="h5" color="inherit" paragraph>
-                      Features: {car.key_features}
-                    </Typography>
-                    <Typography variant="h5" color="inherit" paragraph>
-                      <Rating
-                        name="half-rating-read"
-                        defaultValue={car.rating}
-                        precision={0.25}
-                        readOnly
-                      />
-                    </Typography>
-                    <Link variant="subtitle1" href="#">
-                      Check out
-                    </Link>
-                  </div>
+    <>
+      <Slider {...slickSettings}>
+        {cars.map((car, index) => {
+          return (
+            <Paper key={index}>
+              <div
+                className={classes.mainFeaturedPost}
+                style={{ backgroundImage: `url(${car.image})` }}
+              >
+                <div className={classes.overlay} />
+                <Grid container>
+                  <Grid item md={6}>
+                    <div className={classes.mainFeaturedPostContent}>
+                      <Typography
+                        component="h2"
+                        variant="h4"
+                        color="inherit"
+                        gutterBottom
+                      >
+                        Brand: {car.brand}
+                      </Typography>
+                      <Typography variant="h5" color="inherit" paragraph>
+                        Features: {car.key_features}
+                      </Typography>
+                      <Typography variant="h5" color="inherit" paragraph>
+                        <Rating
+                          name="half-rating-read"
+                          defaultValue={car.rating}
+                          precision={0.25}
+                          readOnly
+                        />
+                      </Typography>
+                      <Link variant="subtitle1" href="#">
+                        Check out
+                      </Link>
+                    </div>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </div>
-          </Paper>
-        );
-      })}
-    </Slider>
+              </div>
+            </Paper>
+          );
+        })}
+      </Slider>
+      <Cars />
+    </>
   );
 };
 

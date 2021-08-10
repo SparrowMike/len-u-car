@@ -55,6 +55,25 @@ const cars = [
     pick_up_point: "Near by Bishan MRT",
     cloudinary_id: "fs3245ernk234k",
   },
+  {
+    brand: "Aston Martin",
+    model: "Victor",
+    type: "Sport",
+    passenger_capacity: 2,
+    transmission: "automatic",
+    price_per_day: 9999,
+    mileage: "8000",
+    engine_type: "petrol",
+    key_features: "Carpets",
+    key_rules: "pets. No smoking. Not permitted to drive into Malaysia",
+    status: "Available",
+    image:
+      "https://robbreport.com/wp-content/uploads/2020/09/victor01.jpg?w=1000",
+    rating: 4.75,
+    review: "Only if i could afford to buy it",
+    pick_up_point: "Near by Bishan MRT",
+    cloudinary_id: "fs3245ernk234k",
+  },
 ];
 
 export default cars;
