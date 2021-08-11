@@ -41,7 +41,14 @@ const useStyles = makeStyles((theme) => ({
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
+    "&:hover": {
+      // boxShadow: "0 0 1px 1px #9d0208 inset",
+      boxShadow: "0 0.6em 0.5em -0.4em lightgrey",
+      transform: "translateY(-0.15em)",
+      cursor: "pointer",
+    },
   },
+
   avatar: {
     backgroundColor: red[500],
   },
@@ -70,7 +77,11 @@ export default function Album() {
                     title={car.brand}
                     subheader={car.model}
                   />
-                  <CardMedia className={classes.media} image={car.image} />
+                  <CardMedia
+                    className={classes.media}
+                    image={car.image}
+                    onClick={() => console.log(car.brand)}
+                  />
                   <CardContent>
                     <Typography
                       variant="body2"
