@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
+const upload = require("../utils/multer");
+const { cloudinary } = require("../utils/cloudinary");
 
 // Routes
 
@@ -20,21 +22,25 @@ router.get("/new", async (req, res) => {
 });
 
 // CREATE new user - POST ROUTE
-router.post("/", async (req, res) => {
+router.post("/", upload.single("avatar"), async (req, res) => {
   try {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const avatar = result.secure_url;
+    const cloudinary_id = result.public_id;
     const {
       username,
       password,
       full_name,
       email,
-      avatar,
+      // avatar,
       user_type,
       mobile,
       identification_card,
       driving_license,
+      // cloudinary_id,
     } = req.body;
     const newUser = await pool.query(
-      "INSERT INTO users (username, password, full_name, email, avatar, user_type, mobile, identification_card, driving_license) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)",
+      "INSERT INTO users (username, password, full_name, email, avatar, user_type, mobile, identification_card, driving_license, cloudinary_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
       [
         username,
         password,
@@ -45,6 +51,7 @@ router.post("/", async (req, res) => {
         mobile,
         identification_card,
         driving_license,
+        cloudinary_id,
       ]
     );
     res.json(newUser.rows[0]);
@@ -114,22 +121,26 @@ router.get("/:id", async (req, res) => {
 });
 
 // UPDATE a user - PUT ROUTE
-router.put("/:id", async (req, res) => {
+router.put("/:id", upload.single("avatar"), async (req, res) => {
   try {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const avatar = result.secure_url;
+    const cloudinary_id = result.public_id;
     const { id } = req.params;
     const {
       username,
       password,
       full_name,
       email,
-      avatar,
+      // avatar,
       user_type,
       mobile,
       identification_card,
       driving_license,
+      // cloudinary_id,
     } = req.body;
     const userX = await pool.query(
-      "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, avatar = $6, user_type = $7, mobile = $8, identification_card = $9, driving_license = $10 WHERE user_id = $1",
+      "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, avatar = $6, user_type = $7, mobile = $8, identification_card = $9, driving_license = $10, cloudinary_id = $11 WHERE user_id = $1",
       [
         id,
         username,
@@ -141,6 +152,7 @@ router.put("/:id", async (req, res) => {
         mobile,
         identification_card,
         driving_license,
+        cloudinary_id,
       ]
     );
     res.status(200).send(`User modified with ID: ${id}`);
