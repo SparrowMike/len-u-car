@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
+const upload = require("../utils/multer");
 
 //*=======================READ all cars - GET ROUTE========================
 router.get("/", async (req, res) => {
