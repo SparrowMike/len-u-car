@@ -1,14 +1,49 @@
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import React from "react";
+import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
+import CameraIcon from "@material-ui/icons/PhotoCamera";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
-import Rating from "@material-ui/lab/Rating";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+
+import ImageList from "@material-ui/core/ImageList";
+import ImageListItem from "@material-ui/core/ImageListItem";
+
+import Paper from "@material-ui/core/Paper";
 import Slider from "react-slick";
-import cars from "../data/cars";
-import Cars from "../components/cars/Cars";
+
+import cars from "../../data/cars";
 
 const useStyles = makeStyles((theme) => ({
+  icon: {
+    marginRight: theme.spacing(2),
+  },
+  heroContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(8, 0, 6),
+  },
+  heroButtons: {
+    marginTop: theme.spacing(4),
+  },
+  cardGrid: {
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8),
+  },
+
+  root: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    overflow: "hidden",
+    backgroundColor: theme.palette.background.paper,
+  },
+  imageList: {
+    width: 500,
+    height: 450,
+  },
   mainFeaturedPost: {
     position: "relative",
     backgroundColor: theme.palette.grey[800],
@@ -37,7 +72,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = () => {
+export default function CarPage() {
+  const classes = useStyles();
+
   const slickSettings = {
     dots: true,
     infinite: true,
@@ -50,10 +87,8 @@ const Home = () => {
     arrows: false,
   };
 
-  const classes = useStyles();
-
   return (
-    <>
+    <div>
       <Slider {...slickSettings}>
         {cars.map((car, index) => {
           return (
@@ -77,17 +112,6 @@ const Home = () => {
                       <Typography variant="h5" color="inherit" paragraph>
                         Features: {car.key_features}
                       </Typography>
-                      <Typography variant="h5" color="inherit" paragraph>
-                        <Rating
-                          name="half-rating-read"
-                          defaultValue={car.rating}
-                          precision={0.25}
-                          readOnly
-                        />
-                      </Typography>
-                      <Link variant="subtitle1" href="#">
-                        Check out
-                      </Link>
                     </div>
                   </Grid>
                 </Grid>
@@ -96,9 +120,6 @@ const Home = () => {
           );
         })}
       </Slider>
-      <Cars />
-    </>
+    </div>
   );
-};
-
-export default Home;
+}

@@ -7,6 +7,11 @@ import { Container } from "@material-ui/core";
 import Register from "./Pages/Register";
 import Login from "./Pages/Login";
 import Home from "./Pages/Home";
+import { PaginationTEST } from "./components/cars/PaginationTEST";
+import CarPage from "./components/carPage/CarPage";
+
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const theme = createTheme({
   palette: {
@@ -44,24 +49,36 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
 
+  const queryClient = new QueryClient();
+
   return (
     <div className={classes.toolbar}>
-      <ThemeProvider theme={theme}>
-        <Navbar />
-        <Container maxWidth="md">
-          <Switch>
-            <Route path="/register">
-              <Register />
-            </Route>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
-        </Container>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <Navbar />
+          <Container maxWidth="md">
+            <Switch>
+              <Route path="/pagination">
+                <PaginationTEST />
+              </Route>
+              <Route path="/carpage">
+                <CarPage />
+              </Route>
+
+              <Route path="/register">
+                <Register />
+              </Route>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/">
+                <Home />
+              </Route>
+            </Switch>
+          </Container>
+        </ThemeProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </div>
   );
 }
