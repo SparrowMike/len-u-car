@@ -15,7 +15,6 @@ type Character = {
 async function getData({ pageParam = 1 }) {
   const response = await fetch(
     `https://swapi.dev/api/vehicles/?page=${pageParam}`
-    // `https://api.themoviedb.org/3/discover/movie?api_key=28f61172b752209fb2807f08057c9e1f&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${pageParam}&with_watch_monetization_types=flatrate`
   );
   if (!response.ok) {
     throw new Error("Problem fetching data");

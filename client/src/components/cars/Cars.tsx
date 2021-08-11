@@ -26,9 +26,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 600,
   },
-  cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
+  container: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
   },
   card: {
     height: "100%",
@@ -61,7 +61,7 @@ export default function Album() {
     <React.Fragment>
       <CssBaseline />
       <main>
-        <Container className={classes.cardGrid} maxWidth="md">
+        <Container className={classes.container} maxWidth="md">
           <Grid container spacing={4}>
             {cars.map((car, index) => (
               <Grid item key={index} xs={12} sm={6} md={4}>
