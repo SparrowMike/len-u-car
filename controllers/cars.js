@@ -18,7 +18,7 @@ router.get("/new", async (req, res) => {
 });
 
 //*========================CREATE new car - POST ROUTE========================
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const {
       brand,

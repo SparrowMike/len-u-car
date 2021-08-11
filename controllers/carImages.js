@@ -10,7 +10,6 @@ router.post("/", upload.single("image"), async (req, res) => {
     const result = await cloudinary.uploader.upload(req.file.path);
     const image = result.secure_url;
     const cloudinary_id = result.public_id;
-    const { image, cloudinary_id } = req.body;
     const newCarImage = await pool.query(
       "INSERT INTO car_images (image,cloudinary_id) VALUES ($1,$2)",
       [image, cloudinary_id]

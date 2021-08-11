@@ -32,12 +32,10 @@ router.post("/", upload.single("avatar"), async (req, res) => {
       password,
       full_name,
       email,
-      avatar,
       user_type,
       mobile,
       identification_card,
       driving_license,
-      cloudinary_id,
     } = req.body;
     const newUser = await pool.query(
       "INSERT INTO users (username, password, full_name, email, avatar, user_type, mobile, identification_card, driving_license, cloudinary_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
@@ -132,12 +130,10 @@ router.put("/:id", upload.single("avatar"), async (req, res) => {
       password,
       full_name,
       email,
-      avatar,
       user_type,
       mobile,
       identification_card,
       driving_license,
-      cloudinary_id,
     } = req.body;
     const userX = await pool.query(
       "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, avatar = $6, user_type = $7, mobile = $8, identification_card = $9, driving_license = $10, cloudinary_id = $11 WHERE user_id = $1",
