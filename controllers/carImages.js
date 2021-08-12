@@ -17,8 +17,9 @@ router.get("/", async (req, res) => {
 //*========================CREATE new car image - POST ROUTE========================
 router.post("/", upload.single("secure_url"), async (req, res) => {
   try {
-    const result = await cloudinary.uploader.upload(req.file.path);
-    console.log(result);
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      upload_preset: "carImages",
+    });
     const secure_url = result.secure_url;
     const cloudinary_id = result.public_id;
 
@@ -46,27 +47,32 @@ router.get("/:id", async (req, res) => {
     console.log(error.message);
   }
 });
-
+//!=======================TESTING ZONE=========================== TBC
 //!=====================UPDATE THE IMAGE========================= TBC
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const { id } = req.params;
-    await cloudinary.uploader.destroy(post.cloudinary_id);
-    const carData = await pool.query(
-      "SELECT cloudinary_id FROM car_images WHERE images_id = $1",
-      [id]
-    );
+    // const prev_image = await pool.query(
+    //   "SELECT cloudinary_id FROM car_images WHERE images_id = $1",
+    //   [id]
+    // );
+    // const cloudID = prev_image.rows[0].cloudinary_id;
+    // await cloudinary.uploader.destroy(cloudID);
+    // console.log(cloudID);
 
-    const carX = await pool.query(
-      "UPDATE car_images SET cloudinary_id = $2, secure_url = $3, cars_id = $4 WHERE images_id = $1",
-      [id]
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const secure_url = result.secure_url;
+    const cloudinary_id = result.public_id;
+
+    const new_image = await pool.query(
+      "UPDATE car_images SET cloudinary_id = $2, secure_url = $3  WHERE images_id = $1",
+      [cloudinary_id, secure_url]
     );
-    //   res.json(userX.rows[0])
-    res.status(200).json(carX.rows);
-  } catch (error) {
-    console.log(error.message);
+  } catch (err) {
+    console.log(err);
   }
 });
+//!===============================================================
 
 //*========================DELETE a car image - DELETE ROUTE========================
 router.delete("/:id", async (req, res) => {

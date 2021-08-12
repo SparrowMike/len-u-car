@@ -24,9 +24,11 @@ router.get("/new", async (req, res) => {
 // CREATE new user - POST ROUTE
 router.post("/", upload.single("avatar"), async (req, res) => {
   try {
-    // const result = await cloudinary.uploader.upload(req.file.path);
-    // const avatar = result.secure_url;
-    // const cloudinary_id = result.public_id;
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      upload_preset: "userAvatar",
+    });
+    const avatar = result.secure_url;
+    const cloudinary_id = result.public_id;
     const {
       username,
       password,
@@ -38,18 +40,18 @@ router.post("/", upload.single("avatar"), async (req, res) => {
       driving_license,
     } = req.body;
     const newUser = await pool.query(
-      "INSERT INTO users (username, password, full_name, email, user_type, mobile, identification_card, driving_license) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
+      "INSERT INTO users (avatar, cloudinary_id, username, password, full_name, email, user_type, mobile, identification_card, driving_license) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
       [
+        avatar,
+        cloudinary_id,
         username,
         password,
         full_name,
         email,
-        // avatar,
         user_type,
         mobile,
         identification_card,
         driving_license,
-        // cloudinary_id,
       ]
     );
     res.json(newUser.rows[0]);
