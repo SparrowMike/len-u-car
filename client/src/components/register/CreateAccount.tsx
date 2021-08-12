@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 
 interface FormValues {
   username: string;
-  password: string;
+  password_unhashed: string;
   passwordConfirm: string;
   email: string;
   full_name: string;
@@ -28,7 +28,7 @@ interface FormValues {
 
 const initialValues: FormValues = {
   username: "",
-  password: "",
+  password_unhashed: "",
   passwordConfirm: "",
   email: "",
   full_name: "",
@@ -55,9 +55,9 @@ const validationSchema = Yup.object().shape({
         }
       }
     ),
-  password: Yup.string().required("Required"),
+  password_unhashed: Yup.string().required("Required"),
   passwordConfirm: Yup.string().oneOf(
-    [Yup.ref("password")],
+    [Yup.ref("password_unhashed")],
     "Password must be the same!"
   ),
   email: Yup.string()
@@ -107,6 +107,7 @@ const CreateAccount: React.FC = () => {
         initialValues={initialValues}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
+        validateOnChange={false}
       >
         {({ dirty, isValid }) => {
           return (
@@ -119,7 +120,7 @@ const CreateAccount: React.FC = () => {
                 required
               />
               <Textfield
-                name="password"
+                name="password_unhashed"
                 label="Password"
                 type="password"
                 className={classes.field}

@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
               }
               else {
                 console.log({ msg: "Username exist, but password wrong" });
-                return res.json({ msg: "Username don't exist, but password wrong" });
+                return res.json({ msg: "Username exist, but password wrong" });
               }
 
             } else {
