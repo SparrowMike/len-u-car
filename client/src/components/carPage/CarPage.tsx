@@ -71,8 +71,10 @@ export default function CarPage() {
       <Container className={classes.container}>
         <Grid container spacing={3}>
           <Grid item xs={8}>
-            <Paper className={classes.main}>Main</Paper>
-            <Divider className={classes.divider} />
+            <Paper className={classes.main}>
+              Main
+              <Divider className={classes.divider} />
+            </Paper>
           </Grid>
           <Grid item xs={4}>
             <Paper className={classes.side}>Side</Paper>
