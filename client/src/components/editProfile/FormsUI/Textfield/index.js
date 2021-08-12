@@ -10,6 +10,7 @@ const TextfieldWrapper = ({ name, ...otherProps }) => {
     ...otherProps,
     fullWidth: true,
     variant: "outlined",
+    autoComplete: "off",
   };
 
   if (mata && mata.touched && mata.error) {
