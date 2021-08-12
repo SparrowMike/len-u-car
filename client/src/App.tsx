@@ -12,6 +12,7 @@ import CarPage from "./components/carPage/CarPage";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import Settings from "./Pages/Settings";
 
 const theme = createTheme({
   palette: {
@@ -70,6 +71,9 @@ function App() {
               </Route>
               <Route path="/login">
                 <Login />
+              </Route>
+              <Route path="/settings">
+                <Settings />
               </Route>
               <Route path="/">
                 <Home />
