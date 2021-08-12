@@ -31,7 +31,7 @@ export default function NewSession() {
 
     console.log(JSON.stringify(signIn));
     const createNewLogin = async () => {
-      const res = await fetch("http://localhost:3003/sessions", {
+      const res = await fetch("http://localhost:4000/sessions", {
         method: "POST",
         body: JSON.stringify(signIn),
         headers: {
