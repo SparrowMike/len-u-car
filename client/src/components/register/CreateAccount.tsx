@@ -1,7 +1,158 @@
-import React from "react";
+import { Container, makeStyles, Typography } from "@material-ui/core";
+import axios from "axios";
+import { Form, Formik } from "formik";
+import * as Yup from "yup";
+import Button from "../editProfile/FormsUI/Button";
+import Textfield from "../editProfile/FormsUI/Textfield";
 
-const CreateAccount = () => {
-  return <div>Create Account</div>;
+const useStyles = makeStyles({
+  field: {
+    marginTop: 10,
+  },
+  footer: {
+    marginTop: 40,
+    paddingBottom: 40,
+  },
+  submitBtn: {
+    marginTop: 20,
+  },
+});
+
+interface FormValues {
+  username: string;
+  password: string;
+  passwordConfirm: string;
+  email: string;
+  full_name: string;
+}
+
+const initialValues: FormValues = {
+  username: "",
+  password: "",
+  passwordConfirm: "",
+  email: "",
+  full_name: "",
+};
+
+const validationSchema = Yup.object().shape({
+  username: Yup.string()
+    .min(5, "Username is too short")
+    .required("Required")
+    .test(
+      "username-backend-validation",
+      "Username is taken",
+      async (username) => {
+        const msg = await axios.post("http://localhost:4000/users/checkusers", {
+          username: username,
+        });
+
+        if (msg.data.msg === "Username available.") {
+          console.log(msg.data.msg);
+          return Promise.resolve(true);
+        } else {
+          console.log("not ok");
+          return Promise.resolve(false);
+        }
+      }
+    ),
+  password: Yup.string().required("Required"),
+  passwordConfirm: Yup.string().oneOf(
+    [Yup.ref("password")],
+    "Password must be the same!"
+  ),
+  email: Yup.string()
+    .lowercase()
+    .email("Invalid email.")
+    .required("Required")
+    .test(
+      "email-backend-validation",
+      "Email address is taken",
+      async (email) => {
+        const msg = await axios.post("http://localhost:4000/users/checkemail", {
+          email: email,
+        });
+
+        if (msg.data.msg === "Email address is available.") {
+          console.log(msg.data.msg);
+          return Promise.resolve(true);
+        } else {
+          console.log("not ok");
+          return Promise.resolve(false);
+        }
+      }
+    ),
+  full_name: Yup.string().required("Required"),
+});
+
+const CreateAccount: React.FC = () => {
+  const classes = useStyles();
+  const handleSubmit = async (values: FormValues) => {
+    try {
+      const res = await fetch("http://localhost:4000/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      console.log(res);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  return (
+    <Container>
+      <Typography variant="h4" align="center" style={{ fontWeight: 600 }}>
+        Len-U-Car
+      </Typography>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+      >
+        {({ dirty, isValid }) => {
+          return (
+            <Form>
+              <Textfield
+                name="username"
+                label="Username"
+                className={classes.field}
+                validateOnChange={false}
+                required
+              />
+              <Textfield
+                name="password"
+                label="Password"
+                type="password"
+                className={classes.field}
+                required
+              />
+              <Textfield
+                name="passwordConfirm"
+                label="Confirm Password"
+                type="password"
+                className={classes.field}
+                required
+              />
+              <Textfield
+                name="email"
+                label="Email"
+                className={classes.field}
+                required
+              />
+              <Textfield
+                name="full_name"
+                label="Full Name"
+                className={classes.field}
+                required
+              />
+              <div className={classes.submitBtn}>
+                <Button>Submit</Button>
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>
+    </Container>
+  );
 };
 
 export default CreateAccount;
