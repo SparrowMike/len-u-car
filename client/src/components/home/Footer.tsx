@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <div>
       <Typography variant="caption" style={{ fontWeight: 500 }} gutterBottom>
-        Test page for login footer
+        A little PERN stack project.
       </Typography>
     </div>
   );
