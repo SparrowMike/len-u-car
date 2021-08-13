@@ -9,6 +9,11 @@ import cars from "../data/cars";
 import Cars from "../components/cars/Cars";
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    borderRadius: "10px",
+
+    // border: "20px solid black",
+  },
   mainFeaturedPost: {
     position: "relative",
     backgroundColor: theme.palette.grey[800],
@@ -53,48 +58,50 @@ const Home = () => {
 
   return (
     <>
-      <Slider {...slickSettings}>
-        {cars.map((car, index) => {
-          return (
-            <Paper key={index}>
-              <div
-                className={classes.mainFeaturedPost}
-                style={{ backgroundImage: `url(${car.image})` }}
-              >
-                <div className={classes.overlay} />
-                <Grid container>
-                  <Grid item md={6}>
-                    <div className={classes.mainFeaturedPostContent}>
-                      <Typography
-                        component="h2"
-                        variant="h4"
-                        color="inherit"
-                        gutterBottom
-                      >
-                        Brand: {car.brand}
-                      </Typography>
-                      <Typography variant="h5" color="inherit" paragraph>
-                        Features: {car.key_features}
-                      </Typography>
-                      <Typography variant="h5" color="inherit" paragraph>
-                        <Rating
-                          name="half-rating-read"
-                          defaultValue={car.rating}
-                          precision={0.25}
-                          readOnly
-                        />
-                      </Typography>
-                      <Link variant="subtitle1" href="#">
-                        Check out
-                      </Link>
-                    </div>
+      <div className={classes.container}>
+        <Slider {...slickSettings}>
+          {cars.map((car, index) => {
+            return (
+              <Paper key={index}>
+                <div
+                  className={classes.mainFeaturedPost}
+                  style={{ backgroundImage: `url(${car.image})` }}
+                >
+                  <div className={classes.overlay} />
+                  <Grid container>
+                    <Grid item md={6}>
+                      <div className={classes.mainFeaturedPostContent}>
+                        <Typography
+                          component="h2"
+                          variant="h4"
+                          color="inherit"
+                          gutterBottom
+                        >
+                          Brand: {car.brand}
+                        </Typography>
+                        <Typography variant="h5" color="inherit" paragraph>
+                          Features: {car.key_features}
+                        </Typography>
+                        <Typography variant="h5" color="inherit" paragraph>
+                          <Rating
+                            name="half-rating-read"
+                            defaultValue={car.rating}
+                            precision={0.25}
+                            readOnly
+                          />
+                        </Typography>
+                        <Link variant="subtitle1" href="#">
+                          Check out
+                        </Link>
+                      </div>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </div>
-            </Paper>
-          );
-        })}
-      </Slider>
+                </div>
+              </Paper>
+            );
+          })}
+        </Slider>
+      </div>
       <Cars />
     </>
   );
