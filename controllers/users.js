@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require("../db");
 const upload = require("../utils/multer");
 const { cloudinary } = require("../utils/cloudinary");
+const bcrypt = require("bcrypt");
 
 // Routes
 
@@ -29,7 +30,7 @@ router.post("/", upload.single("avatar"), async (req, res) => {
     // const cloudinary_id = result.public_id;
     const {
       username,
-      password,
+      password_unhashed,
       full_name,
       email,
       user_type,
@@ -37,6 +38,13 @@ router.post("/", upload.single("avatar"), async (req, res) => {
       identification_card,
       driving_license,
     } = req.body;
+
+    // hash plaintext password
+    console.log( username )
+    console.log( password_unhashed )
+    password = bcrypt.hashSync(password_unhashed, bcrypt.genSaltSync(10));
+    console.log( password )
+
     const newUser = await pool.query(
       "INSERT INTO users (username, password, full_name, email, user_type, mobile, identification_card, driving_license) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
       [

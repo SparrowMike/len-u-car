@@ -6,12 +6,12 @@ CREATE TABLE users (
     password varchar(60),
     full_name varchar(60),
     email varchar(60),
-    avatar varchar(60),
+    avatar varchar(150),
     user_type varchar(20),
     mobile int,
     identification_card varchar(60),
     driving_license varchar(60),
-    cloudinary_id varchar(30)
+    cloudinary_id varchar(30),  
 );
 
 CREATE TABLE cars (
@@ -33,8 +33,8 @@ CREATE TABLE cars (
 
 CREATE TABLE car_images (
     images_id SERIAL,
-    cloudinary_id varchar(30),
-    secure_url varchar(300),
+    cloudinary_id varchar(150),
+    secure_url varchar(150),
     cars_id int
 )
 
