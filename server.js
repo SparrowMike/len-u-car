@@ -5,20 +5,20 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 
-const session = require("express-session");        
-const redis = require('redis');                    
-const connectRedis = require('connect-redis');      
-
+const session = require("express-session");
+const redis = require("redis");
+const connectRedis = require("connect-redis");
+const path = require("path");
 
 //*===================CONFIGURATIONS======================
 require("dotenv").config();
 const PORT = process.env.PORT || 3003;
 
-const RedisStore = connectRedis(session);                         
+const RedisStore = connectRedis(session);
 const redisClient = redis.createClient({
   // +
   // port: 6379,
-  // host: 'localhost'  
+  // host: 'localhost'
 
   host: "ec2-52-54-10-192.compute-1.amazonaws.com",
   port: 16120,
@@ -34,20 +34,27 @@ redisClient.on("error", (err) => {
 // EXPORT
 module.exports = redisClient;
 
-const HerokuRedisStore = new RedisStore({ client: redisClient }); 
+const HerokuRedisStore = new RedisStore({ client: redisClient });
 
 //* ==============BODY PARSER, MIDDLEWARE====================
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use( session({                                   
-  store: HerokuRedisStore,
-  name: "sessionID",
-  secret: process.env.SECRET || "test_secret",
-  saveUninitialized: false,
-  resave: false,
-  cookie: {
+//* ===========HEROKU DEPLOYMENT MIDDLEWARE==================
+app.use(express.static(path.join(__dirname, "./client/build")));
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./client/build", "index.html"));
+});
+
+app.use(
+  session({
+    store: HerokuRedisStore,
+    name: "sessionID",
+    secret: process.env.SECRET || "test_secret",
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
       secure: false,
       httpOnly: true,
       maxAge: 1000 * 60 * 30,
@@ -59,14 +66,13 @@ app.use( session({
 const usersController = require("./controllers/users");
 const carsController = require("./controllers/cars");
 const carImagesController = require("./controllers/carImages");
-const sessionsController = require("./controllers/sessions.js"); 
+const sessionsController = require("./controllers/sessions.js");
 app.use("/users", usersController);
 app.use("/cars", carsController);
 app.use("/images", carImagesController);
-app.use("/sessions", sessionsController); 
+app.use("/sessions", sessionsController);
 
 //*==================LISTENER=====================
 app.listen(PORT, () => {
   console.log("Car rental has started on port", PORT);
 });
-

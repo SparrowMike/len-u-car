@@ -11,12 +11,9 @@ import {
 } from "@material-ui/core";
 
 import { red } from "@material-ui/core/colors";
-// import FavoriteIcon from "@material-ui/icons/Favorite";
-// import ShareIcon from "@material-ui/icons/Share";
 import StarIcon from "@material-ui/icons/Star";
 
 import cars from "../../data/cars";
-// import users from "../../data/users";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -79,14 +76,14 @@ export default function Album() {
                               color: "#FDCC0D",
                               position: "relative",
                               width: "15px",
-                              left: 60,
+                              left: 70,
                               top: 12,
                             }}
                           />
                         }
                         align="right"
                         title={`$ ${car.price_per_day} / day`}
-                        subheader={`${car.rating}`}
+                        subheader={`${car.rating.toFixed(1)}`}
                       />
                     </Grid>
                   </Grid>
