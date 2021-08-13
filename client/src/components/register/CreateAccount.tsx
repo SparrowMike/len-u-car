@@ -1,10 +1,8 @@
-import { makeStyles } from "@material-ui/core";
-import Button from "../editProfile/FormsUI/Button";
-import { Container } from "@material-ui/core";
-import { Typography } from "@material-ui/core";
-import { Formik, Form } from "formik";
+import { Container, makeStyles, Typography } from "@material-ui/core";
 import axios from "axios";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
+import Button from "../editProfile/FormsUI/Button";
 import Textfield from "../editProfile/FormsUI/Textfield";
 
 const useStyles = makeStyles({
@@ -37,44 +35,68 @@ const initialValues: FormValues = {
 };
 
 const validationSchema = Yup.object().shape({
-  username: Yup.string().min(5, "Username is too short").required("Required"),
-  // .test(
-  //   "username-backend-validation",
-  //   "Username is taken",
-  //   async (username) => {
-  //     const {
-  //       data: { success },
-  //     } = await axios.post("http://localhost:4000/users/checkusers", {
-  //       username: username,
-  //     });
-  //     return success;
-  //   }
-  // ),
+  username: Yup.string()
+    .min(5, "Username is too short")
+    .required("Required")
+    .test(
+      "username-backend-validation",
+      "Username is taken",
+      async (username) => {
+        const msg = await axios.post("http://localhost:4000/users/checkusers", {
+          username: username,
+        });
+
+        if (msg.data.msg === "Username available.") {
+          console.log(msg.data.msg);
+          return Promise.resolve(true);
+        } else {
+          console.log("not ok");
+          return Promise.resolve(false);
+        }
+      }
+    ),
   password: Yup.string().required("Required"),
   passwordConfirm: Yup.string().oneOf(
     [Yup.ref("password")],
     "Password must be the same!"
   ),
-  email: Yup.string().lowercase().email("Invalid email.").required("Required"),
-  // .test(
-  //   "email-backend-validation",
-  //   "Email address is taken",
-  //   async (email) => {
-  //     const {
-  //       data: { success },
-  //     } = await axios.post("http://localhost:4000/users/checkemail", {
-  //       email: email,
-  //     });
-  //     return success;
-  //   }
-  // ),
+  email: Yup.string()
+    .lowercase()
+    .email("Invalid email.")
+    .required("Required")
+    .test(
+      "email-backend-validation",
+      "Email address is taken",
+      async (email) => {
+        const msg = await axios.post("http://localhost:4000/users/checkemail", {
+          email: email,
+        });
+
+        if (msg.data.msg === "Email address is available.") {
+          console.log(msg.data.msg);
+          return Promise.resolve(true);
+        } else {
+          console.log("not ok");
+          return Promise.resolve(false);
+        }
+      }
+    ),
   full_name: Yup.string().required("Required"),
 });
 
 const CreateAccount: React.FC = () => {
   const classes = useStyles();
-  const handleSubmit = (values: FormValues): void => {
-    alert(JSON.stringify(values));
+  const handleSubmit = async (values: FormValues) => {
+    try {
+      const res = await fetch("http://localhost:4000/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      console.log(res);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
   return (
     <Container>
@@ -93,6 +115,7 @@ const CreateAccount: React.FC = () => {
                 name="username"
                 label="Username"
                 className={classes.field}
+                validateOnChange={false}
                 required
               />
               <Textfield
