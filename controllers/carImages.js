@@ -47,32 +47,47 @@ router.get("/:id", async (req, res) => {
     console.log(error.message);
   }
 });
-//!=======================TESTING ZONE=========================== TBC
-//!=====================UPDATE THE IMAGE========================= TBC
-router.put("/:id", upload.single("image"), async (req, res) => {
+//*=====================UPDATE THE IMAGE=========================
+router.put("/:id", upload.single("secure_url"), async (req, res) => {
   try {
     const { id } = req.params;
-    // const prev_image = await pool.query(
-    //   "SELECT cloudinary_id FROM car_images WHERE images_id = $1",
-    //   [id]
-    // );
-    // const cloudID = prev_image.rows[0].cloudinary_id;
-    // await cloudinary.uploader.destroy(cloudID);
-    // console.log(cloudID);
-
-    const result = await cloudinary.uploader.upload(req.file.path);
-    const secure_url = result.secure_url;
-    const cloudinary_id = result.public_id;
-
-    const new_image = await pool.query(
-      "UPDATE car_images SET cloudinary_id = $2, secure_url = $3  WHERE images_id = $1",
-      [cloudinary_id, secure_url]
+    const carImages = await pool.query(
+      "SELECT secure_url, cloudinary_id FROM car_images WHERE images_id = $1",
+      [id]
     );
+
+    console.log(carImages);
+    let result;
+    let secure_url;
+    let cloudinary_id;
+    const cloudID = carImages.rows[0].cloudinary_id;
+    const cloudImage = carImages.rows[0].secure_url;
+    if (req.file) {
+      await cloudinary.uploader.destroy(cloudID);
+      result = await cloudinary.uploader.upload(req.file.path, {
+        upload_preset: "carImages",
+      });
+    }
+
+    if (result === undefined) {
+      secure_url = cloudImage;
+      cloudinary_id = cloudID;
+    } else {
+      secure_url = result.secure_url;
+      cloudinary_id = result.public_id;
+    }
+
+    const { cars_id } = req.body;
+    const carImage = await pool.query(
+      "UPDATE car_images SET secure_url = $2, cloudinary_id = $3, cars_id = $4 WHERE images_id = $1",
+      [id, secure_url, cloudinary_id, cars_id]
+    );
+
+    res.status(200).send(`Car image modified with ID: ${id}`);
   } catch (err) {
     console.log(err);
   }
 });
-//!===============================================================
 
 //*========================DELETE a car image - DELETE ROUTE========================
 router.delete("/:id", async (req, res) => {

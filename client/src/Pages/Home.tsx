@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     height: "450px",
-    width: "100%",
   },
   overlay: {
     position: "absolute",
