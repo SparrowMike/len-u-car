@@ -1,8 +1,9 @@
 import React from "react";
-import { Formik } from "formik";
+import { Formik, Field } from "formik";
 import * as yup from "../../../node_modules/yup";
 import Button from "@material-ui/core/Button";
 import Textfield from "../editProfile/FormsUI/Textfield";
+import Radio from "@material-ui/core/Radio";
 
 const validationSchema = yup.object({
   brand: yup.string().required("Brand is required"),
@@ -44,7 +45,7 @@ interface FormValues {
 const INITIAL_FORM_STATE: FormValues = {
   brand: "Aston Martin",
   model: "DB11",
-  type: "petrol",
+  type: "sport",
   passenger_capacity: 4,
   transmission: "automatic",
   price_per_day: 9999,
@@ -67,7 +68,7 @@ const handleSubmit = (formValue: any) => {
    const updateCarAccount = async () => {
      try {
        const res = await fetch(
-         "/cars/"+currentCar,
+         "http://localhost:4000/cars/"+currentCar,
          {
            method: "PUT",
            body: JSON.stringify(merge),
@@ -110,24 +111,46 @@ const handleSubmit = (formValue: any) => {
               name="model"
               label="Model"
             />
-            <Textfield
+            {/* <Textfield
              
               id="type"
               name="type"
               label="Type"
-            />
+            /> */}
+            <div>
+                    Type:
+                  <label>
+                    <Field name="type" type="radio" value="sport" as={Radio} />
+                    Sport
+                  </label>
+                  <label>
+                    <Field name="type" type="radio" value="sedan" as={Radio} />
+                    Sedan
+                  </label>
+                </div>
             <Textfield
              
               id="passenger_capacity"
               name="passenger_capacity"
               label="Passenger_capacity"
             />
-  <Textfield
+  {/* <Textfield
             
               id="transmission"
               name="transmission"
               label="Transmission"
-            />
+            /> */}
+            <div>
+                    Tranmission:
+                  <label>
+                    <Field name="transmission" type="radio" value="automatic" as={Radio} />
+                    Automatic
+                  </label>
+                  <label>
+                    <Field name="transmission" type="radio" value="manual" as={Radio} />
+                    Manual
+                  </label>
+                </div>
             <Textfield
              
               id="price_per_day"
@@ -142,12 +165,27 @@ const handleSubmit = (formValue: any) => {
               label="Mileage"
             />
 
-            <Textfield
+            {/* <Textfield
            
               id="engine_type"
               name="engine_type"
               label="Engine_type"
-            />
+            /> */}
+                <div>
+                    Engine Type:
+                  <label>
+                    <Field name="engine_type" type="radio" value="petrol" as={Radio} />
+                    Petrol
+                  </label>
+                  <label>
+                    <Field name="engine_type" type="radio" value="diesel" as={Radio} />
+                    Diesel
+                  </label>
+                  <label>
+                    <Field name="engine_type" type="radio" value="hybrid" as={Radio} />
+                    Hybrid
+                  </label>
+                </div>
 
             <Textfield
             

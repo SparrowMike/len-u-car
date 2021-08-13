@@ -12,7 +12,7 @@ const connectRedis = require('connect-redis');
 
 //*===================CONFIGURATIONS======================
 require("dotenv").config();
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.PORT || 4000;
 
 const RedisStore = connectRedis(session);                         
 const redisClient = redis.createClient({

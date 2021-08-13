@@ -5,6 +5,8 @@ import Button from "@material-ui/core/Button";
 import Textfield from "../editProfile/FormsUI/Textfield";
 
 
+
+
 const validationSchema = yup.object({
   full_name: yup.string().required("Full Name is required"),
   email: yup
@@ -35,7 +37,7 @@ interface FormValues {
 const INITIAL_FORM_STATE: FormValues = {
   full_name: "abc",
   email: "abc@abc.com",
-  user_type: "provider",
+  user_type: "provider", // maybe can take out
   mobile: 12345678,
   identification_card: "S1234567A",
   driving_license: "S1234567A"
@@ -54,7 +56,7 @@ const handleSubmit = (formValue: FormValues) => {
   const updateUserAccount = async () => {
     try {
       const res = await fetch(
-        "/users/"+currentUser,
+        "http://localhost:4000/users/"+currentUser,
         {
           method: "PUT",
           body: JSON.stringify(merge),
@@ -75,6 +77,7 @@ const handleSubmit = (formValue: FormValues) => {
 
   return (
     <div>
+
       {" "}
       <Formik
         initialValues={{
@@ -143,6 +146,7 @@ const handleSubmit = (formValue: FormValues) => {
           </form>
         )}
       </Formik>
+   
     </div>
   );
 };

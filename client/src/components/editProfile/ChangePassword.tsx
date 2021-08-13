@@ -35,7 +35,7 @@ const handleSubmit = (formValue: FormValues)  => {
    const updateUserAccount = async () => {
      try {
        const res = await fetch(
-         "/users/"+ currentUser,
+         "http://localhost:4000/users/"+ currentUser,
          {
            method: "PUT",
            body: JSON.stringify(merge),

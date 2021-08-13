@@ -58,6 +58,6 @@
     "@types/material-ui": "^0.21.9",
     "@types/react-dom": "^17.0.9",
     "@types/react-slick": "^0.23.5"
-  },
-  "proxy": "http://localhost:3003"
+  }
+ 
 }
