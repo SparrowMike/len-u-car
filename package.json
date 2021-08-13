@@ -8,8 +8,10 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "build": "cd client && npm run build",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm run install-client && npm run build"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --only=dev && npm install && npm run build"
   },
+
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SparrowMike/len-u-car.git"
