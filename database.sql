@@ -11,6 +11,7 @@ CREATE TABLE users (
     mobile int,
     identification_card varchar(60),
     driving_license varchar(60),
+    cloudinary_id varchar(30)
 );
 
 CREATE TABLE cars (
@@ -27,7 +28,7 @@ CREATE TABLE cars (
     key_rules varchar(300),
     status varchar(60),
     pick_up_point varchar(300),
-    user_id int,
+    username varchar(20),
 )
 
 CREATE TABLE car_images (

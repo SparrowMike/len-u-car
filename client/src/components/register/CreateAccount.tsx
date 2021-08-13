@@ -3,6 +3,7 @@ import axios from "axios";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import Button from "../editProfile/FormsUI/Button";
+
 import Textfield from "../editProfile/FormsUI/Textfield";
 
 const useStyles = makeStyles({
@@ -35,6 +36,7 @@ const initialValues: FormValues = {
 };
 
 const validationSchema = Yup.object().shape({
+
   username: Yup.string()
     .min(5, "Username is too short")
     .required("Required")
@@ -55,11 +57,13 @@ const validationSchema = Yup.object().shape({
         }
       }
     ),
+
   password: Yup.string().required("Required"),
   passwordConfirm: Yup.string().oneOf(
     [Yup.ref("password")],
     "Password must be the same!"
   ),
+
   email: Yup.string()
     .lowercase()
     .email("Invalid email.")
@@ -81,11 +85,13 @@ const validationSchema = Yup.object().shape({
         }
       }
     ),
+
   full_name: Yup.string().required("Required"),
 });
 
 const CreateAccount: React.FC = () => {
   const classes = useStyles();
+
   const handleSubmit = async (values: FormValues) => {
     try {
       const res = await fetch("http://localhost:4000/users", {
@@ -97,6 +103,7 @@ const CreateAccount: React.FC = () => {
     } catch (error) {
       console.error(error.message);
     }
+
   };
   return (
     <Container>

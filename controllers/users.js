@@ -119,12 +119,14 @@ router.get("/:id", async (req, res) => {
 });
 
 // UPDATE a user - PUT ROUTE
-router.put("/:id", upload.single("avatar"), async (req, res) => {
+ // router.put("/:id", upload.single("avatar"), async (req, res) => {
+  router.put("/:id", async (req, res) => {
   try {
-    const result = await cloudinary.uploader.upload(req.file.path);
-    const avatar = result.secure_url;
-    const cloudinary_id = result.public_id;
+  //  const result = await cloudinary.uploader.upload(req.file.path);
+   // const avatar = result.secure_url;
+  //  const cloudinary_id = result.public_id;
     const { id } = req.params;
+    console.log(req.body);
     const {
       username,
       password,
@@ -136,19 +138,31 @@ router.put("/:id", upload.single("avatar"), async (req, res) => {
       driving_license,
     } = req.body;
     const userX = await pool.query(
-      "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, avatar = $6, user_type = $7, mobile = $8, identification_card = $9, driving_license = $10, cloudinary_id = $11 WHERE user_id = $1",
+      // "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, avatar = $6, user_type = $7, mobile = $8, identification_card = $9, driving_license = $10, cloudinary_id = $11 WHERE user_id = $1",
+      // [
+      //   id,
+      //   username,
+      //   password,
+      //   full_name,
+      //   email,
+      //   avatar,
+      //   user_type,
+      //   mobile,
+      //   identification_card,
+      //   driving_license,
+      //   cloudinary_id,
+      // ]
+      "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, user_type = $6, mobile = $7, identification_card = $8, driving_license = $9 WHERE user_id = $1",
       [
         id,
         username,
         password,
         full_name,
         email,
-        avatar,
         user_type,
         mobile,
         identification_card,
-        driving_license,
-        cloudinary_id,
+        driving_license
       ]
     );
     res.status(200).send(`User modified with ID: ${id}`);
