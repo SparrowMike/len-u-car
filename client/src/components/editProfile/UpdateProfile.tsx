@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Formik } from "formik";
 import * as yup from "../../../node_modules/yup";
 import {
@@ -8,7 +8,6 @@ import {
   Container,
 } from "@material-ui/core";
 import Textfield from "../editProfile/FormsUI/Textfield";
-import Cookies from 'js-cookie'
 
 const useStyles = makeStyles({
   form: {
@@ -41,172 +40,104 @@ const validationSchema = yup.object({
   driving_license: yup.string().required("Driving license No. is required"),
 });
 
-// interface FormValues {
-//   full_name: string | undefined;
-//   email: string | undefined;
-//   user_type: string | undefined;
-//   mobile: number | undefined;
-//   identification_card: string | undefined;
-//   driving_license: string | undefined
-// }
-
 interface FormValues {
-  user_id: number | undefined,
-  username: string | undefined,
-  password: string | undefined,
-  avatar: string | ArrayBuffer | undefined,
-  cloudinary_id: number | undefined,
-  full_name: string | undefined,
-  email: string | undefined,
-  user_type: string | undefined,
-  mobile: number | undefined,
-  identification_card: string | undefined,
-  driving_license: string | undefined
+  full_name: string;
+  email: string;
+  user_type: string;
+  mobile: number;
+  identification_card: string;
+  driving_license: string;
+  avatar: string | ArrayBuffer;
 }
 
-interface CurrentUser {
-  user_id: number,
-  username: string,
-  password: string,
-  full_name: string,
-  email: string,
-  avatar: string,
-  user_type: string,
-  mobile: number,
-  identification_card: string,
-  driving_license: string,
-  cloudinary_id: number
-}
-
-// const INITIAL_FORM_STATE: FormValues = {
-//   full_name: "abc",
-//   email: "abc@abc.com",
-//   user_type: "provider",
-//   mobile: 12345678,
-//   identification_card: "S1234567A",
-//   driving_license: "S1234567A"
-// };
+const INITIAL_FORM_STATE: FormValues = {
+  full_name: "abc",
+  email: "abc@abc.com",
+  user_type: "provider", // maybe can take out
+  mobile: 12345678,
+  identification_card: "S1234567A",
+  driving_license: "S1234567A",
+  avatar: "",
+};
 
 const UpdateProfile: React.FC = () => {
   const classes = useStyles();
-  const currentUserID = "1";  // temporary to remove
   const [previewSource, setPreviewSource] = useState("");
-  const [currentUser, setCurrentUser] = useState <CurrentUser> ();
-  const [loading, setLoading] = useState <boolean> (false);
-  const [initialValues, setinitialValues] = useState <FormValues> ({
-    user_id: 0,
-    username: "",
-    password: "",
-    avatar: "",
-    cloudinary_id: 0,
-    full_name: "",
-    email: "",
-    user_type: "",
-    mobile: 0,
-    identification_card: "",
-    driving_license: ""
-  });  
+  const [loading, setLoading] = useState(false);
+  const currentUser = "57";
 
-  useEffect(() => {
-    setLoading(true)
-
-    const fetchSession = async () => {
-
-      // retrieve session ID from custom cookie
-      const sidfromCookie = Cookies.get('cook') 
-      console.log(sidfromCookie)
-
-      const res = await fetch(`http://localhost:4000/sessions/check/${sidfromCookie}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await res.json();
-
-      console.log("check useEffect server response", data.sessionDetails);
-      const currentUserInfo = data.sessionDetails.currentUser;
-      console.log("currentUser Data from Redis:", currentUserInfo);
-      console.log(typeof currentUserInfo);
-
-      setCurrentUser(currentUserInfo);
-      console.log(currentUser)
-
-      setinitialValues({
-        user_id: currentUser?.user_id,
-        username: currentUser?.username,
-        password: currentUser?.password,
-        avatar: currentUser?.avatar,
-        cloudinary_id: currentUser?.cloudinary_id,
-
-        full_name: currentUser?.full_name,
-        email: currentUser?.email,
-        user_type: currentUser?.user_type,
-        mobile: currentUser?.mobile,
-        identification_card: currentUser?.identification_card,
-        driving_license: currentUser?.driving_license
-      })
-      console.log( "initialValues ", initialValues )
-
-      if (currentUser?.username === undefined) {
-        setLoading(true)
-      }
-      else {
-        setLoading(false)
-      }
+  // on input change, call reader and set preview
+  const handleFileInputChange = (e: React.ChangeEvent<any>) => {
+    const file = e.target.files[0];
+    console.log("file format", file.name);
+    const reader: any = new FileReader();
+    console.log(reader);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+    reader.onloadend = () => {
+      console.log("file reader result output:", reader.result);
+      setPreviewSource(reader.result);
     };
-    fetchSession()
-  }, [currentUser?.username, initialValues?.user_id]);
+  };
 
-const handleSubmit = (formValue: FormValues) => {
+  const handleSubmit = (formValue: FormValues) => {
+    console.log("submit");
+    // e.preventDefault();
     if (!previewSource) return;
+
     const ImageURL = { avatar: previewSource };
     let merge = { ...formValue, ...ImageURL };
+
     console.log(merge);
-  
-  const updateUserAccount = async () => {
-    try {
-      const res = await fetch(
-        "/users/"+currentUser?.user_id,    
-        {
+    const updateUserAccount = async () => {
+      try {
+        const res = await fetch(`http://localhost:4000/users/${currentUser}`, {
           method: "PUT",
           body: JSON.stringify(merge),
           headers: {
             "Content-Type": "application/json",
           },
-        }
-      );
-      console.log(res);
-      alert("User profile updated succesfully!");
-    } catch (error) {
-      console.log(error);
-    }
+        });
+        //  const data = await res.json();
+        console.log(res);
+        alert("User profile updated succesfully!");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    updateUserAccount();
   };
-  updateUserAccount();
-};
 
   return (
-    <>
+    <div>
       <div>
-      {loading ? (
-        <CircularProgress />
-      ) : (
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          <img
+            src={previewSource}
+            alt="chose"
+            style={{ height: "280px", width: "280px" }}
+          />
+        )}
         <div>
-        <Formik
-          // initialValues={{
-          //   ...INITIAL_FORM_STATE
-          // }}
-
-          initialValues={{
-            ...initialValues
-          }}
-
-          onSubmit={
-          handleSubmit
-        }
-          validationSchema={validationSchema}
-        >
+          <input
+            name="avatar"
+            type="file"
+            id="avatar"
+            onChange={handleFileInputChange}
+            accept=".jpg,.jpeg,.gif,.png"
+          />
+        </div>
+      </div>
+      <Formik
+        initialValues={{
+          ...INITIAL_FORM_STATE,
+        }}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+      >
         {(formik) => (
           <Container>
             <form onSubmit={formik.handleSubmit} className={classes.form}>
@@ -264,13 +195,10 @@ const handleSubmit = (formValue: FormValues) => {
                 Submit
               </Button>
             </form>
-           </Container>
-          )}
-        </Formik>
-      </div>
-      )}
-      </div>
-    </>
+          </Container>
+        )}
+      </Formik>
+    </div>
   );
 };
 

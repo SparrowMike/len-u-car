@@ -81,7 +81,7 @@ const EditCar: React.FC = () => {
     console.log(merge);
     const updateCarAccount = async () => {
       try {
-        const res = await fetch("/cars/" + currentCar, {
+        const res = await fetch("http://localhost:4000/cars/" + currentCar, {
           method: "PUT",
           body: JSON.stringify(merge),
           headers: {
@@ -122,6 +122,7 @@ const EditCar: React.FC = () => {
               label="Model"
             />
             {/* <Textfield
+             
               id="type"
               name="type"
               label="Type"
@@ -143,8 +144,8 @@ const EditCar: React.FC = () => {
               name="passenger_capacity"
               label="Passenger_capacity"
             />
-            
             {/* <Textfield
+            
               id="transmission"
               name="transmission"
               label="Transmission"
@@ -185,6 +186,7 @@ const EditCar: React.FC = () => {
             />
 
             {/* <Textfield
+           
               id="engine_type"
               name="engine_type"
               label="Engine_type"

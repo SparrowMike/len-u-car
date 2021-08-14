@@ -27,10 +27,6 @@
 
 - npm i react-query
 - npm install react-infinite-scroll-component
-- npm install axios
-
-- npm i js-cookie
-- npm i --save-dev @types/js-cookie 
 
 #### React Typesript cheatsheet
 
