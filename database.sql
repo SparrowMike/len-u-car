@@ -28,7 +28,7 @@ CREATE TABLE cars (
     key_rules varchar(300),
     status varchar(60),
     pick_up_point varchar(300),
-    user_id int,
+    username varchar(20),
 )
 
 CREATE TABLE car_images (
