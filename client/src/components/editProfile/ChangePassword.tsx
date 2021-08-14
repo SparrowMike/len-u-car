@@ -3,6 +3,7 @@ import { Formik } from "formik";
 import * as yup from "../../../node_modules/yup";
 import Button from "@material-ui/core/Button";
 import Textfield from "../editProfile/FormsUI/Textfield";
+
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles({
@@ -42,7 +43,7 @@ const ChangePassword: React.FC = () => {
     console.log(merge);
     const updateUserAccount = async () => {
       try {
-        const res = await fetch("http://localhost:4000/users/" + currentUser, {
+        const res = await fetch("/users/" + currentUser, {
           method: "PUT",
           body: JSON.stringify(merge),
           headers: {
@@ -75,6 +76,7 @@ const ChangePassword: React.FC = () => {
               label="Username"
               required
             />
+
             <Textfield
               className={classes.field}
               id="password"
@@ -82,6 +84,7 @@ const ChangePassword: React.FC = () => {
               label="Password"
               required
             />
+
             <Button
               color="primary"
               variant="contained"
