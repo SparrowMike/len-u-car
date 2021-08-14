@@ -22,7 +22,6 @@
     "cloudinary-react": "^1.7.0",
 
     "formik": "^2.2.9",
-    "js-cookie": "^3.0.0",
     "material-ui": "^0.20.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -62,7 +61,6 @@
     ]
   },
   "devDependencies": {
-    "@types/js-cookie": "^2.2.7",
     "@types/material-ui": "^0.21.9",
     "@types/react-dom": "^17.0.9",
     "@types/react-slick": "^0.23.5"
