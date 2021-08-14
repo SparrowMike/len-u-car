@@ -12,7 +12,9 @@ import CarPage from "./components/carPage/CarPage";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import Browse from "./Pages/Browse";
 import Editprofile from "./Pages/Editprofile";
+
 
 const theme = createTheme({
   palette: {
@@ -64,6 +66,9 @@ function App() {
               </Route>
               <Route path="/carpage">
                 <CarPage />
+              </Route>
+              <Route path="/browse">
+                <Browse />
               </Route>
 
               <Route path="/register">
