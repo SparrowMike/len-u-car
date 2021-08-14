@@ -4,6 +4,8 @@ import * as yup from "../../../node_modules/yup";
 import Button from "@material-ui/core/Button";
 import Textfield from "../editProfile/FormsUI/Textfield";
 
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import { useState, useEffect } from "react";
 
 import Cookies from 'js-cookie'
@@ -28,12 +30,12 @@ const validationSchema = yup.object({
 });
 
 interface FormValues {
-  full_name: string;
-  email: string;
-  user_type: string;
-  mobile: number;
-  identification_card: string;
-  driving_license: string
+  full_name: string | undefined;
+  email: string | undefined;
+  user_type: string | undefined;
+  mobile: number | undefined;
+  identification_card: string | undefined;
+  driving_license: string | undefined
 }
 
 interface CurrentUser {
@@ -50,33 +52,40 @@ interface CurrentUser {
   cloudinary_id: number
 }
 
-const INITIAL_FORM_STATE: FormValues = {
-  full_name: "abc",
-  email: "abc@abc.com",
-  user_type: "provider",
-  mobile: 12345678,
-  identification_card: "S1234567A",
-  driving_license: "S1234567A"
-};
+// const INITIAL_FORM_STATE: FormValues = {
+//   full_name: "abc",
+//   email: "abc@abc.com",
+//   user_type: "provider",
+//   mobile: 12345678,
+//   identification_card: "S1234567A",
+//   driving_license: "S1234567A"
+// };
 
 const UpdateProfile: React.FC = () => {
 
   const currentUserID = "1";  // temporary to remove
   
   const [currentUser, setCurrentUser] = useState <CurrentUser> ();
-  const [loggedIn, setloggedIn] = useState <boolean> (false);  // temporary use
-
-  // retrieve session ID from custom cookie
-  const sid = Cookies.get('cook') 
-  console.log(sid)
+  const [initialValues, setinitialValues] = useState <FormValues> ({
+    full_name: "",
+    email: "",
+    user_type: "",
+    mobile: 0,
+    identification_card: "",
+    driving_license: ""
+  });  
+  const [loading, setLoading] = useState <boolean> (false);
 
   useEffect(() => {
-    const fetchSession = async () => {
-      // retrieve session ID from custom cookie
-      // const sid = Cookies.get('cook') 
-      // console.log(sid)
+    setLoading(true)
 
-      const res = await fetch(`http://localhost:4000/sessions/check/${sid}`, {
+    const fetchSession = async () => {
+
+      // retrieve session ID from custom cookie
+      const sidfromCookie = Cookies.get('cook') 
+      console.log(sidfromCookie)
+
+      const res = await fetch(`http://localhost:4000/sessions/check/${sidfromCookie}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -90,19 +99,28 @@ const UpdateProfile: React.FC = () => {
       console.log("currentUser Data from Redis:", currentUserInfo);
       console.log(typeof currentUserInfo);
 
-      if (data.sessionDetails.currentUser === undefined) {
-        console.log("User not logged in yet");
-      } else {
-        setloggedIn(true);
-        setCurrentUser(currentUserInfo);
-        console.log("UpdateProfile currentUser");
-        console.log(currentUser)
+      setCurrentUser(currentUserInfo);
+      console.log(currentUser)
+
+      setinitialValues({
+        full_name: currentUser?.full_name,
+        email: currentUser?.email,
+        user_type: currentUser?.user_type,
+        mobile: currentUser?.mobile,
+        identification_card: currentUser?.identification_card,
+        driving_license: currentUser?.driving_license
+      })
+      console.log( "initialValues ", initialValues )
+
+      if (currentUser?.username === undefined) {
+        setLoading(true)
+      }
+      else {
+        setLoading(false)
       }
     };
-
-    console.log( loggedIn );
-    fetchSession();
-  }, [loggedIn]);
+    fetchSession()
+  }, [currentUser?.username]);
 
 
 const handleSubmit = (formValue: FormValues) => {
@@ -112,7 +130,7 @@ const handleSubmit = (formValue: FormValues) => {
   const updateUserAccount = async () => {
     try {
       const res = await fetch(
-        "/users/"+currentUserID,    // to check/alter
+        "/users/"+currentUser?.user_id,    // to check/alter
         {
           method: "PUT",
           body: JSON.stringify(merge),
@@ -132,87 +150,88 @@ const handleSubmit = (formValue: FormValues) => {
 };
 
   return (
-    <div>
-      {/* <div> {currentUser!.full_name} </div> */}
-      {" "}
-      <Formik
-        initialValues={{
-          ...INITIAL_FORM_STATE
-        }}
-        // initialValues={{
-        //   ...{
-        //     full_name: {currentUser.full_name},
-        //     email: {currentUser.email},
-        //     user_type: {currentUser.user_type},
-        //     mobile: {currentUser.mobile},
-        //     identification_card: {currentUser.identification_card},
-        //     driving_license: {currentUser.driving_license}
-        //   }
-        // }}
-        onSubmit={
-        handleSubmit
-      }
-        validationSchema={validationSchema}
-      >
-        {(formik) => (
-          <form onSubmit={formik.handleSubmit}>
-            <Textfield
-            
-              id="full_name"
-              name="full_name"
-              label="Full_name"
-              required
-            />
-            <Textfield
-            
-              id="email"
-              name="email"
-              label="Email"
-              required
-            />
-            <Textfield
-             
-              id="user_type"
-              name="user_type"
-              label="User_type"
-              required
-            />
-            <Textfield
-            
-              id="mobile"
-              name="mobile"
-              label="Mobile"
-              required
-            />
+    <>
+      <div>
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <div>
+        <Formik
+          // initialValues={{
+          //   ...INITIAL_FORM_STATE
+          // }}
 
-            <Textfield
-           
-              id="identification_card"
-              name="identification_card"
-              label="Identification_card"
-              required
-            />
+          initialValues={{
+            ...initialValues
+          }}
 
-            <Textfield
-             
-              id="driving_license"
-              name="driving_license"
-              label="Driving_license"
-              required
-            />
-            <Button
-              color="primary"
-              variant="contained"
-             
-              type="submit"
-              style={{ marginTop: 10 }}
-            >
-              Submit
-            </Button>
-          </form>
-        )}
-      </Formik>
-    </div>
+          onSubmit={
+          handleSubmit
+        }
+          validationSchema={validationSchema}
+        >
+          {(formik) => (
+            <form onSubmit={formik.handleSubmit}>
+              <Textfield
+              
+                id="full_name"
+                name="full_name"
+                label="Full_name"
+                required
+              />
+              <Textfield
+              
+                id="email"
+                name="email"
+                label="Email"
+                required
+              />
+              <Textfield
+              
+                id="user_type"
+                name="user_type"
+                label="User_type"
+                required
+              />
+              <Textfield
+              
+                id="mobile"
+                name="mobile"
+                label="Mobile"
+                required
+              />
+
+              <Textfield
+            
+                id="identification_card"
+                name="identification_card"
+                label="Identification_card"
+                required
+              />
+
+              <Textfield
+              
+                id="driving_license"
+                name="driving_license"
+                label="Driving_license"
+                required
+              />
+              <Button
+                color="primary"
+                variant="contained"
+              
+                type="submit"
+                style={{ marginTop: 10 }}
+              >
+                Submit
+              </Button>
+            </form>
+          )}
+        </Formik>
+      </div>
+      )}
+      </div>
+    </>
   );
 };
 
