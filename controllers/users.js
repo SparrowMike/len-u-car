@@ -119,26 +119,27 @@ router.get("/:id", async (req, res) => {
 });
 
 //*========================UPDATE a user - PUT ROUTE=======================
-router.put("/:id", upload.single("avatar"), async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userAvatar = await pool.query(
-      "SELECT cloudinary_id, avatar FROM users WHERE user_id = $1",
-      [id]
-    );
+router.put("/:id", async (req, res) => {
+ console.log("req.body avatar - " + req.body.avatar+ "req.body avatar - ");
+ try {
+  const { id } = req.params;
+  const fileStr =  req.body.avatar;
+  const userAvatar = await pool.query(
+    "SELECT cloudinary_id, avatar FROM users WHERE user_id = $1",
+    [id]
+  );
 
-    let result;
-    let avatar;
-    let cloudinary_id;
-    const cloudID = userAvatar.rows[0].cloudinary_id;
-    const cloudAvatar = userAvatar.rows[0].avatar;
-    if (req.file) {
-      await cloudinary.uploader.destroy(cloudID);
-      result = await cloudinary.uploader.upload(req.file.path, {
-        upload_preset: "userAvatar",
-      });
-    }
-
+  let result;
+  let avatar;
+  let cloudinary_id;
+  const cloudID = userAvatar.rows[0].cloudinary_id;
+  const cloudAvatar = userAvatar.rows[0].avatar;
+  if (fileStr) {
+    await cloudinary.uploader.destroy(cloudID);
+    result = await cloudinary.uploader.upload(fileStr, {
+      upload_preset: "userAvatar",
+    });
+  }
     if (result === undefined) {
       avatar = cloudAvatar;
       cloudinary_id = cloudID;
@@ -172,6 +173,18 @@ router.put("/:id", upload.single("avatar"), async (req, res) => {
         driving_license,
         cloudinary_id,
       ]
+      // "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, user_type = $6, mobile = $7, identification_card = $8, driving_license = $9 WHERE user_id = $1",
+      // [
+      //   id,
+      //   username,
+      //   password,
+      //   full_name,
+      //   email,
+      //   user_type,
+      //   mobile,
+      //   identification_card,
+      //   driving_license
+      // ]
     );
     res.status(200).send(`User modified with ID: ${id}`);
   } catch (error) {
