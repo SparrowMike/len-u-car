@@ -1,9 +1,26 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as yup from "../../../node_modules/yup";
-import Button from "@material-ui/core/Button";
+import {
+  makeStyles,
+  Button,
+  CircularProgress,
+  Container,
+} from "@material-ui/core";
 import Textfield from "../editProfile/FormsUI/Textfield";
-import CircularProgress from "@material-ui/core/CircularProgress";
+
+const useStyles = makeStyles({
+  form: {
+    marginTop: 20,
+  },
+  field: {
+    marginTop: 10,
+  },
+  footer: {
+    marginTop: 40,
+    paddingBottom: 40,
+  },
+});
 
 const validationSchema = yup.object({
   full_name: yup.string().required("Full Name is required"),
@@ -44,6 +61,7 @@ const INITIAL_FORM_STATE: FormValues = {
 };
 
 const UpdateProfile: React.FC = () => {
+  const classes = useStyles();
   const [previewSource, setPreviewSource] = useState("");
   const [loading, setLoading] = useState(false);
   const currentUser = "57";
@@ -112,7 +130,7 @@ const UpdateProfile: React.FC = () => {
             accept=".jpg,.jpeg,.gif,.png"
           />
         </div>
-      </div>{" "}
+      </div>
       <Formik
         initialValues={{
           ...INITIAL_FORM_STATE,
@@ -121,44 +139,63 @@ const UpdateProfile: React.FC = () => {
         validationSchema={validationSchema}
       >
         {(formik) => (
-          <form onSubmit={formik.handleSubmit}>
-            <Textfield
-              id="full_name"
-              name="full_name"
-              label="Full_name"
-              required
-            />
-            <Textfield id="email" name="email" label="Email" required />
-            <Textfield
-              id="user_type"
-              name="user_type"
-              label="User_type"
-              required
-            />
-            <Textfield id="mobile" name="mobile" label="Mobile" required />
+          <Container>
+            <form onSubmit={formik.handleSubmit} className={classes.form}>
+              <Textfield
+                className={classes.field}
+                id="full_name"
+                name="full_name"
+                label="Full_name"
+                required
+              />
+              <Textfield
+                className={classes.field}
+                id="email"
+                name="email"
+                label="Email"
+                required
+              />
+              <Textfield
+                className={classes.field}
+                id="user_type"
+                name="user_type"
+                label="User_type"
+                required
+              />
+              <Textfield
+                className={classes.field}
+                id="mobile"
+                name="mobile"
+                label="Mobile"
+                required
+              />
 
-            <Textfield
-              id="identification_card"
-              name="identification_card"
-              label="Identification_card"
-              required
-            />
+              <Textfield
+                className={classes.field}
+                id="identification_card"
+                name="identification_card"
+                label="Identification_card"
+                required
+              />
 
-            <Textfield
-              id="driving_license"
-              name="driving_license"
-              label="Driving_license"
-              required
-            />
-            <Button
-              color="primary"
-              variant="contained"
-              type="submit"
-              style={{ marginTop: 10 }}
-            >
-              Submit
-            </Button>
-          </form>
+              <Textfield
+                className={classes.field}
+                id="driving_license"
+                name="driving_license"
+                label="Driving_license"
+                required
+              />
+              <Button
+                className={classes.form}
+                color="primary"
+                variant="contained"
+                type="submit"
+                style={{ marginTop: 10 }}
+              >
+                Submit
+              </Button>
+            </form>
+          </Container>
         )}
       </Formik>
     </div>

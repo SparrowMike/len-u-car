@@ -1,13 +1,28 @@
 import React from "react";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme, Container } from "@material-ui/core";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import UpdateProfile from "./UpdateProfile";
-import EditCar from './EditCar'
+import EditCar from "./EditCar";
 import ChangePassword from "./ChangePassword";
 
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+    display: "flex",
+    height: "800px",
+    borderRadius: "10px",
+  },
+  tabs: {
+    borderRight: `1px solid ${theme.palette.divider}`,
+  },
+  container: {
+    maxWidth: "750px",
+  },
+}));
 interface TabPanelProps {
   children?: React.ReactNode;
   index: any;
@@ -26,7 +41,7 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
+        <Box p={2}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -40,18 +55,6 @@ function a11yProps(index: any) {
     "aria-controls": `vertical-tabpanel-${index}`,
   };
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    display: "flex",
-    height: 800
-  },
-  tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
-  },
-}));
 
 export default function Edit() {
   const classes = useStyles();
@@ -75,15 +78,17 @@ export default function Edit() {
         <Tab label="edit car" {...a11yProps(1)} />
         <Tab label="change password" {...a11yProps(2)} />
       </Tabs>
-      <TabPanel value={value} index={0}>
-        <UpdateProfile />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <EditCar />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <ChangePassword />
-      </TabPanel>
+      <Container className={classes.container}>
+        <TabPanel value={value} index={0}>
+          <UpdateProfile />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <EditCar />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <ChangePassword />
+        </TabPanel>
+      </Container>
     </div>
   );
 }
