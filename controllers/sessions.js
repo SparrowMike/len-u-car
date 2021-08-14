@@ -5,6 +5,13 @@ const pool = require("../db");
 
 const redisClient = require("../server.js");   // correct?
 
+// var cors = require('cors')
+// router.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+// const corsConfig = {
+//   credentials: true,
+//   origin: true,
+// };
+// router.use(cors(corsConfig));
 
 // test (can remove)
 router.get("/", (req, res) => {
@@ -33,7 +40,7 @@ router.post("/", async (req, res) => {
                 req.session.currentUser = foundUsers.rows[0];
 
                 console.log("log in user", req.session.currentUser);
-                // return res.json(req.session);
+            
               }
               else {
                 console.log( bcrypt.hashSync( req.body.password , bcrypt.genSaltSync(10)) );
@@ -54,7 +61,11 @@ router.post("/", async (req, res) => {
                 console.log(req.body.username);
                 req.session.currentUserCars = foundCars.rows[0];
 
-                return res.json(req.session);
+                req.session.currentSID = req.sessionID;
+                console.log( " req.session.currentSID ")
+                console.log( req.session.currentSID  )
+                
+                return res.json( {currentSID: req.session.currentSID} );
               });
           });
 
@@ -65,20 +76,33 @@ router.post("/", async (req, res) => {
   });
 
 
+
 // check login
-router.get("/check", (req, res) => {
+router.get("/check/:sid", (req, res) => {
+  const { sid } = req.params;
+  console.log("session id")
+  console.log( sid );
+
+  console.log("session check route triggered")
+
   if (req.session === undefined) {
     res.send("not logged in");
-  } else {
-    const sid_get = `sess:${req.sessionID}`;
+  } 
+  else {
+    const sid_get = `sess:${sid}`;
+    console.log( sid_get )
+
     redisClient.get(sid_get, async (err, jobs) => {
       if (err) {
-        console.log("redis server cannot retrieve session not successful")
+        console.log("Retrieve session data from Redis server not successful")
       } else {
         if (jobs) {
+          console.log("Retrieve session data from Redis server successful")
+          console.log(JSON.parse(jobs))
+
           res.status(200).json({
-              jobs: JSON.parse(jobs),
-              message: "data retrieved from the cache"
+              sessionDetails: JSON.parse(jobs),
+              message: "Retrieved session data from Redis server."
           });
         }
       }
@@ -88,14 +112,16 @@ router.get("/check", (req, res) => {
 
 
 // logout
-router.delete("/", (req, res) => {
+router.delete("/:sid", (req, res) => {
 
-    // const sid_destroy = req.sessionID;
-    const sid_destroy = `sess:${req.sessionID}`;
+    const { sid } = req.params;
+    console.log("session id")
+    console.log( sid );
+    const sid_destroy = `sess:${sid}`;
 
     req.session.destroy(() => {
       redisClient.del(sid_destroy, function(err) {
-        console.log("redis server delete session error")
+        console.log(`redis server session deleted: ${sid_destroy}`)
       });
       res.send("user has logged out");
     });

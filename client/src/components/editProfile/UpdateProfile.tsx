@@ -4,6 +4,10 @@ import * as yup from "../../../node_modules/yup";
 import Button from "@material-ui/core/Button";
 import Textfield from "../editProfile/FormsUI/Textfield";
 
+import { useState, useEffect } from "react";
+
+import Cookies from 'js-cookie'
+
 
 const validationSchema = yup.object({
   full_name: yup.string().required("Full Name is required"),
@@ -32,6 +36,20 @@ interface FormValues {
   driving_license: string
 }
 
+interface CurrentUser {
+  user_id: number,
+  username: string,
+  password: string,
+  full_name: string,
+  email: string,
+  avatar: string,
+  user_type: string,
+  mobile: number,
+  identification_card: string,
+  driving_license: string,
+  cloudinary_id: number
+}
+
 const INITIAL_FORM_STATE: FormValues = {
   full_name: "abc",
   email: "abc@abc.com",
@@ -41,10 +59,50 @@ const INITIAL_FORM_STATE: FormValues = {
   driving_license: "S1234567A"
 };
 
-
 const UpdateProfile: React.FC = () => {
 
-  const currentUser = "1";
+  const currentUserID = "1";  // temporary to remove
+  
+  const [currentUser, setCurrentUser] = useState <CurrentUser> ();
+  const [loggedIn, setloggedIn] = useState <boolean> (false);  // temporary use
+
+  // retrieve session ID from custom cookie
+  const sid = Cookies.get('cook') 
+  console.log(sid)
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      // retrieve session ID from custom cookie
+      // const sid = Cookies.get('cook') 
+      // console.log(sid)
+
+      const res = await fetch(`http://localhost:4000/sessions/check/${sid}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      console.log("check useEffect server response", data.sessionDetails);
+      const currentUserInfo = data.sessionDetails.currentUser;
+      console.log("currentUser Data from Redis:", currentUserInfo);
+      console.log(typeof currentUserInfo);
+
+      if (data.sessionDetails.currentUser === undefined) {
+        console.log("User not logged in yet");
+      } else {
+        setloggedIn(true);
+        setCurrentUser(currentUserInfo);
+        console.log("UpdateProfile currentUser");
+        console.log(currentUser)
+      }
+    };
+
+    console.log( loggedIn );
+    fetchSession();
+  }, [loggedIn]);
 
 
 const handleSubmit = (formValue: FormValues) => {
@@ -54,7 +112,7 @@ const handleSubmit = (formValue: FormValues) => {
   const updateUserAccount = async () => {
     try {
       const res = await fetch(
-        "/users/"+currentUser,
+        "/users/"+currentUserID,    // to check/alter
         {
           method: "PUT",
           body: JSON.stringify(merge),
@@ -75,11 +133,22 @@ const handleSubmit = (formValue: FormValues) => {
 
   return (
     <div>
+      {/* <div> {currentUser!.full_name} </div> */}
       {" "}
       <Formik
         initialValues={{
           ...INITIAL_FORM_STATE
         }}
+        // initialValues={{
+        //   ...{
+        //     full_name: {currentUser.full_name},
+        //     email: {currentUser.email},
+        //     user_type: {currentUser.user_type},
+        //     mobile: {currentUser.mobile},
+        //     identification_card: {currentUser.identification_card},
+        //     driving_license: {currentUser.driving_license}
+        //   }
+        // }}
         onSubmit={
         handleSubmit
       }
