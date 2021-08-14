@@ -1,3 +1,7 @@
 body {
   background-color: whitesmoke;
 }
+
+.slick-list {
+  border-radius: 10px;
+}

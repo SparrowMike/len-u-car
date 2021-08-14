@@ -1,15 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Formik } from "formik";
 import * as yup from "../../../node_modules/yup";
-import Button from "@material-ui/core/Button";
+import {
+  makeStyles,
+  Button,
+  CircularProgress,
+  Container,
+} from "@material-ui/core";
 import Textfield from "../editProfile/FormsUI/Textfield";
-
-import CircularProgress from "@material-ui/core/CircularProgress";
-
-import { useState, useEffect } from "react";
-
 import Cookies from 'js-cookie'
 
+const useStyles = makeStyles({
+  form: {
+    marginTop: 20,
+  },
+  field: {
+    marginTop: 10,
+  },
+  footer: {
+    marginTop: 40,
+    paddingBottom: 40,
+  },
+});
 
 const validationSchema = yup.object({
   full_name: yup.string().required("Full Name is required"),
@@ -42,9 +54,8 @@ interface FormValues {
   user_id: number | undefined,
   username: string | undefined,
   password: string | undefined,
-  avatar: string | undefined,
+  avatar: string | ArrayBuffer | undefined,
   cloudinary_id: number | undefined,
-
   full_name: string | undefined,
   email: string | undefined,
   user_type: string | undefined,
@@ -77,17 +88,17 @@ interface CurrentUser {
 // };
 
 const UpdateProfile: React.FC = () => {
-
+  const classes = useStyles();
   const currentUserID = "1";  // temporary to remove
-  
+  const [previewSource, setPreviewSource] = useState("");
   const [currentUser, setCurrentUser] = useState <CurrentUser> ();
+  const [loading, setLoading] = useState <boolean> (false);
   const [initialValues, setinitialValues] = useState <FormValues> ({
     user_id: 0,
     username: "",
     password: "",
     avatar: "",
     cloudinary_id: 0,
-
     full_name: "",
     email: "",
     user_type: "",
@@ -95,7 +106,6 @@ const UpdateProfile: React.FC = () => {
     identification_card: "",
     driving_license: ""
   });  
-  const [loading, setLoading] = useState <boolean> (false);
 
   useEffect(() => {
     setLoading(true)
@@ -149,11 +159,12 @@ const UpdateProfile: React.FC = () => {
     fetchSession()
   }, [currentUser?.username, initialValues?.user_id]);
 
-
 const handleSubmit = (formValue: FormValues) => {
- // const userImageURL = { image: displayImageUser };
-  let merge = { ...formValue };
-  console.log(merge);
+    if (!previewSource) return;
+    const ImageURL = { avatar: previewSource };
+    let merge = { ...formValue, ...ImageURL };
+    console.log(merge);
+  
   const updateUserAccount = async () => {
     try {
       const res = await fetch(
@@ -196,31 +207,32 @@ const handleSubmit = (formValue: FormValues) => {
         }
           validationSchema={validationSchema}
         >
-          {(formik) => (
-            <form onSubmit={formik.handleSubmit}>
+        {(formik) => (
+          <Container>
+            <form onSubmit={formik.handleSubmit} className={classes.form}>
               <Textfield
-              
+                className={classes.field}
                 id="full_name"
                 name="full_name"
                 label="Full_name"
                 required
               />
               <Textfield
-              
+                className={classes.field}
                 id="email"
                 name="email"
                 label="Email"
                 required
               />
               <Textfield
-              
+                className={classes.field}
                 id="user_type"
                 name="user_type"
                 label="User_type"
                 required
               />
               <Textfield
-              
+                className={classes.field}
                 id="mobile"
                 name="mobile"
                 label="Mobile"
@@ -228,7 +240,7 @@ const handleSubmit = (formValue: FormValues) => {
               />
 
               <Textfield
-            
+                className={classes.field}
                 id="identification_card"
                 name="identification_card"
                 label="Identification_card"
@@ -236,22 +248,23 @@ const handleSubmit = (formValue: FormValues) => {
               />
 
               <Textfield
-              
+                className={classes.field}
                 id="driving_license"
                 name="driving_license"
                 label="Driving_license"
                 required
               />
               <Button
+                className={classes.form}
                 color="primary"
                 variant="contained"
-              
                 type="submit"
                 style={{ marginTop: 10 }}
               >
                 Submit
               </Button>
             </form>
+           </Container>
           )}
         </Formik>
       </div>

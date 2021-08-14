@@ -11,7 +11,7 @@ CREATE TABLE users (
     mobile int,
     identification_card varchar(60),
     driving_license varchar(60),
-    cloudinary_id varchar(30),  
+    cloudinary_id varchar(75)
 );
 
 CREATE TABLE cars (
@@ -33,7 +33,7 @@ CREATE TABLE cars (
 
 CREATE TABLE car_images (
     images_id SERIAL,
-    cloudinary_id varchar(150),
+    cloudinary_id varchar(75),
     secure_url varchar(150),
     cars_id int
 )

@@ -1,6 +1,14 @@
 import React from "react";
 
-import { makeStyles, Grid, Paper, Container, Divider } from "@material-ui/core";
+import {
+  makeStyles,
+  Grid,
+  Paper,
+  Container,
+  Divider,
+  Avatar,
+  Typography,
+} from "@material-ui/core";
 
 import Slider from "react-slick";
 
@@ -15,9 +23,15 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     height: "450px",
-    width: "100%",
   },
-
+  overlay: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    backgroundColor: "rgba(0,0,0,.06)",
+  },
   main: {
     padding: theme.spacing(2),
     textAlign: "center",
@@ -36,6 +50,10 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     margin: theme.spacing(2, 0),
+  },
+  avatar: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
   },
 }));
 
@@ -59,20 +77,34 @@ export default function CarPage() {
       <Slider {...slickSettings}>
         {cars.map((car, index) => {
           return (
-            <div key={index}>
+            <Paper key={index}>
               <div
                 className={classes.mainFeaturedPost}
                 style={{ backgroundImage: `url(${car.image})` }}
-              />
-            </div>
+              >
+                <div className={classes.overlay} />
+              </div>
+            </Paper>
           );
         })}
       </Slider>
+
       <Container className={classes.container}>
         <Grid container spacing={3}>
           <Grid item xs={8}>
             <Paper className={classes.main}>
-              Main
+              <Grid container spacing={1}>
+                <Grid item xs={4}>
+                  <Avatar
+                    alt="Remy Sharp"
+                    src="/static/images/avatar/1.jpg"
+                    className={classes.avatar}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography>Johnny Bravo</Typography>
+                </Grid>
+              </Grid>
               <Divider className={classes.divider} />
             </Paper>
           </Grid>
