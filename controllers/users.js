@@ -3,7 +3,6 @@ const router = express.Router();
 const pool = require("../db");
 const upload = require("../utils/multer");
 const { cloudinary } = require("../utils/cloudinary");
-const bcrypt = require("bcrypt");
 
 // Routes
 
@@ -27,7 +26,7 @@ router.post("/", upload.single("avatar"), async (req, res) => {
     const cloudinary_id = result.public_id;
     const {
       username,
-      password_unhashed,
+      password,
       full_name,
       email,
       user_type,
@@ -35,13 +34,6 @@ router.post("/", upload.single("avatar"), async (req, res) => {
       identification_card,
       driving_license,
     } = req.body;
-
-    // hash plaintext password
-    console.log( username )
-    console.log( password_unhashed )
-    password = bcrypt.hashSync(password_unhashed, bcrypt.genSaltSync(10));
-    console.log( password )
-
     const newUser = await pool.query(
       "INSERT INTO users (avatar, cloudinary_id, username, password, full_name, email, user_type, mobile, identification_card, driving_license) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
       [
@@ -167,31 +159,19 @@ router.put("/:id", async (req, res) => {
       driving_license,
     } = req.body;
     const userX = await pool.query(
-      // "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, avatar = $6, user_type = $7, mobile = $8, identification_card = $9, driving_license = $10, cloudinary_id = $11 WHERE user_id = $1",
-      // [
-      //   id,
-      //   username,
-      //   password,
-      //   full_name,
-      //   email,
-      //   avatar,
-      //   user_type,
-      //   mobile,
-      //   identification_card,
-      //   driving_license,
-      //   cloudinary_id,
-      // ]
-      "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, user_type = $6, mobile = $7, identification_card = $8, driving_license = $9 WHERE user_id = $1",
+      "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, avatar = $6, user_type = $7, mobile = $8, identification_card = $9, driving_license = $10, cloudinary_id = $11 WHERE user_id = $1",
       [
         id,
         username,
         password,
         full_name,
         email,
+        avatar,
         user_type,
         mobile,
         identification_card,
-        driving_license
+        driving_license,
+        cloudinary_id,
       ]
       // "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, user_type = $6, mobile = $7, identification_card = $8, driving_license = $9 WHERE user_id = $1",
       // [
