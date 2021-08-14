@@ -23,10 +23,7 @@ router.get("/", (req, res) => {
 router.post("/", async (req, res) => {
     try {
         console.log( " session login route triggered")
-        // console.log("req body: ", req.body);
-        // req.session.sid = `sess:${req.sessionID}`;
-        // console.log( req.session.sid );
-    
+
         const existingUsers = pool
           .query("SELECT * FROM users WHERE username = $1", [req.body.username])
           .then((foundUsers) => {
@@ -36,11 +33,12 @@ router.post("/", async (req, res) => {
               console.log({ msg: "Username exist" });
               
               if (bcrypt.compareSync(req.body.password, foundUsers.rows[0].password)) {
-                console.log( foundUsers.rows[0].username );
-                req.session.currentUser = foundUsers.rows[0];
 
+                console.log( foundUsers.rows[0].username );
+
+                // store user's profile details in session
+                req.session.currentUser = foundUsers.rows[0];
                 console.log("log in user", req.session.currentUser);
-            
               }
               else {
                 console.log( bcrypt.hashSync( req.body.password , bcrypt.genSaltSync(10)) );
@@ -61,11 +59,16 @@ router.post("/", async (req, res) => {
                 console.log(req.body.username);
                 req.session.currentUserCars = foundCars.rows[0];
 
-                req.session.currentSID = req.sessionID;
-                console.log( " req.session.currentSID ")
-                console.log( req.session.currentSID  )
-                
-                return res.json( {currentSID: req.session.currentSID} );
+                console.log( "req.session.currentUserCars: ", foundCars.rows[0] )
+
+                // if car information is retrieved from database, update car details into session
+                if ( req.session.currentUser !== undefined ){
+                  // store car (user's) details in session
+                  req.session.currentSID = req.sessionID;
+                  console.log( "req.session.currentSID: ", req.session.currentSID)
+                  
+                  return res.json( {currentSID: req.session.currentSID} );
+                }
               });
           });
 
