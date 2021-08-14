@@ -3,7 +3,10 @@ import axios from "axios";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import Button from "../editProfile/FormsUI/Button";
+
 import Textfield from "../editProfile/FormsUI/Textfield";
+import { useHistory } from "react-router-dom";
+
 
 const useStyles = makeStyles({
   field: {
@@ -20,7 +23,7 @@ const useStyles = makeStyles({
 
 interface FormValues {
   username: string;
-  password: string;
+  password_unhashed: string;
   passwordConfirm: string;
   email: string;
   full_name: string;
@@ -28,13 +31,14 @@ interface FormValues {
 
 const initialValues: FormValues = {
   username: "",
-  password: "",
+  password_unhashed: "",
   passwordConfirm: "",
   email: "",
   full_name: "",
 };
 
 const validationSchema = Yup.object().shape({
+
   username: Yup.string()
     .min(5, "Username is too short")
     .required("Required")
@@ -55,11 +59,14 @@ const validationSchema = Yup.object().shape({
         }
       }
     ),
-  password: Yup.string().required("Required"),
+
+  password_unhashed: Yup.string().required("Required"),
+
   passwordConfirm: Yup.string().oneOf(
-    [Yup.ref("password")],
+    [Yup.ref("password_unhashed")],
     "Password must be the same!"
   ),
+
   email: Yup.string()
     .lowercase()
     .email("Invalid email.")
@@ -81,22 +88,31 @@ const validationSchema = Yup.object().shape({
         }
       }
     ),
+
   full_name: Yup.string().required("Required"),
 });
 
 const CreateAccount: React.FC = () => {
   const classes = useStyles();
-  const handleSubmit = async (values: FormValues) => {
-    try {
-      const res = await fetch("http://localhost:4000/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      console.log(res);
-    } catch (error) {
-      console.error(error.message);
+  const history = useHistory();
+
+  const handleSubmit = (values: FormValues)=> { 
+    const createNewAccount = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        });
+        console.log(res);
+      
+      } catch (error) {
+        console.error(error.message);
+      }
     }
+    createNewAccount();
+    history.replace("http://localhost:3000/")
+
   };
   return (
     <Container>
@@ -107,6 +123,7 @@ const CreateAccount: React.FC = () => {
         initialValues={initialValues}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
+        validateOnChange={false}
       >
         {({ dirty, isValid }) => {
           return (
@@ -119,7 +136,7 @@ const CreateAccount: React.FC = () => {
                 required
               />
               <Textfield
-                name="password"
+                name="password_unhashed"
                 label="Password"
                 type="password"
                 className={classes.field}

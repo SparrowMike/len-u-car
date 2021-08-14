@@ -16,12 +16,14 @@ const PORT = process.env.PORT || 4000;
 
 const RedisStore = connectRedis(session);
 const redisClient = redis.createClient({
+  // for redis local version
   // port: 6379,
-  // host: 'localhost'
+  // host: 'localhost'  
+  
   // for redis cloud version
   host: "ec2-52-54-10-192.compute-1.amazonaws.com",
   port: 16120,
-  password: "p9a8f345c693fbbb525145c11d037fdfe2c4fc08f25452579adc4b2947d2435c8",
+  password: process.env.REDISPW,
   tls: {
     rejectUnauthorized: false,
   },

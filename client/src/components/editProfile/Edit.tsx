@@ -1,4 +1,5 @@
 import React from "react";
+
 import { makeStyles, Theme, Container } from "@material-ui/core";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: "750px",
   },
 }));
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: any;
@@ -78,6 +80,7 @@ export default function Edit() {
         <Tab label="edit car" {...a11yProps(1)} />
         <Tab label="change password" {...a11yProps(2)} />
       </Tabs>
+
       <Container className={classes.container}>
         <TabPanel value={value} index={0}>
           <UpdateProfile />
