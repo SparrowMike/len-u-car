@@ -143,8 +143,8 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <Button>
-              <MenuIcon onClick={toggleDrawer("top", true)} />
+            <Button onClick={toggleDrawer("top", true)}>
+              <MenuIcon />
             </Button>
             <SwipeableDrawer
               anchor="top"
