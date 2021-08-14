@@ -29,12 +29,27 @@ const validationSchema = yup.object({
   driving_license: yup.string().required("Driving license No. is required"),
 });
 
+// interface FormValues {
+//   full_name: string | undefined;
+//   email: string | undefined;
+//   user_type: string | undefined;
+//   mobile: number | undefined;
+//   identification_card: string | undefined;
+//   driving_license: string | undefined
+// }
+
 interface FormValues {
-  full_name: string | undefined;
-  email: string | undefined;
-  user_type: string | undefined;
-  mobile: number | undefined;
-  identification_card: string | undefined;
+  user_id: number | undefined,
+  username: string | undefined,
+  password: string | undefined,
+  avatar: string | undefined,
+  cloudinary_id: number | undefined,
+
+  full_name: string | undefined,
+  email: string | undefined,
+  user_type: string | undefined,
+  mobile: number | undefined,
+  identification_card: string | undefined,
   driving_license: string | undefined
 }
 
@@ -67,6 +82,12 @@ const UpdateProfile: React.FC = () => {
   
   const [currentUser, setCurrentUser] = useState <CurrentUser> ();
   const [initialValues, setinitialValues] = useState <FormValues> ({
+    user_id: 0,
+    username: "",
+    password: "",
+    avatar: "",
+    cloudinary_id: 0,
+
     full_name: "",
     email: "",
     user_type: "",
@@ -103,6 +124,12 @@ const UpdateProfile: React.FC = () => {
       console.log(currentUser)
 
       setinitialValues({
+        user_id: currentUser?.user_id,
+        username: currentUser?.username,
+        password: currentUser?.password,
+        avatar: currentUser?.avatar,
+        cloudinary_id: currentUser?.cloudinary_id,
+
         full_name: currentUser?.full_name,
         email: currentUser?.email,
         user_type: currentUser?.user_type,
@@ -120,7 +147,7 @@ const UpdateProfile: React.FC = () => {
       }
     };
     fetchSession()
-  }, [currentUser?.username]);
+  }, [currentUser?.username, initialValues?.user_id]);
 
 
 const handleSubmit = (formValue: FormValues) => {
@@ -130,7 +157,7 @@ const handleSubmit = (formValue: FormValues) => {
   const updateUserAccount = async () => {
     try {
       const res = await fetch(
-        "/users/"+currentUser?.user_id,    // to check/alter
+        "/users/"+currentUser?.user_id,    
         {
           method: "PUT",
           body: JSON.stringify(merge),
@@ -139,7 +166,6 @@ const handleSubmit = (formValue: FormValues) => {
           },
         }
       );
-    //  const data = await res.json();
       console.log(res);
       alert("User profile updated succesfully!");
     } catch (error) {
