@@ -3,7 +3,7 @@ import { Formik } from "formik";
 import * as yup from "../../../node_modules/yup";
 import Button from "@material-ui/core/Button";
 import Textfield from "../editProfile/FormsUI/Textfield";
-
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 
 
@@ -31,7 +31,8 @@ interface FormValues {
   user_type: string;
   mobile: number;
   identification_card: string;
-  driving_license: string
+  driving_license: string;
+  avatar: string | ArrayBuffer;
 }
 
 const INITIAL_FORM_STATE: FormValues = {
@@ -40,23 +41,40 @@ const INITIAL_FORM_STATE: FormValues = {
   user_type: "provider", // maybe can take out
   mobile: 12345678,
   identification_card: "S1234567A",
-  driving_license: "S1234567A"
+  driving_license: "S1234567A",
+  avatar: ""
 };
 
 
 const UpdateProfile: React.FC = () => {
+const[previewSource, setPreviewSource] = React.useState <string | ArrayBuffer | null>("");
+const [loading, setLoading] = React.useState(false);
+const currentUser = "57";
 
-  const currentUser = "1";
-
+// on input change, call reader and set preview
+const handleFileInputChange = (e: React.ChangeEvent<any>) => {
+const file = e.target.files[0];
+console.log("file format", file.name);
+const reader = new FileReader();
+if(file){reader.readAsDataURL(file);};
+reader.onloadend = () => {
+console.log("file reader result output:",reader.result);
+  setPreviewSource(reader.result);
+}};
 
 const handleSubmit = (formValue: FormValues) => {
- // const userImageURL = { image: displayImageUser };
-  let merge = { ...formValue };
+  console.log('submit');
+ // e.preventDefault();
+  if(!previewSource) return;
+
+  const ImageURL = { avatar: previewSource };
+  let merge = { ...formValue, ...ImageURL };
+
   console.log(merge);
   const updateUserAccount = async () => {
     try {
       const res = await fetch(
-        "http://localhost:4000/users/"+currentUser,
+        `http://localhost:4000/users/${currentUser}`,
         {
           method: "PUT",
           body: JSON.stringify(merge),
@@ -75,9 +93,28 @@ const handleSubmit = (formValue: FormValues) => {
   updateUserAccount();
 };
 
+
   return (
     <div>
-
+            <div>
+              {loading ? (
+                <CircularProgress />
+              ) : (
+                <img
+                src={previewSource} alt='chose'
+                  style={{ height: "280px", width: "280px" }}
+                />
+              )}
+              <div>
+                <input
+                  name="avatar"
+                  type="file"
+                  id="avatar"
+                  onChange={handleFileInputChange}
+                  accept=".jpg,.jpeg,.gif,.png"
+                />
+              </div>
+            </div>
       {" "}
       <Formik
         initialValues={{
@@ -90,6 +127,8 @@ const handleSubmit = (formValue: FormValues) => {
       >
         {(formik) => (
           <form onSubmit={formik.handleSubmit}>
+
+
             <Textfield
             
               id="full_name"
@@ -143,6 +182,7 @@ const handleSubmit = (formValue: FormValues) => {
             >
               Submit
             </Button>
+            
           </form>
         )}
       </Formik>

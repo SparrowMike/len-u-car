@@ -18,7 +18,12 @@ router.get("/", async (req, res) => {
 router.post("/", upload.single("secure_url"), async (req, res) => {
   try {
     const result = await cloudinary.uploader.upload(req.file.path, {
-      upload_preset: "carImages",
+    
+    // common preset
+    //  upload_preset: "carImages",
+
+    // another preset
+    upload_preset: "dev_setups",
     });
     const secure_url = result.secure_url;
     const cloudinary_id = result.public_id;
