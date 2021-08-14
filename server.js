@@ -16,17 +16,15 @@ const PORT = process.env.PORT || 4000;
 
 const RedisStore = connectRedis(session);
 const redisClient = redis.createClient({
-  // for redis local version
-  port: 6379,
-  host: "localhost",
-
+  // port: 6379,
+  // host: 'localhost'
   // for redis cloud version
-  // host: "ec2-52-54-10-192.compute-1.amazonaws.com",
-  // port: 16120,
-  // password: "p9a8f345c693fbbb525145c11d037fdfe2c4fc08f25452579adc4b2947d2435c8",
-  // tls: {
-  //   rejectUnauthorized: false,
-  // },
+  host: "ec2-52-54-10-192.compute-1.amazonaws.com",
+  port: 16120,
+  password: "p9a8f345c693fbbb525145c11d037fdfe2c4fc08f25452579adc4b2947d2435c8",
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 redisClient.on("error", (err) => {
   console.log("redisClient Error " + err);
@@ -49,6 +47,12 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 // app.get("/*", (req, res) => {
 // res.sendFile(path.join(__dirname, "./client/build", "index.html"));
 // });
+
+//* ===========HEROKU DEPLOYMENT MIDDLEWARE==================
+app.use(express.static(path.join(__dirname, "./client/build")));
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./client/build", "index.html"));
+});
 
 app.use(
   session({

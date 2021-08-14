@@ -140,7 +140,6 @@ router.put("/:id", async (req, res) => {
       upload_preset: "userAvatar",
     });
   }
-
     if (result === undefined) {
       avatar = cloudAvatar;
       cloudinary_id = cloudID;
