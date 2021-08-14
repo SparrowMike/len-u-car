@@ -28,6 +28,8 @@
 - npm i react-query
 - npm install react-infinite-scroll-component
 
+- npm install --save material-ui-dropzone
+
 #### React Typesript cheatsheet
 
 - https://github.com/typescript-cheatsheets/react

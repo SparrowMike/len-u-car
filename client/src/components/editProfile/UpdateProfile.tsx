@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as yup from "../../../node_modules/yup";
-import {
-  makeStyles,
-  Button,
-  CircularProgress,
-  Container,
-} from "@material-ui/core";
+import { makeStyles, Button, Container } from "@material-ui/core";
 import Textfield from "../editProfile/FormsUI/Textfield";
+import { DropzoneArea } from "material-ui-dropzone";
 
 const useStyles = makeStyles({
   form: {
@@ -62,30 +58,19 @@ const INITIAL_FORM_STATE: FormValues = {
 
 const UpdateProfile: React.FC = () => {
   const classes = useStyles();
-  const [previewSource, setPreviewSource] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [previewSource, setPreviewSource] = useState();
+  const [image, setImage] = useState<any>();
   const currentUser = "57";
 
-  // on input change, call reader and set preview
-  const handleFileInputChange = (e: React.ChangeEvent<any>) => {
-    const file = e.target.files[0];
-    console.log("file format", file.name);
+  const handleSubmit = (formValue: FormValues) => {
     const reader: any = new FileReader();
-    console.log(reader);
-    if (file) {
-      reader.readAsDataURL(file);
+    if (image) {
+      reader.readAsDataURL(image);
     }
     reader.onloadend = () => {
-      console.log("file reader result output:", reader.result);
       setPreviewSource(reader.result);
     };
-  };
-
-  const handleSubmit = (formValue: FormValues) => {
-    console.log("submit");
-    // e.preventDefault();
     if (!previewSource) return;
-
     const ImageURL = { avatar: previewSource };
     let merge = { ...formValue, ...ImageURL };
 
@@ -111,26 +96,6 @@ const UpdateProfile: React.FC = () => {
 
   return (
     <div>
-      <div>
-        {loading ? (
-          <CircularProgress />
-        ) : (
-          <img
-            src={previewSource}
-            alt="chose"
-            style={{ height: "280px", width: "280px" }}
-          />
-        )}
-        <div>
-          <input
-            name="avatar"
-            type="file"
-            id="avatar"
-            onChange={handleFileInputChange}
-            accept=".jpg,.jpeg,.gif,.png"
-          />
-        </div>
-      </div>
       <Formik
         initialValues={{
           ...INITIAL_FORM_STATE,
@@ -141,6 +106,14 @@ const UpdateProfile: React.FC = () => {
         {(formik) => (
           <Container>
             <form onSubmit={formik.handleSubmit} className={classes.form}>
+              <DropzoneArea
+                acceptedFiles={["image/*"]}
+                dropzoneText={"Drag and drop an avatar here or click"}
+                filesLimit={1}
+                onChange={(files) => {
+                  setImage(files[0]);
+                }}
+              />
               <Textfield
                 className={classes.field}
                 id="full_name"
@@ -169,7 +142,6 @@ const UpdateProfile: React.FC = () => {
                 label="Mobile"
                 required
               />
-
               <Textfield
                 className={classes.field}
                 id="identification_card"
@@ -177,7 +149,6 @@ const UpdateProfile: React.FC = () => {
                 label="Identification_card"
                 required
               />
-
               <Textfield
                 className={classes.field}
                 id="driving_license"
