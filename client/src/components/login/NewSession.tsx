@@ -5,6 +5,8 @@ import { Button } from "@material-ui/core";
 import { Container } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 
+import Cookies from "js-cookie";
+
 const useStyles = makeStyles({
   form: {
     marginTop: 20,
@@ -36,10 +38,14 @@ export default function NewSession() {
         body: JSON.stringify(signIn),
         headers: {
           "Content-Type": "application/json",
+          credentials: "include",
         },
       });
       const data = await res.json();
       console.log(data);
+
+      // set session ID into custom cookie
+      Cookies.set("cook", data.currentSID);
     };
     createNewLogin();
   };

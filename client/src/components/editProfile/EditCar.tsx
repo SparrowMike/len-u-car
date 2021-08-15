@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import Textfield from "../editProfile/FormsUI/Textfield";
 import Radio from "@material-ui/core/Radio";
 import { makeStyles, CircularProgress } from "@material-ui/core";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 
 const useStyles = makeStyles({
   form: {
@@ -43,64 +43,64 @@ const validationSchema = yup.object({
 });
 
 interface FormValues {
-  cars_id: number | undefined,
-  brand: string | undefined,
-  model: string | undefined,
-  type: string | undefined,
-  passenger_capacity: number | undefined,
-  transmission: string | undefined,
-  price_per_day: number | undefined,
-  mileage: string | undefined,
-  engine_type: string | undefined,
-  key_features: string | undefined,
-  key_rules: string | undefined,
-  status: string | undefined,
-  pick_up_point: string | undefined,
-  username: string | undefined
+  cars_id: number | undefined;
+  brand: string | undefined;
+  model: string | undefined;
+  type: string | undefined;
+  passenger_capacity: number | undefined;
+  transmission: string | undefined;
+  price_per_day: number | undefined;
+  mileage: string | undefined;
+  engine_type: string | undefined;
+  key_features: string | undefined;
+  key_rules: string | undefined;
+  status: string | undefined;
+  pick_up_point: string | undefined;
+  username: string | undefined;
 }
 
 interface currentUserCar {
-  cars_id: number,
-  brand: string,
-  model: string,
-  type: string,
-  passenger_capacity: number,
-  transmission: string,
-  price_per_day: number,
-  mileage: string,
-  engine_type: string,
-  key_features: string,
-  key_rules: string,
-  status: string,
-  pick_up_point: string,
-  username: string
+  cars_id: number;
+  brand: string;
+  model: string;
+  type: string;
+  passenger_capacity: number;
+  transmission: string;
+  price_per_day: number;
+  mileage: string;
+  engine_type: string;
+  key_features: string;
+  key_rules: string;
+  status: string;
+  pick_up_point: string;
+  username: string;
 }
 
-const INITIAL_FORM_STATE: FormValues = {
-  brand: "Aston Martin",
-  model: "DB11",
-  type: "sport",
-  passenger_capacity: 4,
-  transmission: "automatic",
-  price_per_day: 9999,
-  mileage: "10000",
-  engine_type: "petrol",
-  key_features: "GPS",
-  key_rules: "No driving to malaysia",
-  status: "available",
-  pick_up_point: "AMK mrt",
+// const INITIAL_FORM_STATE: FormValues = {
+//   brand: "Aston Martin",
+//   model: "DB11",
+//   type: "sport",
+//   passenger_capacity: 4,
+//   transmission: "automatic",
+//   price_per_day: 9999,
+//   mileage: "10000",
+//   engine_type: "petrol",
+//   key_features: "GPS",
+//   key_rules: "No driving to malaysia",
+//   status: "available",
+//   pick_up_point: "AMK mrt",
 
-  cars_id: 9999,
-  username: "testusername"
-};
+//   cars_id: 9999,
+//   username: "testusername"
+// };
 
 const EditCar: React.FC = () => {
   const classes = useStyles();
-  const currentCar = "3";      // temporary, to remove
+  // const currentCar = "3"; // temporary, to remove
 
-  const [currentUserCar, setCurrentUserCar] = useState <currentUserCar> ();
-  const [loading, setLoading] = useState <boolean> (false);
-  const [initialValues, setinitialValues] = useState <FormValues> ({
+  const [currentUserCar, setCurrentUserCar] = useState<currentUserCar>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [initialValues, setinitialValues] = useState<FormValues>({
     cars_id: 999999,
     brand: "",
     model: "",
@@ -114,25 +114,26 @@ const EditCar: React.FC = () => {
     key_rules: "",
     status: "",
     pick_up_point: "",
-    username: ""
-  });  
-
+    username: "",
+  });
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
 
     const fetchSession = async () => {
-
       // retrieve session ID from custom cookie
-      const sidfromCookie = Cookies.get('cook') 
-      console.log(sidfromCookie)
+      const sidfromCookie = Cookies.get("cook");
+      console.log(sidfromCookie);
 
-      const res = await fetch(`http://localhost:4000/sessions/check/${sidfromCookie}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        `http://localhost:4000/sessions/check/${sidfromCookie}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await res.json();
 
@@ -141,8 +142,8 @@ const EditCar: React.FC = () => {
       console.log("currentUser Data from Redis:", currentUserCarsInfo);
       console.log(typeof currentUserCarsInfo);
 
-      setCurrentUserCar(currentUserCarsInfo[0]);   // first element in array
-      console.log(currentUserCar)
+      setCurrentUserCar(currentUserCarsInfo[0]); // first element in array
+      console.log(currentUserCar);
 
       setinitialValues({
         cars_id: currentUserCar?.cars_id,
@@ -159,17 +160,16 @@ const EditCar: React.FC = () => {
         status: currentUserCar?.status,
         pick_up_point: currentUserCar?.pick_up_point,
         username: currentUserCar?.username,
-      })
-      console.log( "initialValues ", initialValues )
+      });
+      console.log("initialValues ", initialValues);
 
       if (currentUserCar?.username === undefined) {
-        setLoading(true)
-      }
-      else {
-        setLoading(false)
+        setLoading(true);
+      } else {
+        setLoading(false);
       }
     };
-    fetchSession()
+    fetchSession();
   }, [currentUserCar?.username, initialValues?.cars_id]);
 
   const handleSubmit = (formValue: any) => {
@@ -202,14 +202,12 @@ const EditCar: React.FC = () => {
       ) : (
         <div>
           <Formik
-
             // initialValues={{
             //   ...INITIAL_FORM_STATE,
             // }}
             initialValues={{
-              ...initialValues
+              ...initialValues,
             }}
-
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
           >
@@ -249,7 +247,7 @@ const EditCar: React.FC = () => {
                   name="passenger_capacity"
                   label="Passenger_capacity"
                 />
-                
+
                 {/* <Textfield
                   id="transmission"
                   name="transmission"
