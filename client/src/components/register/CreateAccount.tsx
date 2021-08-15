@@ -141,7 +141,9 @@ const CreateAccount: React.FC = () => {
                 required
               />
               <div className={classes.submitBtn}>
-                <Button>Submit</Button>
+                <Button>
+                  <Typography style={{ fontWeight: 700 }}>Register</Typography>
+                </Button>
               </div>
             </Form>
           );

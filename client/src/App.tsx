@@ -16,10 +16,10 @@ import Register from "./Pages/Register";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#168aad",
+      main: "#FF385C",
     },
     secondary: {
-      main: "#d9ed92",
+      main: "#FD5B61",
     },
   },
   typography: {
