@@ -55,7 +55,7 @@ interface FormValues {
   username: string | undefined,
   password: string | undefined,
   avatar: string | ArrayBuffer | undefined,
-  cloudinary_id: number | undefined,
+  cloudinary_id: string | undefined,
   full_name: string | undefined,
   email: string | undefined,
   user_type: string | undefined,
@@ -75,7 +75,7 @@ interface CurrentUser {
   mobile: number,
   identification_card: string,
   driving_license: string,
-  cloudinary_id: number
+  cloudinary_id: string
 }
 
 // const INITIAL_FORM_STATE: FormValues = {
@@ -98,7 +98,7 @@ const UpdateProfile: React.FC = () => {
     username: "",
     password: "",
     avatar: "",
-    cloudinary_id: 0,
+    cloudinary_id: "",
     full_name: "",
     email: "",
     user_type: "",
