@@ -14,10 +14,6 @@ const useStyles = makeStyles({
   field: {
     marginTop: 10,
   },
-  footer: {
-    marginTop: 40,
-    paddingBottom: 40,
-  },
 });
 
 const validationSchema = yup.object({

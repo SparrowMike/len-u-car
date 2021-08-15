@@ -47,10 +47,8 @@ const validationSchema = Yup.object().shape({
         });
 
         if (msg.data.msg === "Username available.") {
-          console.log(msg.data.msg);
           return Promise.resolve(true);
         } else {
-          console.log("not ok");
           return Promise.resolve(false);
         }
       }
@@ -73,10 +71,8 @@ const validationSchema = Yup.object().shape({
         });
 
         if (msg.data.msg === "Email address is available.") {
-          console.log(msg.data.msg);
           return Promise.resolve(true);
         } else {
-          console.log("not ok");
           return Promise.resolve(false);
         }
       }

@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
 });
 
 //*========================CREATE NEW USERS - POST ROUTE========================
-router.post("/", upload.single("avatar"), async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { username, password_unhashed, full_name, email } = req.body;
 
@@ -47,15 +47,11 @@ router.post("/checkusers", async (req, res) => {
       .query("SELECT * FROM users WHERE username = $1", [req.body.username])
       .then((user) => {
         if (user.rowCount) {
-          console.log({ msg: "Username already been taken" });
           return res.json({ msg: "Username already been taken" });
         }
-
-        console.log({ msg: "Username available." });
         return res.json({ msg: "Username available." });
       });
   } catch (error) {
-    console.error(error);
     res.status(400).json("Error: " + error);
   }
 });
@@ -63,21 +59,16 @@ router.post("/checkusers", async (req, res) => {
 //*========================check email exists=======================
 
 router.post("/checkemail", async (req, res) => {
-  // console.log( " check_EMAIL route triggered")
-
   try {
     const existingUsers = await pool
       .query("SELECT * FROM users WHERE email = $1", [req.body.email])
       .then((email) => {
         if (email.rowCount) {
-          console.log({ msg: "Email address is in use." });
           return res.json({ msg: "Email address is in use." });
         }
-        console.log({ msg: "Email address is available." });
         return res.json({ msg: "Email address is available." });
       });
   } catch (error) {
-    console.error(error);
     res.status(400).json("Error: " + error);
   }
 });
@@ -129,7 +120,7 @@ router.put("/:id", async (req, res) => {
 
     const {
       username,
-      password,
+      password_unhashed,
       full_name,
       email,
       user_type,
@@ -137,6 +128,9 @@ router.put("/:id", async (req, res) => {
       identification_card,
       driving_license,
     } = req.body;
+
+    password = bcrypt.hashSync(password_unhashed, bcrypt.genSaltSync(10));
+
     const userX = await pool.query(
       "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, avatar = $6, user_type = $7, mobile = $8, identification_card = $9, driving_license = $10, cloudinary_id = $11 WHERE user_id = $1",
       [
@@ -152,18 +146,6 @@ router.put("/:id", async (req, res) => {
         driving_license,
         cloudinary_id,
       ]
-      // "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, user_type = $6, mobile = $7, identification_card = $8, driving_license = $9 WHERE user_id = $1",
-      // [
-      //   id,
-      //   username,
-      //   password,
-      //   full_name,
-      //   email,
-      //   user_type,
-      //   mobile,
-      //   identification_card,
-      //   driving_license
-      // ]
     );
     res.status(200).send(`User modified with ID: ${id}`);
   } catch (error) {
