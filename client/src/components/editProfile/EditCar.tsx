@@ -153,7 +153,6 @@ const EditCar: React.FC = () => {
   }, [currentUserCar?.username, initialValues?.cars_id]);
 
   const handleSubmit = (formValue: any) => {
-    // const userImageURL = { image: displayImageUser };
     let merge = { ...formValue };
     console.log(merge);
     const updateCarAccount = async () => {

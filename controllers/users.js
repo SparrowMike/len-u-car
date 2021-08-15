@@ -43,13 +43,9 @@ router.post("/", upload.single("avatar"), async (req, res) => {
 
 router.post("/checkusers", async (req, res) => {
   try {
-    // console.log( " checkusers route triggered")
-
     const existingUsers = await pool
       .query("SELECT * FROM users WHERE username = $1", [req.body.username])
       .then((user) => {
-        // console.log(user.rowCount);
-
         if (user.rowCount) {
           console.log({ msg: "Username already been taken" });
           return res.json({ msg: "Username already been taken" });
