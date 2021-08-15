@@ -8,9 +8,8 @@ import {
   Container,
 } from "@material-ui/core";
 import Textfield from "../editProfile/FormsUI/Textfield";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 import { DropzoneArea } from "material-ui-dropzone";
-      
 
 const useStyles = makeStyles({
   form: {
@@ -53,31 +52,31 @@ const validationSchema = yup.object({
 // }
 
 interface FormValues {
-  user_id: number | undefined,
-  username: string | undefined,
-  password: string | undefined,
-  avatar: string | ArrayBuffer | undefined,
-  cloudinary_id: string | undefined,
-  full_name: string | undefined,
-  email: string | undefined,
-  user_type: string | undefined,
-  mobile: number | undefined,
-  identification_card: string | undefined,
-  driving_license: string | undefined
+  user_id: number | undefined;
+  username: string | undefined;
+  password: string | undefined;
+  avatar: string | ArrayBuffer | undefined;
+  cloudinary_id: string | undefined;
+  full_name: string | undefined;
+  email: string | undefined;
+  user_type: string | undefined;
+  mobile: number | undefined;
+  identification_card: string | undefined;
+  driving_license: string | undefined;
 }
 
 interface CurrentUser {
-  user_id: number,
-  username: string,
-  password: string,
-  full_name: string,
-  email: string,
-  avatar: string,
-  user_type: string,
-  mobile: number,
-  identification_card: string,
-  driving_license: string,
-  cloudinary_id: string
+  user_id: number;
+  username: string;
+  password: string;
+  full_name: string;
+  email: string;
+  avatar: string;
+  user_type: string;
+  mobile: number;
+  identification_card: string;
+  driving_license: string;
+  cloudinary_id: string;
 }
 
 // const INITIAL_FORM_STATE: FormValues = {
@@ -90,12 +89,12 @@ interface CurrentUser {
 // };
 
 const UpdateProfile: React.FC = () => {
-  const classes = useStyles()
+  const classes = useStyles();
   const [previewSource, setPreviewSource] = useState("");
   const [image, setImage] = useState<any>();
-  const [currentUser, setCurrentUser] = useState <CurrentUser> ();
-  const [loading, setLoading] = useState <boolean> (false);
-  const [initialValues, setinitialValues] = useState <FormValues> ({
+  const [currentUser, setCurrentUser] = useState<CurrentUser>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [initialValues, setinitialValues] = useState<FormValues>({
     user_id: 0,
     username: "",
     password: "",
@@ -106,24 +105,26 @@ const UpdateProfile: React.FC = () => {
     user_type: "",
     mobile: 0,
     identification_card: "",
-    driving_license: ""
-  });  
+    driving_license: "",
+  });
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
 
     const fetchSession = async () => {
-
       // retrieve session ID from custom cookie
-      const sidfromCookie = Cookies.get('cook') 
-      console.log(sidfromCookie)
+      const sidfromCookie = Cookies.get("cook");
+      console.log(sidfromCookie);
 
-      const res = await fetch(`http://localhost:4000/sessions/check/${sidfromCookie}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        `http://localhost:4000/sessions/check/${sidfromCookie}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await res.json();
 
@@ -133,7 +134,7 @@ const UpdateProfile: React.FC = () => {
       console.log(typeof currentUserInfo);
 
       setCurrentUser(currentUserInfo);
-      console.log(currentUser)
+      console.log(currentUser);
 
       setinitialValues({
         user_id: currentUser?.user_id,
@@ -147,21 +148,20 @@ const UpdateProfile: React.FC = () => {
         user_type: currentUser?.user_type,
         mobile: currentUser?.mobile,
         identification_card: currentUser?.identification_card,
-        driving_license: currentUser?.driving_license
-      })
-      console.log( "initialValues ", initialValues )
+        driving_license: currentUser?.driving_license,
+      });
+      console.log("initialValues ", initialValues);
 
       if (currentUser?.username === undefined) {
-        setLoading(true)
-      }
-      else {
-        setLoading(false)
+        setLoading(true);
+      } else {
+        setLoading(false);
       }
     };
-    fetchSession()
+    fetchSession();
   }, [currentUser?.username, initialValues?.user_id]);
 
-const handleSubmit = (formValue: FormValues) => {
+  const handleSubmit = (formValue: FormValues) => {
     const reader: any = new FileReader();
     if (image) {
       reader.readAsDataURL(image);
@@ -173,120 +173,112 @@ const handleSubmit = (formValue: FormValues) => {
     const ImageURL = { avatar: previewSource };
     let merge = { ...formValue, ...ImageURL };
     console.log(merge);
-  
-  const updateUserAccount = async () => {
-    try {
-      const res = await fetch(
-        "/users/"+currentUser?.user_id,    
-        {
+
+    const updateUserAccount = async () => {
+      try {
+        const res = await fetch("/users/" + currentUser?.user_id, {
           method: "PUT",
           body: JSON.stringify(merge),
           headers: {
             "Content-Type": "application/json",
           },
-        }
-      );
-      console.log(res);
-      alert("User profile updated succesfully!");
-    } catch (error) {
-      console.log(error);
-    }
+        });
+        console.log(res);
+        alert("User profile updated succesfully!");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    updateUserAccount();
   };
-  updateUserAccount();
-};
 
   return (
     <>
-
       {loading ? (
         <CircularProgress />
       ) : (
         <div>
-        <Formik
-          // initialValues={{
-          //   ...INITIAL_FORM_STATE
-          // }}
+          <Formik
+            // initialValues={{
+            //   ...INITIAL_FORM_STATE
+            // }}
 
-          initialValues={{
-            ...initialValues
-          }}
+            initialValues={{
+              ...initialValues,
+            }}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+          >
+            {(formik) => (
+              <Container>
+                <form onSubmit={formik.handleSubmit} className={classes.form}>
+                  <DropzoneArea
+                    acceptedFiles={["image/*"]}
+                    dropzoneText={"Drag and drop an avatar here or click"}
+                    filesLimit={1}
+                    onChange={(files) => {
+                      setImage(files[0]);
+                    }}
+                  />
+                  <Textfield
+                    className={classes.field}
+                    id="full_name"
+                    name="full_name"
+                    label="Full_name"
+                    required
+                  />
+                  <Textfield
+                    className={classes.field}
+                    id="email"
+                    name="email"
+                    label="Email"
+                    required
+                  />
+                  <Textfield
+                    className={classes.field}
+                    id="user_type"
+                    name="user_type"
+                    label="User_type"
+                    required
+                  />
+                  <Textfield
+                    className={classes.field}
+                    id="mobile"
+                    name="mobile"
+                    label="Mobile"
+                    required
+                  />
 
-          onSubmit={
-          handleSubmit
-        }
-          validationSchema={validationSchema}
-        >
-        {(formik) => (
-          <Container>
-            <form onSubmit={formik.handleSubmit} className={classes.form}>
-            <DropzoneArea
-              acceptedFiles={["image/*"]}
-              dropzoneText={"Drag and drop an avatar here or click"}
-              filesLimit={1}
-              onChange={(files) => {
-                setImage(files[0]);
-              }}
-            />
-              <Textfield
-                className={classes.field}
-                id="full_name"
-                name="full_name"
-                label="Full_name"
-                required
-              />
-              <Textfield
-                className={classes.field}
-                id="email"
-                name="email"
-                label="Email"
-                required
-              />
-              <Textfield
-                className={classes.field}
-                id="user_type"
-                name="user_type"
-                label="User_type"
-                required
-              />
-              <Textfield
-                className={classes.field}
-                id="mobile"
-                name="mobile"
-                label="Mobile"
-                required
-              />
+                  <Textfield
+                    className={classes.field}
+                    id="identification_card"
+                    name="identification_card"
+                    label="Identification_card"
+                    required
+                  />
 
-              <Textfield
-                className={classes.field}
-                id="identification_card"
-                name="identification_card"
-                label="Identification_card"
-                required
-              />
-
-              <Textfield
-                className={classes.field}
-                id="driving_license"
-                name="driving_license"
-                label="Driving_license"
-                required
-              />
-              <Button
-                className={classes.form}
-                color="primary"
-                variant="contained"
-                type="submit"
-                style={{ marginTop: 10 }}
-              >
-                Submit
-              </Button>
-            </form>
-           </Container>
-          )}
-        </Formik>
-      </div>
+                  <Textfield
+                    className={classes.field}
+                    id="driving_license"
+                    name="driving_license"
+                    label="Driving_license"
+                    required
+                  />
+                  <Button
+                    className={classes.form}
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    style={{ marginTop: 10 }}
+                  >
+                    Submit
+                  </Button>
+                </form>
+              </Container>
+            )}
+          </Formik>
+        </div>
       )}
-
     </>
   );
 };
