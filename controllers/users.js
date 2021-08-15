@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require("../db");
 const upload = require("../utils/multer");
 const { cloudinary } = require("../utils/cloudinary");
+const bcrypt = require("bcrypt");
 
 // Routes
 
@@ -19,35 +20,17 @@ router.get("/", async (req, res) => {
 //*========================CREATE NEW USERS - POST ROUTE========================
 router.post("/", upload.single("avatar"), async (req, res) => {
   try {
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      upload_preset: "userAvatar",
-    });
-    const avatar = result.secure_url;
-    const cloudinary_id = result.public_id;
-    const {
-      username,
-      password,
-      full_name,
-      email,
-      user_type,
-      mobile,
-      identification_card,
-      driving_license,
-    } = req.body;
+    const { username, password_unhashed, full_name, email } = req.body;
+
+    // hash plaintext password
+    console.log(username);
+    console.log(password_unhashed);
+    password = bcrypt.hashSync(password_unhashed, bcrypt.genSaltSync(10));
+    console.log(password);
+
     const newUser = await pool.query(
-      "INSERT INTO users (avatar, cloudinary_id, username, password, full_name, email, user_type, mobile, identification_card, driving_license) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
-      [
-        avatar,
-        cloudinary_id,
-        username,
-        password,
-        full_name,
-        email,
-        user_type,
-        mobile,
-        identification_card,
-        driving_license,
-      ]
+      "INSERT INTO users (username, password, full_name, email) VALUES ($1,$2,$3,$4)",
+      [username, password, full_name, email]
     );
     res.json(newUser.rows[0]);
     console.log(newUser);
@@ -120,26 +103,26 @@ router.get("/:id", async (req, res) => {
 
 //*========================UPDATE a user - PUT ROUTE=======================
 router.put("/:id", async (req, res) => {
- console.log("req.body avatar - " + req.body.avatar+ "req.body avatar - ");
- try {
-  const { id } = req.params;
-  const fileStr =  req.body.avatar;
-  const userAvatar = await pool.query(
-    "SELECT cloudinary_id, avatar FROM users WHERE user_id = $1",
-    [id]
-  );
+  console.log("req.body avatar - " + req.body.avatar + "req.body avatar - ");
+  try {
+    const { id } = req.params;
+    const fileStr = req.body.avatar;
+    const userAvatar = await pool.query(
+      "SELECT cloudinary_id, avatar FROM users WHERE user_id = $1",
+      [id]
+    );
 
-  let result;
-  let avatar;
-  let cloudinary_id;
-  const cloudID = userAvatar.rows[0].cloudinary_id;
-  const cloudAvatar = userAvatar.rows[0].avatar;
-  if (fileStr) {
-    await cloudinary.uploader.destroy(cloudID);
-    result = await cloudinary.uploader.upload(fileStr, {
-      upload_preset: "userAvatar",
-    });
-  }
+    let result;
+    let avatar;
+    let cloudinary_id;
+    const cloudID = userAvatar.rows[0].cloudinary_id;
+    const cloudAvatar = userAvatar.rows[0].avatar;
+    if (fileStr) {
+      await cloudinary.uploader.destroy(cloudID);
+      result = await cloudinary.uploader.upload(fileStr, {
+        upload_preset: "userAvatar",
+      });
+    }
     if (result === undefined) {
       avatar = cloudAvatar;
       cloudinary_id = cloudID;

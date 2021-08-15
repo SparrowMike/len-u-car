@@ -13,11 +13,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-//*========================GREATE NEW FORM - GET ROUTE========================
-router.get("/new", async (req, res) => {
-  res.send("send this to CRA");
-});
-
 //*========================CREATE new car - POST ROUTE========================
 router.post("/", async (req, res) => {
   try {
@@ -91,7 +86,7 @@ router.put("/:id", async (req, res) => {
       key_rules,
       status,
       pick_up_point,
-      username,   // previous was 'user_id'
+      username, // previous was 'user_id'
     } = req.body;
     const carX = await pool.query(
       "UPDATE cars SET brand = $2, model = $3, type = $4, passenger_capacity = $5, transmission = $6, price_per_day = $7, mileage = $8, engine_type = $9, key_features = $10,key_rules = $11,status= $12,pick_up_point = $13,username = $14 WHERE cars_id = $1",
@@ -109,7 +104,7 @@ router.put("/:id", async (req, res) => {
         key_rules,
         status,
         pick_up_point,
-        username,   // previous was 'user_id'
+        username, // previous was 'user_id'
       ]
     );
     res.status(200).send(`Car modified with ID: ${id}`);

@@ -76,28 +76,8 @@ interface currentUserCar {
   username: string;
 }
 
-// const INITIAL_FORM_STATE: FormValues = {
-//   brand: "Aston Martin",
-//   model: "DB11",
-//   type: "sport",
-//   passenger_capacity: 4,
-//   transmission: "automatic",
-//   price_per_day: 9999,
-//   mileage: "10000",
-//   engine_type: "petrol",
-//   key_features: "GPS",
-//   key_rules: "No driving to malaysia",
-//   status: "available",
-//   pick_up_point: "AMK mrt",
-
-//   cars_id: 9999,
-//   username: "testusername"
-// };
-
 const EditCar: React.FC = () => {
   const classes = useStyles();
-  // const currentCar = "3"; // temporary, to remove
-
   const [currentUserCar, setCurrentUserCar] = useState<currentUserCar>();
   const [loading, setLoading] = useState<boolean>(false);
   const [initialValues, setinitialValues] = useState<FormValues>({
@@ -202,9 +182,6 @@ const EditCar: React.FC = () => {
       ) : (
         <div>
           <Formik
-            // initialValues={{
-            //   ...INITIAL_FORM_STATE,
-            // }}
             initialValues={{
               ...initialValues,
             }}
@@ -225,11 +202,6 @@ const EditCar: React.FC = () => {
                   name="model"
                   label="Model"
                 />
-                {/* <Textfield
-                  id="type"
-                  name="type"
-                  label="Type"
-                /> */}
                 <div>
                   Type:
                   <label>
@@ -247,12 +219,6 @@ const EditCar: React.FC = () => {
                   name="passenger_capacity"
                   label="Passenger_capacity"
                 />
-
-                {/* <Textfield
-                  id="transmission"
-                  name="transmission"
-                  label="Transmission"
-                /> */}
                 <div>
                   Tranmission:
                   <label>
@@ -287,12 +253,6 @@ const EditCar: React.FC = () => {
                   name="mileage"
                   label="Mileage"
                 />
-
-                {/* <Textfield
-                  id="engine_type"
-                  name="engine_type"
-                  label="Engine_type"
-                /> */}
                 <div>
                   Engine Type:
                   <label>

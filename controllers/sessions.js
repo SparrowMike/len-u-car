@@ -9,11 +9,8 @@ const redisClient = require("../server.js"); // correct?
 router.post("/", async (req, res) => {
   try {
     console.log(" session login route triggered");
-    // console.log("req body: ", req.body);
-    // req.session.sid = `sess:${req.sessionID}`;
-    // console.log( req.session.sid );
 
-    const existingUsers = await pool
+    const existingUsers = pool
       .query("SELECT * FROM users WHERE username = $1", [req.body.username])
       .then((foundUsers) => {
         console.log(foundUsers.rowCount);
@@ -26,9 +23,9 @@ router.post("/", async (req, res) => {
           ) {
             console.log(foundUsers.rows[0].username);
 
-            req.session.currentUser = foundUsers.rows[0].username;
+            // store user's profile details in session
+            req.session.currentUser = foundUsers.rows[0];
             console.log("log in user", req.session.currentUser);
-            // return res.json(req.session);
           } else {
             console.log(
               bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
