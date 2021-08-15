@@ -29,10 +29,10 @@ router.post("/", async (req, res) => {
       key_rules,
       status,
       pick_up_point,
-      user_id,
+      username,
     } = req.body;
     const newCar = await pool.query(
-      "INSERT INTO cars (brand, model, type, passenger_capacity, transmission, price_per_day, mileage, engine_type, key_features, key_rules,status,pick_up_point,user_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)",
+      "INSERT INTO cars (brand, model, type, passenger_capacity, transmission, price_per_day, mileage, engine_type, key_features, key_rules,status,pick_up_point,username) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)",
       [
         brand,
         model,
@@ -46,7 +46,7 @@ router.post("/", async (req, res) => {
         key_rules,
         status,
         pick_up_point,
-        user_id,
+        username,
       ]
     );
     res.status(200).send(`Car created with brand: ${brand}`);

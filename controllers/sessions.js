@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 
-const redisClient = require("../server.js"); // correct?
+const redisClient = require("../server.js");
 
 // login
 router.post("/", async (req, res) => {
@@ -81,6 +81,9 @@ router.get("/check/:sid", (req, res) => {
     redisClient.get(sid_get, async (err, jobs) => {
       if (err) {
         console.log("Retrieve session data from Redis server not successful");
+        res.json({
+          message: "Retrieve session data from Redis server not successful",
+        });
       } else {
         if (jobs) {
           console.log("Retrieve session data from Redis server successful");

@@ -78,23 +78,24 @@ interface currentUserCar {
 
 const EditCar: React.FC = () => {
   const classes = useStyles();
+  const [user, setUser] = useState<string>();
   const [currentUserCar, setCurrentUserCar] = useState<currentUserCar>();
   const [loading, setLoading] = useState<boolean>(false);
   const [initialValues, setinitialValues] = useState<FormValues>({
-    cars_id: 999999,
-    brand: "",
-    model: "",
-    type: "",
-    passenger_capacity: 0,
-    transmission: "",
-    price_per_day: 0,
-    mileage: "",
-    engine_type: "",
-    key_features: "",
-    key_rules: "",
-    status: "",
-    pick_up_point: "",
-    username: "",
+    cars_id: undefined,
+    brand: undefined,
+    model: undefined,
+    type: undefined,
+    passenger_capacity: undefined,
+    transmission: undefined,
+    price_per_day: undefined,
+    mileage: undefined,
+    engine_type: undefined,
+    key_features: undefined,
+    key_rules: undefined,
+    status: undefined,
+    pick_up_point: undefined,
+    username: undefined,
   });
 
   useEffect(() => {
@@ -103,7 +104,7 @@ const EditCar: React.FC = () => {
     const fetchSession = async () => {
       // retrieve session ID from custom cookie
       const sidfromCookie = Cookies.get("cook");
-      console.log(sidfromCookie);
+      console.log("Session Id from Cookie: ", sidfromCookie);
 
       const res = await fetch(
         `http://localhost:4000/sessions/check/${sidfromCookie}`,
@@ -120,41 +121,40 @@ const EditCar: React.FC = () => {
       console.log("check useEffect server response", data.sessionDetails);
       const currentUserCarsInfo = data.sessionDetails.currentUserCars;
       console.log("currentUser Data from Redis:", currentUserCarsInfo);
-      console.log(typeof currentUserCarsInfo);
-
+      setUser(data.sessionDetails.currentUser.username);
       setCurrentUserCar(currentUserCarsInfo[0]); // first element in array
-      console.log(currentUserCar);
+      console.log("currentUserCar: ", currentUserCar);
 
-      setinitialValues({
-        cars_id: currentUserCar?.cars_id,
-        brand: currentUserCar?.brand,
-        model: currentUserCar?.model,
-        type: currentUserCar?.type,
-        passenger_capacity: currentUserCar?.passenger_capacity,
-        transmission: currentUserCar?.transmission,
-        price_per_day: currentUserCar?.price_per_day,
-        mileage: currentUserCar?.mileage,
-        engine_type: currentUserCar?.engine_type,
-        key_features: currentUserCar?.key_features,
-        key_rules: currentUserCar?.key_rules,
-        status: currentUserCar?.status,
-        pick_up_point: currentUserCar?.pick_up_point,
-        username: currentUserCar?.username,
-      });
-      console.log("initialValues ", initialValues);
-
-      if (currentUserCar?.username === undefined) {
-        setLoading(true);
+      if (currentUserCar !== undefined) {
+        setinitialValues({
+          cars_id: currentUserCar?.cars_id,
+          brand: currentUserCar?.brand,
+          model: currentUserCar?.model,
+          type: currentUserCar?.type,
+          passenger_capacity: currentUserCar?.passenger_capacity,
+          transmission: currentUserCar?.transmission,
+          price_per_day: currentUserCar?.price_per_day,
+          mileage: currentUserCar?.mileage,
+          engine_type: currentUserCar?.engine_type,
+          key_features: currentUserCar?.key_features,
+          key_rules: currentUserCar?.key_rules,
+          status: currentUserCar?.status,
+          pick_up_point: currentUserCar?.pick_up_point,
+          username: currentUserCar?.username,
+        });
       } else {
-        setLoading(false);
+        console.log("currentUserCar: undefined");
       }
+      console.log("initialValues ", initialValues);
+      setLoading(false);
     };
     fetchSession();
     // eslint-disable-next-line
   }, [currentUserCar?.username, initialValues?.cars_id]);
 
   const handleSubmit = (formValue: any) => {
-    let merge = { ...formValue };
+    const carOwner = { username: user };
+    let merge = { ...formValue, ...carOwner };
     console.log(merge);
     const updateCarAccount = async () => {
       try {
@@ -172,7 +172,25 @@ const EditCar: React.FC = () => {
         console.log(error);
       }
     };
-    updateCarAccount();
+    const createCarAccount = async () => {
+      try {
+        const res = await fetch("/cars/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(merge),
+        });
+        console.log(res);
+        alert("New car profile created succesfully!");
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    if (currentUserCar?.cars_id === undefined) {
+      createCarAccount();
+    } else {
+      updateCarAccount();
+    }
   };
 
   return (
