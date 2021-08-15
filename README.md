@@ -29,6 +29,8 @@
 - npm install react-infinite-scroll-component
 
 - npm install --save material-ui-dropzone
+- npm i js-cookie
+- npm i --save-dev @types/js-cookie
 
 #### React Typesript cheatsheet
 
