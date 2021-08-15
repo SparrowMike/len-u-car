@@ -44,6 +44,25 @@ router.post("/", async (req, res) => {
                 console.log({ msg: "Username don't exist" });
                 return res.json({ msg: "Username don't exist" });
             }
+          })
+          .then( ()=>{
+              const existingCars = pool
+              .query("SELECT * FROM cars WHERE username = $1", [req.body.username])
+              .then((foundCars) => {
+                console.log(req.body.username);
+                req.session.currentUserCars = foundCars.rows;   // can have more than one car
+
+                console.log( "req.session.currentUserCars: ", foundCars.rows )
+
+                // if car information is retrieved from database, update car details into session
+                if ( req.session.currentUser !== undefined ){
+                  // store car (user's) details in session
+                  req.session.currentSID = req.sessionID;
+                  console.log( "req.session.currentSID: ", req.session.currentSID)
+                  
+                  return res.json( {currentSID: req.session.currentSID} );
+                }
+              });
           });
 
       } catch (error) {
