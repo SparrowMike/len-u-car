@@ -150,6 +150,7 @@ const EditCar: React.FC = () => {
       }
     };
     fetchSession();
+    // eslint-disable-next-line
   }, [currentUserCar?.username, initialValues?.cars_id]);
 
   const handleSubmit = (formValue: any) => {

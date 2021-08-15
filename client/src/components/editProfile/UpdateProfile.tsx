@@ -98,15 +98,12 @@ const UpdateProfile: React.FC = () => {
       const sidfromCookie = Cookies.get("cook");
       console.log(sidfromCookie);
 
-      const res = await fetch(
-        `/sessions/check/${sidfromCookie}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(`/sessions/check/${sidfromCookie}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await res.json();
 
@@ -140,6 +137,7 @@ const UpdateProfile: React.FC = () => {
       }
     };
     fetchSession();
+    // eslint-disable-next-line
   }, [currentUser?.username, initialValues?.user_id]);
 
   const handleSubmit = (formValue: FormValues) => {
@@ -153,7 +151,6 @@ const UpdateProfile: React.FC = () => {
     if (!previewSource) return;
     const ImageURL = { avatar: previewSource };
     let merge = { ...formValue, ...ImageURL };
-    // console.log(merge);
 
     const updateUserAccount = async () => {
       try {
