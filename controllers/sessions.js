@@ -81,6 +81,9 @@ router.get("/check/:sid", (req, res) => {
     redisClient.get(sid_get, async (err, jobs) => {
       if (err) {
         console.log("Retrieve session data from Redis server not successful");
+        res.json({
+          message: "Retrieve session data from Redis server not successful",
+        });
       } else {
         if (jobs) {
           console.log("Retrieve session data from Redis server successful");
