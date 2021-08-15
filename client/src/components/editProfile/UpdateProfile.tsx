@@ -188,7 +188,7 @@ const handleSubmit = (formValue: FormValues) => {
 
   return (
     <>
-      <div>
+
       {loading ? (
         <CircularProgress />
       ) : (
@@ -269,7 +269,7 @@ const handleSubmit = (formValue: FormValues) => {
         </Formik>
       </div>
       )}
-      </div>
+
     </>
   );
 };
