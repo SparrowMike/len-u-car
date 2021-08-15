@@ -99,7 +99,7 @@ const UpdateProfile: React.FC = () => {
       console.log(sidfromCookie);
 
       const res = await fetch(
-        `http://localhost:4000/sessions/check/${sidfromCookie}`,
+        `/sessions/check/${sidfromCookie}`,
         {
           method: "GET",
           headers: {
