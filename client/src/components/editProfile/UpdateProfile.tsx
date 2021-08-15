@@ -9,6 +9,8 @@ import {
 } from "@material-ui/core";
 import Textfield from "../editProfile/FormsUI/Textfield";
 import Cookies from 'js-cookie'
+import { DropzoneArea } from "material-ui-dropzone";
+      
 
 const useStyles = makeStyles({
   form: {
@@ -88,9 +90,9 @@ interface CurrentUser {
 // };
 
 const UpdateProfile: React.FC = () => {
-  const classes = useStyles();
-  const currentUserID = "1";  // temporary to remove
+  const classes = useStyles()
   const [previewSource, setPreviewSource] = useState("");
+  const [image, setImage] = useState<any>();
   const [currentUser, setCurrentUser] = useState <CurrentUser> ();
   const [loading, setLoading] = useState <boolean> (false);
   const [initialValues, setinitialValues] = useState <FormValues> ({
@@ -160,6 +162,13 @@ const UpdateProfile: React.FC = () => {
   }, [currentUser?.username, initialValues?.user_id]);
 
 const handleSubmit = (formValue: FormValues) => {
+    const reader: any = new FileReader();
+    if (image) {
+      reader.readAsDataURL(image);
+    }
+    reader.onloadend = () => {
+      setPreviewSource(reader.result);
+    };
     if (!previewSource) return;
     const ImageURL = { avatar: previewSource };
     let merge = { ...formValue, ...ImageURL };
@@ -210,6 +219,14 @@ const handleSubmit = (formValue: FormValues) => {
         {(formik) => (
           <Container>
             <form onSubmit={formik.handleSubmit} className={classes.form}>
+            <DropzoneArea
+              acceptedFiles={["image/*"]}
+              dropzoneText={"Drag and drop an avatar here or click"}
+              filesLimit={1}
+              onChange={(files) => {
+                setImage(files[0]);
+              }}
+            />
               <Textfield
                 className={classes.field}
                 id="full_name"
