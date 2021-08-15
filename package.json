@@ -11,8 +11,6 @@
     "build": "cd client && npm run build",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm run install-client && npm run build"
   },
-
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SparrowMike/len-u-car.git"
