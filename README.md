@@ -25,6 +25,9 @@
 - npm i @types/react-slick --save-dev
 - npm i @material-ui/lab
 
+- npm i react-query
+- npm install react-infinite-scroll-component
+
 #### React Typesript cheatsheet
 
 - https://github.com/typescript-cheatsheets/react

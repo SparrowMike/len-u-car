@@ -87,6 +87,9 @@ export default function Navbar() {
         <ListItem button component={RouterLink} to="/login">
           <ListItemText primary="Login" />
         </ListItem>
+        <ListItem button component={RouterLink} to="/editprofile">
+          <ListItemText primary="Edit profile" />
+        </ListItem>
       </List>
     </div>
   );
@@ -140,11 +143,21 @@ export default function Navbar() {
                 Login
               </Link>
             </Typography>
+            <Typography className={classes.temp}>
+              <Link
+                component={RouterLink}
+                color="inherit"
+                to="/editprofile"
+                style={{ textDecoration: "none" }}
+              >
+                Edit profile
+              </Link>
+            </Typography>
           </>
         ) : (
           <>
-            <Button>
-              <MenuIcon onClick={toggleDrawer("top", true)} />
+            <Button onClick={toggleDrawer("top", true)}>
+              <MenuIcon />
             </Button>
             <SwipeableDrawer
               anchor="top"

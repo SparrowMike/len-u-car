@@ -10,15 +10,23 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@types/jest": "^26.0.24",
+    "@types/material-ui": "^0.21.9",
     "@types/node": "^12.20.19",
     "@types/react": "^17.0.15",
+    "@types/react-dom": "^17.0.9",
     "@types/react-router": "^5.1.16",
     "@types/react-router-dom": "^5.1.8",
+
+    "@types/react-slick": "^0.23.5",
     "axios": "^0.21.1",
+    "cloudinary-react": "^1.7.0",
+
     "formik": "^2.2.9",
     "material-ui": "^0.20.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-query": "^3.19.4",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
@@ -56,5 +64,6 @@
     "@types/material-ui": "^0.21.9",
     "@types/react-dom": "^17.0.9",
     "@types/react-slick": "^0.23.5"
-  }
+  },
+  "proxy": "http://localhost:4000"
 }
