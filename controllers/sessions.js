@@ -57,9 +57,9 @@ router.post("/", async (req, res) => {
               .query("SELECT * FROM cars WHERE username = $1", [req.body.username])
               .then((foundCars) => {
                 console.log(req.body.username);
-                req.session.currentUserCars = foundCars.rows[0];
+                req.session.currentUserCars = foundCars.rows;   // can have more than one car
 
-                console.log( "req.session.currentUserCars: ", foundCars.rows[0] )
+                console.log( "req.session.currentUserCars: ", foundCars.rows )
 
                 // if car information is retrieved from database, update car details into session
                 if ( req.session.currentUser !== undefined ){
