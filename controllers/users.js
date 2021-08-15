@@ -129,6 +129,7 @@ router.get("/:id", async (req, res) => {
 // UPDATE a user - PUT ROUTE
  // router.put("/:id", upload.single("avatar"), async (req, res) => {
   router.put("/:id", async (req, res) => {
+    console.log( "user put route triggered");
   try {
   //  const result = await cloudinary.uploader.upload(req.file.path);
    // const avatar = result.secure_url;
