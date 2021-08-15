@@ -1,8 +1,6 @@
-require("dotenv").config();
 const { Pool } = require("pg");
 
 const pool = new Pool({
-  // heroku postgres 
   user: "hqmnrcgvmaenbf",
   host: "ec2-54-196-65-186.compute-1.amazonaws.com",
   port: 5432,
@@ -11,12 +9,6 @@ const pool = new Pool({
   ssl: {
     rejectUnauthorized: false,
   },
-
-  // local postgres
-  // database: process.env.PSQL_DATABASE,
-  // user:process.env.PSQL_USER,
-  // password:process.env.PSQL_PASSWORD
-
 });
 
 module.exports = pool;

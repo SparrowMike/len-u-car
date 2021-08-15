@@ -5,20 +5,20 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 
-const session = require("express-session");
-const redis = require("redis");
-const connectRedis = require("connect-redis");
-const path = require("path");
+const session = require("express-session"); // +
+const redis = require("redis"); // +
+const connectRedis = require("connect-redis"); // +
 
 //*===================CONFIGURATIONS======================
 require("dotenv").config();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3003;
 
-const RedisStore = connectRedis(session);
+const RedisStore = connectRedis(session); // +
 const redisClient = redis.createClient({
+  // +
   // port: 6379,
-  // host: 'localhost'
-  // for redis cloud version
+  // host: 'localhost'  // need to change to heroku redis?
+
   host: "ec2-52-54-10-192.compute-1.amazonaws.com",
   port: 16120,
   password: "p9a8f345c693fbbb525145c11d037fdfe2c4fc08f25452579adc4b2947d2435c8",
@@ -29,35 +29,17 @@ const redisClient = redis.createClient({
 redisClient.on("error", (err) => {
   console.log("redisClient Error " + err);
 });
-
-// EXPORT
-module.exports = redisClient;
-
-const HerokuRedisStore = new RedisStore({ client: redisClient });
+const HerokuRedisStore = new RedisStore({ client: redisClient }); // +
 
 //* ==============BODY PARSER, MIDDLEWARE====================
 app.use(cors());
-//app.use(express.json());
-//app.use(express.urlencoded({ extended: false }));
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
-
-//* ===========HEROKU DEPLOYMENT MIDDLEWARE==================
-// app.use(express.static(path.join(__dirname, "./client/build")));
-// app.get("/*", (req, res) => {
-// res.sendFile(path.join(__dirname, "./client/build", "index.html"));
-// });
-
-//* ===========HEROKU DEPLOYMENT MIDDLEWARE==================
-// app.use(express.static(path.join(__dirname, "./client/build")));
-// app.get("/*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "./client/build", "index.html"));
-// });
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.use(
   session({
+    // +
     store: HerokuRedisStore,
-    name: "sessionID",
     secret: process.env.SECRET || "test_secret",
     saveUninitialized: false,
     resave: false,
@@ -73,11 +55,11 @@ app.use(
 const usersController = require("./controllers/users");
 const carsController = require("./controllers/cars");
 const carImagesController = require("./controllers/carImages");
-const sessionsController = require("./controllers/sessions.js");
+const sessionsController = require("./controllers/sessions.js"); // +
 app.use("/users", usersController);
 app.use("/cars", carsController);
 app.use("/images", carImagesController);
-app.use("/sessions", sessionsController);
+app.use("/sessions", sessionsController); // +
 
 //*==================LISTENER=====================
 app.listen(PORT, () => {

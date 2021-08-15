@@ -3,8 +3,6 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 
-const redisClient = require("../server.js");   // correct?
-
 
 // test (can remove)
 router.get("/", (req, res) => {
@@ -12,13 +10,15 @@ router.get("/", (req, res) => {
 });
 
 
+// can test login with:
+//   username: simon
+//   password: ****
+
 // login
 router.post("/", async (req, res) => {
     try {
         console.log( " session login route triggered")
-        // console.log("req body: ", req.body);
-        // req.session.sid = `sess:${req.sessionID}`;
-        // console.log( req.session.sid );
+        console.log("req body: ", req.body);
     
         const existingUsers = await pool
           .query("SELECT * FROM users WHERE username = $1", [req.body.username])
@@ -55,16 +55,9 @@ router.post("/", async (req, res) => {
 
 // logout
 router.delete("/", (req, res) => {
-
-    const sid_destroy = req.sessionID;
-
     req.session.destroy(() => {
-      redisClient.del(sid_destroy, function(err) {
-        console.log("redis server delete session error")
-      });
-      res.send("user has logged out");
+        res.send("user has logged out");
     });
-
 });
 
 

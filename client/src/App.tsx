@@ -7,14 +7,6 @@ import { Container } from "@material-ui/core";
 import Register from "./Pages/Register";
 import Login from "./Pages/Login";
 import Home from "./Pages/Home";
-import { PaginationTEST } from "./components/cars/PaginationTEST";
-import CarPage from "./components/carPage/CarPage";
-
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
-import Browse from "./Pages/Browse";
-import Editprofile from "./Pages/Editprofile";
-
 
 const theme = createTheme({
   palette: {
@@ -35,7 +27,7 @@ const theme = createTheme({
   breakpoints: {
     values: {
       xs: 375,
-      sm: 640,
+      sm: 600,
       md: 1250,
       lg: 1600,
       xl: 2260,
@@ -52,42 +44,24 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
 
-  const queryClient = new QueryClient();
-
   return (
     <div className={classes.toolbar}>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <Navbar />
-          <Container maxWidth="md">
-            <Switch>
-              <Route path="/pagination">
-                <PaginationTEST />
-              </Route>
-              <Route path="/carpage">
-                <CarPage />
-              </Route>
-              <Route path="/browse">
-                <Browse />
-              </Route>
-
-              <Route path="/register">
-                <Register />
-              </Route>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <Route path="/editprofile">
-                <Editprofile />
-              </Route>
-              <Route path="/">
-                <Home />
-              </Route>
-            </Switch>
-          </Container>
-        </ThemeProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      <ThemeProvider theme={theme}>
+        <Navbar />
+        <Container maxWidth="md">
+          <Switch>
+            <Route path="/register">
+              <Register />
+            </Route>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </Container>
+      </ThemeProvider>
     </div>
   );
 }

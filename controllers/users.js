@@ -6,7 +6,7 @@ const { cloudinary } = require("../utils/cloudinary");
 
 // Routes
 
-//*========================READ ALL USERS - GET ROUTE========================
+// READ all users - GET ROUTE
 router.get("/", async (req, res) => {
   try {
     const existingUsers = await pool.query("SELECT * FROM users;");
@@ -16,14 +16,17 @@ router.get("/", async (req, res) => {
   }
 });
 
-//*========================CREATE NEW USERS - POST ROUTE========================
+// CREATE NEW FORM - GET ROUTE
+router.get("/new", async (req, res) => {
+  res.send("send this to CRA");
+});
+
+// CREATE new user - POST ROUTE
 router.post("/", upload.single("avatar"), async (req, res) => {
   try {
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      upload_preset: "userAvatar",
-    });
-    const avatar = result.secure_url;
-    const cloudinary_id = result.public_id;
+    // const result = await cloudinary.uploader.upload(req.file.path);
+    // const avatar = result.secure_url;
+    // const cloudinary_id = result.public_id;
     const {
       username,
       password,
@@ -35,18 +38,18 @@ router.post("/", upload.single("avatar"), async (req, res) => {
       driving_license,
     } = req.body;
     const newUser = await pool.query(
-      "INSERT INTO users (avatar, cloudinary_id, username, password, full_name, email, user_type, mobile, identification_card, driving_license) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
+      "INSERT INTO users (username, password, full_name, email, user_type, mobile, identification_card, driving_license) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
       [
-        avatar,
-        cloudinary_id,
         username,
         password,
         full_name,
         email,
+        // avatar,
         user_type,
         mobile,
         identification_card,
         driving_license,
+        // cloudinary_id,
       ]
     );
     res.json(newUser.rows[0]);
@@ -56,8 +59,7 @@ router.post("/", upload.single("avatar"), async (req, res) => {
   }
 });
 
-//*========================check username exists=======================
-
+// check username exists
 router.post("/checkusers", async (req, res) => {
   try {
     // console.log( " checkusers route triggered")
@@ -65,7 +67,7 @@ router.post("/checkusers", async (req, res) => {
     const existingUsers = await pool
       .query("SELECT * FROM users WHERE username = $1", [req.body.username])
       .then((user) => {
-        // console.log(user.rowCount);
+        console.log(user.rowCount);
 
         if (user.rowCount) {
           console.log({ msg: "Username already been taken" });
@@ -81,8 +83,7 @@ router.post("/checkusers", async (req, res) => {
   }
 });
 
-//*========================check email exists=======================
-
+// check email exists
 router.post("/checkemail", async (req, res) => {
   // console.log( " check_EMAIL route triggered")
 
@@ -103,8 +104,7 @@ router.post("/checkemail", async (req, res) => {
   }
 });
 
-//*========================GET A USER - GET ROUTE=======================
-
+// GET a user - GET ROUTE
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -118,36 +118,13 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//*========================UPDATE a user - PUT ROUTE=======================
-router.put("/:id", async (req, res) => {
- console.log("req.body avatar - " + req.body.avatar+ "req.body avatar - ");
- try {
-  const { id } = req.params;
-  const fileStr =  req.body.avatar;
-  const userAvatar = await pool.query(
-    "SELECT cloudinary_id, avatar FROM users WHERE user_id = $1",
-    [id]
-  );
-
-  let result;
-  let avatar;
-  let cloudinary_id;
-  const cloudID = userAvatar.rows[0].cloudinary_id;
-  const cloudAvatar = userAvatar.rows[0].avatar;
-  if (fileStr) {
-    await cloudinary.uploader.destroy(cloudID);
-    result = await cloudinary.uploader.upload(fileStr, {
-      upload_preset: "userAvatar",
-    });
-  }
-    if (result === undefined) {
-      avatar = cloudAvatar;
-      cloudinary_id = cloudID;
-    } else {
-      avatar = result.secure_url;
-      cloudinary_id = result.public_id;
-    }
-
+// UPDATE a user - PUT ROUTE
+router.put("/:id", upload.single("avatar"), async (req, res) => {
+  try {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const avatar = result.secure_url;
+    const cloudinary_id = result.public_id;
+    const { id } = req.params;
     const {
       username,
       password,
@@ -173,18 +150,6 @@ router.put("/:id", async (req, res) => {
         driving_license,
         cloudinary_id,
       ]
-      // "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, user_type = $6, mobile = $7, identification_card = $8, driving_license = $9 WHERE user_id = $1",
-      // [
-      //   id,
-      //   username,
-      //   password,
-      //   full_name,
-      //   email,
-      //   user_type,
-      //   mobile,
-      //   identification_card,
-      //   driving_license
-      // ]
     );
     res.status(200).send(`User modified with ID: ${id}`);
   } catch (error) {
@@ -192,16 +157,10 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-//*========================DELETE a user - DELETE ROUTE========================
+// DELETE a user - DELETE ROUTE
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const userAvatar = await pool.query(
-      "SELECT cloudinary_id FROM users WHERE user_id = $1",
-      [id]
-    );
-    const cloudID = userAvatar.rows[0].cloudinary_id;
-    await cloudinary.uploader.destroy(cloudID);
     const userX = await pool.query("DELETE FROM users WHERE user_id = $1", [
       id,
     ]);

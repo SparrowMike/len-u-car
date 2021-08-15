@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     height: "450px",
+    width: "100%",
   },
   overlay: {
     position: "absolute",
@@ -40,11 +41,11 @@ const Home = () => {
   const slickSettings = {
     dots: true,
     infinite: true,
-    speed: 1000,
+    speed: 2000,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 4000,
     cssEase: "linear",
     arrows: false,
   };
