@@ -10,7 +10,9 @@ const bcrypt = require("bcrypt");
 //*========================READ ALL USERS - GET ROUTE========================
 router.get("/", async (req, res) => {
   try {
-    const existingUsers = await pool.query("SELECT * FROM users LEFT JOIN cars ON users.username = cars.username LEFT JOIN car_images ON car_images.cars_id = cars.cars_id ORDER BY users.username;");
+    const existingUsers = await pool.query(
+      "SELECT * FROM users LEFT JOIN cars ON users.username = cars.username LEFT JOIN car_images ON car_images.cars_id = cars.cars_id ORDER BY users.username;"
+    );
     res.send(existingUsers.rows);
   } catch (error) {
     console.log(error.message);
@@ -179,7 +181,7 @@ router.delete("/:id", async (req, res) => {
       "SELECT cloudinary_id FROM users WHERE user_id = $1",
       [id]
     );
-    const cloudID = userAvatar.rows[0].cloudinary_id;
+    const cloudID = userAvatar.rows[0].cloudinary_id || null;
     await cloudinary.uploader.destroy(cloudID);
     const userX = await pool.query("DELETE FROM users WHERE user_id = $1", [
       id,
