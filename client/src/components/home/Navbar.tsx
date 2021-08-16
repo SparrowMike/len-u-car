@@ -38,6 +38,10 @@ const useStyles = makeStyles((theme: Theme) =>
     list: {
       width: 250,
     },
+    logo: {
+      marginRight: 30,
+      marginTop: 10,
+    },
     fullList: {
       width: "auto",
     },
@@ -98,19 +102,21 @@ export default function Navbar() {
   return (
     <AppBar color="inherit" elevation={2}>
       <Toolbar>
-        <Typography variant="h6" className={classes.title}>
-          LenUCar
-        </Typography>
         {!isMobile ? (
           <>
-            <Typography className={classes.temp}>
+            <Typography variant="h6" className={classes.title}>
               <Link
                 component={RouterLink}
                 color="inherit"
                 to="/"
                 style={{ textDecoration: "none" }}
               >
-                Home
+                <img
+                  src="https://i.ibb.co/MsPChWS/lenucar.png"
+                  height="35"
+                  className={classes.logo}
+                  alt="logo"
+                />
               </Link>
             </Typography>
             <Typography className={classes.temp}>
