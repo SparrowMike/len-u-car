@@ -14,6 +14,13 @@ import { red } from "@material-ui/core/colors";
 import StarIcon from "@material-ui/icons/Star";
 
 import cars from "../../data/cars";
+import { IState as Props } from "../../Pages/Browse";
+
+interface IProps {
+  users: Props["users"];
+
+}
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,26 +54,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Album() {
+const Cars: React.FC<IProps> = ({ users }) => {
   const classes = useStyles();
-
+console.log(users);
+// console.log(users[0]);
   return (
     <React.Fragment>
       <CssBaseline />
       <main>
+        
         <Container className={classes.container} maxWidth="md">
           <Grid container spacing={4}>
-            {cars.map((car, index) => (
+            {users?.map((user, index) => (
               <Grid item key={index} xs={12} sm={6} md={4}>
                 <Card className={classes.root}>
                   <CardMedia
                     className={classes.media}
-                    image={car.image}
-                    onClick={() => console.log(car.brand)}
+                    image={user.secure_url}
+                   // onClick={() => console.log(car.brand)}
+                    onClick={() => console.log(user)}
                   />
                   <Grid container>
                     <Grid item xs>
-                      <CardHeader title={car.brand} subheader={car.model} />
+                      <CardHeader title={user.brand} subheader={user.model} />
                     </Grid>
                     <Grid item>
                       <CardHeader
@@ -82,8 +92,8 @@ export default function Album() {
                           />
                         }
                         align="right"
-                        title={`$ ${car.price_per_day} / day`}
-                        subheader={`${car.rating.toFixed(1)}`}
+                        title={`$ ${user.price_per_day} / day`}
+                        // subheader={`${user.rating.toFixed(1)}`}
                       />
                     </Grid>
                   </Grid>
@@ -95,4 +105,6 @@ export default function Album() {
       </main>
     </React.Fragment>
   );
-}
+};
+
+export default Cars;

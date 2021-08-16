@@ -95,7 +95,7 @@ const Home = () => {
           );
         })}
       </Slider>
-      <Cars />
+      {/* <Cars /> */}
     </>
   );
 };
