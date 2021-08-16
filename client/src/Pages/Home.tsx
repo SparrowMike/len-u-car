@@ -59,7 +59,7 @@ const Home = () => {
             <Paper key={index}>
               <div
                 className={classes.mainFeaturedPost}
-                style={{ backgroundImage: `url(${car.image})` }}
+                style={{ backgroundImage: `url(${car.secure_url})` }}
               >
                 <div className={classes.overlay} />
                 <Grid container>
@@ -95,7 +95,7 @@ const Home = () => {
           );
         })}
       </Slider>
-      <Cars />
+      {/* <Cars /> */}
     </>
   );
 };

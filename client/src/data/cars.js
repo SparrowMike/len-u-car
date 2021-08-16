@@ -11,7 +11,7 @@ const cars = [
     key_features: "Sexy",
     key_rules: "pets. No smoking. Not permitted to drive into Malaysia",
     status: "Available",
-    image: "https://i.ibb.co/RcMjDvz/white-bugatti-chiron.jpg",
+    secure_url: "https://i.ibb.co/RcMjDvz/white-bugatti-chiron.jpg",
     rating: 3.25,
     review: "Only if i could afford to buy it",
     pick_up_point: "Near by Bishan MRT",
@@ -29,7 +29,7 @@ const cars = [
     key_features: "Speed",
     key_rules: "pets. No smoking. Not permitted to drive into Malaysia",
     status: "Available",
-    image:
+    secure_url:
       "https://images.unsplash.com/photo-1575225929311-30a188430dec?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2700&q=80",
     rating: 5,
     review: "Only if i could afford to buy it",
@@ -48,7 +48,7 @@ const cars = [
     key_features: "Do it all type of car",
     key_rules: "pets. No smoking. Not permitted to drive into Malaysia",
     status: "Available",
-    image:
+    secure_url:
       "https://cdn.motor1.com/images/mgl/0l89V/s1/lamborghini-urus-by-keyvany.jpg",
     rating: 4.75,
     review: "Only if i could afford to buy it",
@@ -67,7 +67,7 @@ const cars = [
     key_features: "Carpets",
     key_rules: "pets. No smoking. Not permitted to drive into Malaysia",
     status: "Available",
-    image:
+    secure_url:
       "https://robbreport.com/wp-content/uploads/2020/09/victor01.jpg?w=1000",
     rating: 4.75,
     review: "Only if i could afford to buy it",

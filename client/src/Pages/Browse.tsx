@@ -10,6 +10,42 @@ import {
   InputLabel,
 } from "@material-ui/core";
 import Cars from "../components/cars/Cars";
+import axios from "axios";
+import { useQuery } from "react-query";
+
+export interface IState {
+  users: {
+    avatar: string;
+    brand: string;
+    cars_id: number;
+    cloudinary_id: string;
+    driving_license: string;
+    email: string;
+    engine_type: string;
+    full_name: string;
+    identification_card: string;
+    images_id: number;
+    key_features: string;
+    key_rules: string;
+    mileage: string;
+    mobile: number;
+    model: string;
+    passenger_capacity: number;
+    password: string;
+    pick_up_point: string;
+    price_per_day: number;
+    secure_url: string;
+    status: string;
+    transmission: string;
+    type: string;
+    user_id: number;
+    user_type: string;
+    username: string;
+  }[];
+  carType?: string;
+  transmission?: string;
+  engineType?: string;
+}
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -30,23 +66,19 @@ const useStyles = makeStyles((theme) => ({
 
 const Browse = () => {
   const classes = useStyles();
-  const [carType, setCarType] = useState<string>("");
-  const [transmission, setTransmission] = useState<string>("");
-  const [engineType, setEngineType] = useState<string>("");
+  const [carType, setCarType] = useState<string>();
+  const [transmission, setTransmission] = useState<string>();
+  const [engineType, setEngineType] = useState<string>();
 
-  const handleCarType = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setCarType(event.target.value as string);
-  };
-  const handleTransmission = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setTransmission(event.target.value as string);
-  };
-  const handleEngineType = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setEngineType(event.target.value as string);
+  const fetchUsers = async () => {
+    const { data } = await axios.get("http://localhost:4000/users");
+    return data;
   };
 
-  // console.log(carType);
-  // console.log(transmission);
-  // console.log(engineType);
+  const { isLoading, isSuccess, error, isError, data } = useQuery(
+    "users",
+    fetchUsers
+  );
 
   return (
     <>
@@ -59,35 +91,39 @@ const Browse = () => {
                 <Select
                   id="carType"
                   value={carType}
-                  onChange={handleCarType}
                   label="Type"
+                  onChange={(e) => {
+                    setCarType(e.target.value as string);
+                  }}
                 >
                   <MenuItem value="sport">Sport</MenuItem>
-                  <MenuItem value="suv">SUV</MenuItem>
-                  <MenuItem value="avant">Avant</MenuItem>
+                  <MenuItem value="SUV">SUV</MenuItem>
+                  <MenuItem value="sedan">Sedan</MenuItem>
                 </Select>
               </FormControl>
-
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel>Transmit</InputLabel>
                 <Select
                   id="transmission"
                   value={transmission}
-                  onChange={handleTransmission}
                   label="Transmit"
+                  onChange={(e) => {
+                    setTransmission(e.target.value as string);
+                  }}
                 >
-                  <MenuItem value="auto">Auto</MenuItem>
+                  <MenuItem value="automatic">Auto</MenuItem>
                   <MenuItem value="manual">Manual</MenuItem>
                 </Select>
               </FormControl>
-
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel>Engine</InputLabel>
                 <Select
                   id="engineType"
                   value={engineType}
-                  onChange={handleEngineType}
                   label="Engine"
+                  onChange={(e) => {
+                    setEngineType(e.target.value as string);
+                  }}
                 >
                   <MenuItem value="petrol">Petrol</MenuItem>
                   <MenuItem value="diesel">Diesel</MenuItem>
@@ -98,7 +134,16 @@ const Browse = () => {
           </Grid>
         </Grid>
       </Container>
-      <Cars />
+      {isLoading ? (
+        <h1>Loading data</h1>
+      ) : (
+        <Cars
+          users={data}
+          carType={carType}
+          transmission={transmission}
+          engineType={engineType}
+        />
+      )}
     </>
   );
 };
