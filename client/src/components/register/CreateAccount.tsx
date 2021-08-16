@@ -47,10 +47,8 @@ const validationSchema = Yup.object().shape({
         });
 
         if (msg.data.msg === "Username available.") {
-          console.log(msg.data.msg);
           return Promise.resolve(true);
         } else {
-          console.log("not ok");
           return Promise.resolve(false);
         }
       }
@@ -73,10 +71,8 @@ const validationSchema = Yup.object().shape({
         });
 
         if (msg.data.msg === "Email address is available.") {
-          console.log(msg.data.msg);
           return Promise.resolve(true);
         } else {
-          console.log("not ok");
           return Promise.resolve(false);
         }
       }
@@ -145,7 +141,9 @@ const CreateAccount: React.FC = () => {
                 required
               />
               <div className={classes.submitBtn}>
-                <Button>Submit</Button>
+                <Button>
+                  <Typography style={{ fontWeight: 700 }}>Register</Typography>
+                </Button>
               </div>
             </Form>
           );

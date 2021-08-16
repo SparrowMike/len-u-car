@@ -1,28 +1,25 @@
-import "./App.css";
-import Navbar from "./components/home/Navbar";
-import { createTheme, ThemeProvider } from "@material-ui/core";
+import { Container, createTheme, ThemeProvider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Route, Switch } from "react-router-dom";
-import { Container } from "@material-ui/core";
-import Register from "./Pages/Register";
-import Login from "./Pages/Login";
-import Home from "./Pages/Home";
-import { PaginationTEST } from "./components/cars/PaginationTEST";
-import CarPage from "./components/carPage/CarPage";
-
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { Route, Switch } from "react-router-dom";
+import "./App.css";
+import CarPage from "./components/carPage/CarPage";
+import { PaginationTEST } from "./components/cars/PaginationTEST";
+import Navbar from "./components/home/Navbar";
 import Browse from "./Pages/Browse";
 import Editprofile from "./Pages/Editprofile";
-
+import Home from "./Pages/Home";
+import Login from "./Pages/Login";
+import Register from "./Pages/Register";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#168aad",
+      main: "#FF385C",
     },
     secondary: {
-      main: "#d9ed92",
+      main: "#FD5B61",
     },
   },
   typography: {
