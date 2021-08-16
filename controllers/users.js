@@ -1,41 +1,75 @@
+const bcrypt = require("bcrypt");
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 const upload = require("../utils/multer");
 const { cloudinary } = require("../utils/cloudinary");
-const bcrypt = require("bcrypt");
-
-// Routes
+const knexPg = require("knex")({
+  client: "pg",
+  connection: {
+    connectionString: process.env.HEROKU_POSTGRESQL_URL,
+    ssl: { rejectUnauthorized: false },
+  },
+});
 
 //*========================READ ALL USERS - GET ROUTE========================
+
+router.get("/random", async (req, res) => {
+  try {
+    const users = await knexPg
+      .from("users")
+      .innerJoin("cars", "users.username", "cars.username")
+      .leftJoin("car_images", "car_images.cars_id", "cars.cars_id")
+      .select(
+        "cars.cars_id",
+        "cars.price_per_day",
+        "cars.brand",
+        "cars.model",
+        "car_images.secure_url"
+      )
+      .orderByRaw("RANDOM()")
+      .limit(3);
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(400).json("Error: " + error);
+  }
+});
+
+//*========================READ RANDOM 3 USERS - GET ROUTE========================
+
 router.get("/", async (req, res) => {
   try {
-    const existingUsers = await pool.query("SELECT * FROM users;");
-    res.send(existingUsers.rows);
+    const users = await knexPg
+      .from("users")
+      .innerJoin("cars", "users.username", "cars.username")
+      .leftJoin("car_images", "car_images.cars_id", "cars.cars_id")
+      .orderBy("users.username");
+
+    res.status(200).json(users);
   } catch (error) {
-    console.log(error.message);
+    res.status(400).json("Error: " + error);
   }
 });
 
 //*========================CREATE NEW USERS - POST ROUTE========================
-router.post("/", async (req, res) => {
+
+router.post("/", upload.single("avatar"), async (req, res) => {
   try {
     const { username, password_unhashed, full_name, email } = req.body;
-
-    // hash plaintext password
-    console.log(username);
-    console.log(password_unhashed);
-    password = bcrypt.hashSync(password_unhashed, bcrypt.genSaltSync(10));
-    console.log(password);
-
-    const newUser = await pool.query(
-      "INSERT INTO users (username, password, full_name, email) VALUES ($1,$2,$3,$4)",
-      [username, password, full_name, email]
-    );
-    res.json(newUser.rows[0]);
-    console.log(newUser);
+    const password = bcrypt.hashSync(password_unhashed, bcrypt.genSaltSync(10));
+    const newUser = await knexPg("users").insert({
+      username: username,
+      password: password,
+      full_name: full_name,
+      email: email,
+    });
+    res.json({
+      msg: "database insert new user successful",
+      rowCount: newUser.rowCount,
+    });
   } catch (error) {
-    console.log(error.message);
+    res.status(400).json("Error: " + error);
   }
 });
 
@@ -78,22 +112,20 @@ router.post("/checkemail", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const userX = await pool.query("SELECT * FROM users WHERE user_id = $1", [
-      id,
-    ]);
-    //   res.json(userX.rows[0])
-    res.status(200).json(userX.rows);
+    const users = await knexPg("users").where("user_id", id);
+    res.status(200).json(users[0]);
   } catch (error) {
-    console.log(error.message);
+    res.status(400).json("Error: " + error);
   }
 });
 
 //*========================UPDATE a user - PUT ROUTE=======================
+
 router.put("/:id", async (req, res) => {
   console.log("req.body avatar - " + req.body.avatar + "req.body avatar - ");
   try {
     const { id } = req.params;
-    const fileStr = req.body.avatar;
+    const fileStr = req.body.avatar; // not tested yet
     const userAvatar = await pool.query(
       "SELECT cloudinary_id, avatar FROM users WHERE user_id = $1",
       [id]
@@ -120,7 +152,7 @@ router.put("/:id", async (req, res) => {
 
     const {
       username,
-      password_unhashed,
+      password,
       full_name,
       email,
       user_type,
@@ -129,46 +161,48 @@ router.put("/:id", async (req, res) => {
       driving_license,
     } = req.body;
 
-    password = bcrypt.hashSync(password_unhashed, bcrypt.genSaltSync(10));
+    const user_rowCount = await knexPg("users")
+      .where("user_id", "=", id)
+      .update({
+        user_id: id,
+        username: username,
+        password: password,
+        full_name: full_name,
+        email: email,
+        // avatar: avatar,
+        user_type: user_type,
+        mobile: mobile,
+        identification_card: identification_card,
+        driving_license: driving_license,
+        // cloudinary_id: cloudinary_id,
+      });
 
-    const userX = await pool.query(
-      "UPDATE users SET username = $2, password = $3, full_name = $4, email = $5, avatar = $6, user_type = $7, mobile = $8, identification_card = $9, driving_license = $10, cloudinary_id = $11 WHERE user_id = $1",
-      [
-        id,
-        username,
-        password,
-        full_name,
-        email,
-        avatar,
-        user_type,
-        mobile,
-        identification_card,
-        driving_license,
-        cloudinary_id,
-      ]
-    );
     res.status(200).send(`User modified with ID: ${id}`);
   } catch (error) {
-    console.log(error.message);
+    res.status(400).json("Error: " + error);
   }
 });
 
 //*========================DELETE a user - DELETE ROUTE========================
+
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const userAvatar = await pool.query(
-      "SELECT cloudinary_id FROM users WHERE user_id = $1",
-      [id]
-    );
-    const cloudID = userAvatar.rows[0].cloudinary_id;
+    const userAvatar = await knexPg("users") // not tested yet
+      .where("user_id", id)
+      .select("cloudinary_id");
+    const cloudID = userAvatar[0].cloudinary_id || null;
     await cloudinary.uploader.destroy(cloudID);
-    const userX = await pool.query("DELETE FROM users WHERE user_id = $1", [
-      id,
-    ]);
+
+    const result = knexPg("users")
+      .where("user_id", id)
+      .del()
+      .then(() => {
+        knexPg.destroy();
+      });
     res.status(200).send(`User deleted with ID: ${id}`);
   } catch (error) {
-    console.log(error.message);
+    res.status(400).json("Error: " + error);
   }
 });
 

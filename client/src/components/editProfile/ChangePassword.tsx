@@ -54,7 +54,6 @@ interface CurrentUser {
 const ChangePassword: React.FC = () => {
   const classes = useStyles();
   const [currentUser, setCurrentUser] = useState<CurrentUser>();
-  const [loading, setLoading] = useState<boolean>(false);
   const [initialValues, setinitialValues] = useState<FormValues>({
     user_id: undefined,
     username: undefined,
@@ -70,8 +69,6 @@ const ChangePassword: React.FC = () => {
   });
 
   useEffect(() => {
-    setLoading(true);
-
     const fetchSession = async () => {
       // retrieve session ID from custom cookie
       const sidfromCookie = Cookies.get("cook");
@@ -107,30 +104,25 @@ const ChangePassword: React.FC = () => {
         driving_license: currentUser?.driving_license,
       });
       console.log("initialValues ", initialValues);
-
-      if (currentUser?.username === undefined) {
-        setLoading(true);
-      } else {
-        setLoading(false);
-      }
     };
     fetchSession();
     // eslint-disable-next-line
   }, [currentUser?.username, initialValues?.user_id]);
 
   const handleSubmit = (formValue: FormValues) => {
-    let merge = { ...formValue };
+    let merge = { ...initialValues };
+    merge.password_unhashed = formValue.password_unhashed;
     console.log(merge);
     const updateUserAccount = async () => {
       try {
-        const res = await fetch("http://localhost:4000/users/" + currentUser, {
+        const res = await fetch("/users/" + currentUser?.user_id, {
           method: "PUT",
           body: JSON.stringify(merge),
           headers: {
             "Content-Type": "application/json",
           },
         });
-        //  const data = await res.json();
+        console.log(merge);
         console.log(res);
         alert("User profile updated succesfully!");
       } catch (error) {

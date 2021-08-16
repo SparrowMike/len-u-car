@@ -65,6 +65,7 @@ const validationSchema = Yup.object().shape({
         const msg = await axios.post("http://localhost:4000/users/checkemail", {
           email: email,
         });
+        console.log("msg: ", msg)
 
         if (msg.data.msg === "Email address is available.") {
           return Promise.resolve(true);
@@ -99,6 +100,7 @@ const CreateAccount: React.FC = () => {
         initialValues={initialValues}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
+        validateOnChange={false}
       >
         {() => {
           return (
@@ -107,7 +109,6 @@ const CreateAccount: React.FC = () => {
                 name="username"
                 label="Username"
                 className={classes.field}
-                validateOnChange={false}
                 required
               />
               <Textfield
@@ -137,7 +138,9 @@ const CreateAccount: React.FC = () => {
                 required
               />
               <div className={classes.submitBtn}>
-                <Button>Submit</Button>
+                <Button>
+                  <Typography style={{ fontWeight: 700 }}>Register</Typography>
+                </Button>
               </div>
             </Form>
           );

@@ -3,31 +3,19 @@ const router = express.Router();
 const pool = require("../db");
 const upload = require("../utils/multer");
 const { cloudinary } = require("../utils/cloudinary");
+const knexPg = require("knex")({
+  client: "pg",
+  connection: {
+    connectionString: process.env.HEROKU_POSTGRESQL_URL,
+    ssl: { rejectUnauthorized: false },
+  },
+});
 
 //*========================READ ALL IMAGES - GET ROUTE========================
 router.get("/", async (req, res) => {
   try {
-    const carImage = await pool.query("SELECT * FROM car_images;");
-    res.send(carImage.rows);
-  } catch (error) {
-    console.log(error.message);
-  }
-});
-
-//*========================CREATE new car image - POST ROUTE========================
-router.post("/", upload.single("secure_url"), async (req, res) => {
-  try {
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      upload_preset: "carImages",
-    });
-    const secure_url = result.secure_url;
-    const cloudinary_id = result.public_id;
-
-    const newCarImage = await pool.query(
-      "INSERT INTO car_images (secure_url,cloudinary_id) VALUES ($1,$2)",
-      [secure_url, cloudinary_id]
-    );
-    res.status(200).send(`Car image uploaded: ${secure_url}`);
+    const carImages = await knexPg.from("car_images");
+    res.send(carImages);
   } catch (error) {
     console.log(error.message);
   }
@@ -37,37 +25,36 @@ router.post("/", upload.single("secure_url"), async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const carX = await pool.query(
-      "SELECT * FROM car_images WHERE images_id = $1",
-      [id]
-    );
-    res.status(200).json(carX.rows);
+    const cars = await knexPg("car_images").where("images_id", id);
+    res.status(200).json(cars[0]);
   } catch (error) {
     console.log(error.message);
   }
 });
+
 //*=====================UPDATE THE IMAGE=========================
 router.put("/:id", upload.single("secure_url"), async (req, res) => {
   try {
     const { id } = req.params;
+    const fileStr = req.body.avatar; // not tested yet
     const carImages = await pool.query(
       "SELECT secure_url, cloudinary_id FROM car_images WHERE images_id = $1",
       [id]
     );
-
     console.log(carImages);
+
     let result;
     let secure_url;
     let cloudinary_id;
     const cloudID = carImages.rows[0].cloudinary_id;
     const cloudImage = carImages.rows[0].secure_url;
-    if (req.file) {
+    if (fileStr) {
+      // previous req.file
       await cloudinary.uploader.destroy(cloudID);
-      result = await cloudinary.uploader.upload(req.file.path, {
+      result = await cloudinary.uploader.upload(fileStr, {
         upload_preset: "carImages",
       });
     }
-
     if (result === undefined) {
       secure_url = cloudImage;
       cloudinary_id = cloudID;
@@ -77,11 +64,12 @@ router.put("/:id", upload.single("secure_url"), async (req, res) => {
     }
 
     const { cars_id } = req.body;
-    const carImage = await pool.query(
-      "UPDATE car_images SET secure_url = $2, cloudinary_id = $3, cars_id = $4 WHERE images_id = $1",
-      [id, secure_url, cloudinary_id, cars_id]
-    );
-
+    const carImage = await knexPg("users").where("user_id", "=", id).update({
+      images_id: id,
+      secure_url: secure_url,
+      cloudinary_id: cloudinary_id,
+      cars_id: cars_id,
+    });
     res.status(200).send(`Car image modified with ID: ${id}`);
   } catch (err) {
     console.log(err);
@@ -92,16 +80,19 @@ router.put("/:id", upload.single("secure_url"), async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const carData = await pool.query(
-      "SELECT cloudinary_id FROM car_images WHERE images_id = $1",
-      [id]
-    );
+
+    const carData = await knexPg("car_images") // not tested yet
+      .where("images_id", id)
+      .select("cloudinary_id");
     const cloudID = carData.rows[0].cloudinary_id;
     await cloudinary.uploader.destroy(cloudID);
-    const carImageX = await pool.query(
-      "DELETE FROM car_images WHERE images_id = $1",
-      [id]
-    );
+
+    const carImageX = knexPg("car_images")
+      .where("images_id", id)
+      .del()
+      .then(() => {
+        knexPg.destroy();
+      });
     res.status(200).send(`Car image with ID: ${id} deleted`);
   } catch (error) {
     console.log(error.message);

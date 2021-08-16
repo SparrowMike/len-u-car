@@ -148,6 +148,7 @@ const EditCar: React.FC = () => {
     // eslint-disable-next-line
   }, [currentUserCar?.username, initialValues?.cars_id]);
 
+
   const handleSubmit = (formValue: any) => {
     const carOwner = { username: user };
     let merge = { ...formValue, ...carOwner };
@@ -191,7 +192,7 @@ const EditCar: React.FC = () => {
 
   return (
     <>
-      {loading ? (
+      {loading ? ( 
         <CircularProgress />
       ) : (
         <div>

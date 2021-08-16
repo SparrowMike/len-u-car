@@ -13,13 +13,14 @@ import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 
+
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#168aad",
+      main: "#FF385C",
     },
     secondary: {
-      main: "#d9ed92",
+      main: "#FD5B61",
     },
   },
   typography: {
@@ -61,13 +62,12 @@ function App() {
               <Route path="/pagination">
                 <PaginationTEST />
               </Route>
-              <Route path="/carpage">
+              <Route path="/carpage/:cars_id">
                 <CarPage />
               </Route>
               <Route path="/browse">
                 <Browse />
               </Route>
-
               <Route path="/register">
                 <Register />
               </Route>

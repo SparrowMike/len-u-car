@@ -135,6 +135,7 @@ const UpdateProfile: React.FC = () => {
     // eslint-disable-next-line
   }, [currentUser?.username, initialValues?.user_id]);
 
+
   const handleSubmit = (formValue: FormValues) => {
     const reader: any = new FileReader();
     if (image) {
