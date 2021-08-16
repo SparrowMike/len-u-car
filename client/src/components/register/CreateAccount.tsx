@@ -69,6 +69,7 @@ const validationSchema = Yup.object().shape({
         const msg = await axios.post("http://localhost:4000/users/checkemail", {
           email: email,
         });
+        console.log("msg: ", msg)
 
         if (msg.data.msg === "Email address is available.") {
           return Promise.resolve(true);
