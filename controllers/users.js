@@ -10,7 +10,7 @@ const bcrypt = require("bcrypt");
 //*========================READ ALL USERS - GET ROUTE========================
 router.get("/", async (req, res) => {
   try {
-    const existingUsers = await pool.query("SELECT * FROM users;");
+    const existingUsers = await pool.query("SELECT * FROM users LEFT JOIN cars ON users.username = cars.username LEFT JOIN car_images ON car_images.cars_id = cars.cars_id ORDER BY users.username;");
     res.send(existingUsers.rows);
   } catch (error) {
     console.log(error.message);

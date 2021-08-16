@@ -10,6 +10,8 @@ import {
   InputLabel,
 } from "@material-ui/core";
 import Cars from "../components/cars/Cars";
+import axios from 'axios';
+import { useQuery } from "react-query";
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -48,6 +50,20 @@ const Browse = () => {
   // console.log(transmission);
   // console.log(engineType);
 
+  const fetchUsers = async () => {
+    const { data } = await axios.get(
+      'http://localhost:4000/users'
+    );
+    return data;
+  };
+
+  const {  isLoading, 
+           isSuccess, 
+           error, 
+           isError, 
+           data} = useQuery("users", fetchUsers)
+  
+           console.log(data);
   return (
     <>
       <Container className={classes.container}>
