@@ -3,6 +3,13 @@ const router = express.Router();
 const pool = require("../db");
 const upload = require("../utils/multer");
 const { cloudinary } = require("../utils/cloudinary");
+const knexPg = require("knex")({
+  client: "pg",
+  connection: {
+    connectionString: process.env.HEROKU_POSTGRESQL_URL,
+    ssl: { rejectUnauthorized: false },
+  },
+});
 
 //*========================READ ALL USERS - GET ROUTE========================
 
