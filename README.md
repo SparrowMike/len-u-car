@@ -10,6 +10,8 @@
 - npm i bcrypt
 - npm i express-session
 - npm i redis connect-redis
+-
+- npm install knex --save
 
 ### 2. Front-End
 
