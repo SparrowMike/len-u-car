@@ -104,6 +104,7 @@ const CreateAccount: React.FC = () => {
         initialValues={initialValues}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
+        validateOnChange={false}
       >
         {({ dirty, isValid }) => {
           return (
@@ -112,7 +113,6 @@ const CreateAccount: React.FC = () => {
                 name="username"
                 label="Username"
                 className={classes.field}
-                validateOnChange={false}
                 required
               />
               <Textfield

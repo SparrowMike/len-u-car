@@ -53,10 +53,10 @@ router.post("/", upload.single("avatar"), async (req, res) => {
 
 router.post("/checkusers", async (req, res) => {
   try {
-    const existingUsers = await knexPg("users")
-      .where("username", req.body.username)
-      .then((users) => {
-        if (users.length !== 0 && users[0].username) {
+    const existingUsers = await pool
+      .query("SELECT * FROM users WHERE username = $1", [req.body.username])
+      .then((user) => {
+        if (user.rowCount) {
           return res.json({ msg: "Username already been taken" });
         }
         return res.json({ msg: "Username available." });
@@ -70,11 +70,11 @@ router.post("/checkusers", async (req, res) => {
 
 router.post("/checkemail", async (req, res) => {
   try {
-    const existingUsers = await knexPg("users")
-      .where("email", req.body.email)
-      .then((users) => {
-        if (users.length !== 0 && users[0].email) {
-          return res.json({ msg: "Email already been taken" });
+    const existingUsers = await pool
+      .query("SELECT * FROM users WHERE email = $1", [req.body.email])
+      .then((email) => {
+        if (email.rowCount) {
+          return res.json({ msg: "Email address is in use." });
         }
         return res.json({ msg: "Email address is available." });
       });
@@ -167,7 +167,6 @@ router.delete("/:id", async (req, res) => {
     const userAvatar = await knexPg("users") // not tested yet
       .where("user_id", id)
       .select("cloudinary_id");
-
     const cloudID = userAvatar[0].cloudinary_id;
     await cloudinary.uploader.destroy(cloudID);
 
