@@ -2,12 +2,19 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 const upload = require("../utils/multer");
+const knexPg = require("knex")({
+  client: "pg",
+  connection: {
+    connectionString: process.env.HEROKU_POSTGRESQL_URL,
+    ssl: { rejectUnauthorized: false },
+  },
+});
 
 //*=======================READ all cars - GET ROUTE========================
 router.get("/", async (req, res) => {
   try {
-    const existingCars = await pool.query("SELECT * FROM cars;");
-    res.send(existingCars.rows);
+    const existingCars = await knexPg.from("cars");
+    res.send(existingCars);
   } catch (error) {
     console.log(error.message);
   }
@@ -29,26 +36,23 @@ router.post("/", async (req, res) => {
       key_rules,
       status,
       pick_up_point,
-      user_id,
+      username,
     } = req.body;
-    const newCar = await pool.query(
-      "INSERT INTO cars (brand, model, type, passenger_capacity, transmission, price_per_day, mileage, engine_type, key_features, key_rules,status,pick_up_point,user_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)",
-      [
-        brand,
-        model,
-        type,
-        passenger_capacity,
-        transmission,
-        price_per_day,
-        mileage,
-        engine_type,
-        key_features,
-        key_rules,
-        status,
-        pick_up_point,
-        user_id,
-      ]
-    );
+    const newCar = await knexPg("cars").insert({
+      brand: brand,
+      model: model,
+      type: type,
+      passenger_capacity: passenger_capacity,
+      transmission: transmission,
+      price_per_day: price_per_day,
+      mileage: mileage,
+      engine_type: engine_type,
+      key_features: key_features,
+      key_rules: key_rules,
+      status: status,
+      pick_up_point: pick_up_point,
+      username: username,
+    });
     res.status(200).send(`Car created with brand: ${brand}`);
   } catch (error) {
     console.log(error.message);
@@ -59,11 +63,8 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const carX = await pool.query("SELECT * FROM cars WHERE cars_id = $1", [
-      id,
-    ]);
-    //   res.json(userX.rows[0])
-    res.status(200).json(carX.rows);
+    const cars = await knexPg("cars").where("cars_id", id);
+    res.status(200).json(cars[0]);
   } catch (error) {
     console.log(error.message);
   }
@@ -88,25 +89,24 @@ router.put("/:id", async (req, res) => {
       pick_up_point,
       username, // previous was 'user_id'
     } = req.body;
-    const carX = await pool.query(
-      "UPDATE cars SET brand = $2, model = $3, type = $4, passenger_capacity = $5, transmission = $6, price_per_day = $7, mileage = $8, engine_type = $9, key_features = $10,key_rules = $11,status= $12,pick_up_point = $13,username = $14 WHERE cars_id = $1",
-      [
-        id,
-        brand,
-        model,
-        type,
-        passenger_capacity,
-        transmission,
-        price_per_day,
-        mileage,
-        engine_type,
-        key_features,
-        key_rules,
-        status,
-        pick_up_point,
-        username, // previous was 'user_id'
-      ]
-    );
+
+    const car_rowCount = await knexPg("cars").where("cars_id", "=", id).update({
+      cars_id: id,
+      brand: brand,
+      model: model,
+      type: type,
+      passenger_capacity: passenger_capacity,
+      transmission: transmission,
+      price_per_day: price_per_day,
+      mileage: mileage,
+      engine_type: engine_type,
+      key_features: key_features,
+      key_rules: key_rules,
+      status: status,
+      pick_up_point: pick_up_point,
+      username: username,
+    });
+
     res.status(200).send(`Car modified with ID: ${id}`);
   } catch (error) {
     console.log(error.message);
@@ -117,7 +117,12 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const carX = await pool.query("DELETE FROM cars WHERE cars_id = $1", [id]);
+    const result = knexPg("cars")
+      .where("cars_id", id)
+      .del()
+      .then(() => {
+        knexPg.destroy();
+      });
 
     res.status(200).send(`Car deleted with ID: ${id}`);
   } catch (error) {

@@ -18,10 +18,6 @@ const useStyles = makeStyles({
   field: {
     marginTop: 10,
   },
-  footer: {
-    marginTop: 40,
-    paddingBottom: 40,
-  },
 });
 
 const validationSchema = yup.object({
@@ -77,17 +73,17 @@ const UpdateProfile: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<CurrentUser>();
   const [loading, setLoading] = useState<boolean>(false);
   const [initialValues, setinitialValues] = useState<FormValues>({
-    user_id: 0,
-    username: "",
-    password: "",
-    avatar: "",
-    cloudinary_id: "",
-    full_name: "",
-    email: "",
-    user_type: "",
-    mobile: 0,
-    identification_card: "",
-    driving_license: "",
+    user_id: undefined,
+    username: undefined,
+    password: undefined,
+    avatar: undefined,
+    cloudinary_id: undefined,
+    full_name: undefined,
+    email: undefined,
+    user_type: undefined,
+    mobile: undefined,
+    identification_card: undefined,
+    driving_license: undefined,
   });
 
   useEffect(() => {
@@ -96,24 +92,20 @@ const UpdateProfile: React.FC = () => {
     const fetchSession = async () => {
       // retrieve session ID from custom cookie
       const sidfromCookie = Cookies.get("cook");
-      console.log(sidfromCookie);
+      console.log("Session Id from Cookie: ", sidfromCookie);
 
-      const res = await fetch(
-        `http://localhost:4000/sessions/check/${sidfromCookie}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(`/sessions/check/${sidfromCookie}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await res.json();
 
       console.log("check useEffect server response", data.sessionDetails);
       const currentUserInfo = data.sessionDetails.currentUser;
       console.log("currentUser Data from Redis:", currentUserInfo);
-      console.log(typeof currentUserInfo);
 
       setCurrentUser(currentUserInfo);
       console.log(currentUser);
@@ -140,7 +132,9 @@ const UpdateProfile: React.FC = () => {
       }
     };
     fetchSession();
+    // eslint-disable-next-line
   }, [currentUser?.username, initialValues?.user_id]);
+
 
   const handleSubmit = (formValue: FormValues) => {
     const reader: any = new FileReader();
@@ -153,7 +147,6 @@ const UpdateProfile: React.FC = () => {
     if (!previewSource) return;
     const ImageURL = { avatar: previewSource };
     let merge = { ...formValue, ...ImageURL };
-    // console.log(merge);
 
     const updateUserAccount = async () => {
       try {
