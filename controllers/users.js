@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
@@ -31,7 +32,8 @@ router.get("/", async (req, res) => {
 
 router.post("/", upload.single("avatar"), async (req, res) => {
   try {
-    const { username, password, full_name, email } = req.body;
+    const { username, password_unhashed, full_name, email } = req.body;
+    const password = bcrypt.hashSync(password_unhashed, bcrypt.genSaltSync(10));
     const newUser = await knexPg("users").insert({
       username: username,
       password: password,
@@ -74,7 +76,7 @@ router.post("/checkemail", async (req, res) => {
         if (users.length !== 0 && users[0].email) {
           return res.json({ msg: "Email already been taken" });
         }
-        return res.json({ msg: "Email available." });
+        return res.json({ msg: "Email address is available." });
       });
   } catch (error) {
     res.status(400).json("Error: " + error);

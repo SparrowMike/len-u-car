@@ -2,6 +2,13 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 const upload = require("../utils/multer");
+const knexPg = require("knex")({
+  client: "pg",
+  connection: {
+    connectionString: process.env.HEROKU_POSTGRESQL_URL,
+    ssl: { rejectUnauthorized: false },
+  },
+});
 
 //*=======================READ all cars - GET ROUTE========================
 router.get("/", async (req, res) => {
