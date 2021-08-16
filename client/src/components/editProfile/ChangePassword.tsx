@@ -143,10 +143,10 @@ const ChangePassword: React.FC = () => {
   };
 
   return (
-    <>
-      {loading ? (
-        <CircularProgress />
-      ) : (
+    // <>
+    //   {loading ? (
+    //     <CircularProgress />
+    //   ) : (
         <div>
           <Formik
             initialValues={{ ...initialValues }}
@@ -174,8 +174,8 @@ const ChangePassword: React.FC = () => {
             )}
           </Formik>
         </div>
-      )}
-    </>
+    //   )}
+    // </>
   );
 };
 
