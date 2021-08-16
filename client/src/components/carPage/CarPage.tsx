@@ -13,6 +13,14 @@ import {
 import Slider from "react-slick";
 
 import cars from "../../data/cars";
+import { IState as Props } from "../../Pages/Browse";
+import { useLocation } from "react-router";
+
+interface LocationState {
+  data: Props["users"];
+
+}
+
 
 const useStyles = makeStyles((theme) => ({
   mainFeaturedPost: {
@@ -57,7 +65,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CarPage() {
+function CarPage() {
+  const location = useLocation()
+  const notify = location.state.data;
+  console.log(location.state);
+  console.log(location.state.data.brand)
   const classes = useStyles();
 
   const slickSettings = {
@@ -115,4 +127,6 @@ export default function CarPage() {
       </Container>
     </div>
   );
-}
+};
+
+export default CarPage;

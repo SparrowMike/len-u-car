@@ -70,7 +70,7 @@ function App() {
               <Route path="/browse">
                 <Browse />
               </Route>
-
+          
               <Route path="/register">
                 <Register />
               </Route>

@@ -15,6 +15,7 @@ import StarIcon from "@material-ui/icons/Star";
 
 import cars from "../../data/cars";
 import { IState as Props } from "../../Pages/Browse";
+import { Link } from "react-router-dom";
 
 interface IProps {
   users: Props["users"];
@@ -58,6 +59,7 @@ const Cars: React.FC<IProps> = ({ users }) => {
   const classes = useStyles();
 console.log(users);
 // console.log(users[0]);
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -68,12 +70,14 @@ console.log(users);
             {users?.map((user, index) => (
               <Grid item key={index} xs={12} sm={6} md={4}>
                 <Card className={classes.root}>
+                <Link to={{pathname: "/carpage", state: {data: user}}}>
                   <CardMedia
                     className={classes.media}
                     image={user.secure_url}
                    // onClick={() => console.log(car.brand)}
                     onClick={() => console.log(user)}
                   />
+                    </Link>
                   <Grid container>
                     <Grid item xs>
                       <CardHeader title={user.brand} subheader={user.model} />
