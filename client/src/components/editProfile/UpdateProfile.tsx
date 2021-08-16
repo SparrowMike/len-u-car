@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import Textfield from "../editProfile/FormsUI/Textfield";
 import Cookies from "js-cookie";
-// import { DropzoneArea } from "material-ui-dropzone";
+import { DropzoneArea } from "material-ui-dropzone";
 
 const useStyles = makeStyles({
   form: {
@@ -17,10 +17,6 @@ const useStyles = makeStyles({
   },
   field: {
     marginTop: 10,
-  },
-  footer: {
-    marginTop: 40,
-    paddingBottom: 40,
   },
 });
 
@@ -72,8 +68,8 @@ interface CurrentUser {
 
 const UpdateProfile: React.FC = () => {
   const classes = useStyles();
-  // const [previewSource, setPreviewSource] = useState("");
-  // const [image, setImage] = useState<any>();
+  const [previewSource, setPreviewSource] = useState("");
+  const [image, setImage] = useState<any>();
   const [currentUser, setCurrentUser] = useState<CurrentUser>();
   const [loading, setLoading] = useState<boolean>(false);
   const [initialValues, setinitialValues] = useState<FormValues>({
@@ -98,15 +94,12 @@ const UpdateProfile: React.FC = () => {
       const sidfromCookie = Cookies.get("cook");
       console.log("Session Id from Cookie: ", sidfromCookie);
 
-      const res = await fetch(
-        `http://localhost:4000/sessions/check/${sidfromCookie}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(`/sessions/check/${sidfromCookie}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await res.json();
 
@@ -139,21 +132,21 @@ const UpdateProfile: React.FC = () => {
       }
     };
     fetchSession();
+    // eslint-disable-next-line
   }, [currentUser?.username, initialValues?.user_id]);
 
 
   const handleSubmit = (formValue: FormValues) => {
-    // const reader: any = new FileReader();
-    // if (image) {
-    //   reader.readAsDataURL(image);
-    // }
-    // reader.onloadend = () => {
-    //   setPreviewSource(reader.result);
-    // };
-    // if (!previewSource) return;
-    // const ImageURL = { avatar: previewSource };
-    let merge = { ...formValue };
-    // console.log(merge);
+    const reader: any = new FileReader();
+    if (image) {
+      reader.readAsDataURL(image);
+    }
+    reader.onloadend = () => {
+      setPreviewSource(reader.result);
+    };
+    if (!previewSource) return;
+    const ImageURL = { avatar: previewSource };
+    let merge = { ...formValue, ...ImageURL };
 
     const updateUserAccount = async () => {
       try {
@@ -189,14 +182,14 @@ const UpdateProfile: React.FC = () => {
             {(formik) => (
               <Container>
                 <form onSubmit={formik.handleSubmit} className={classes.form}>
-                  {/* <DropzoneArea
+                  <DropzoneArea
                     acceptedFiles={["image/*"]}
                     dropzoneText={"Drag and drop an avatar here or click"}
                     filesLimit={1}
                     onChange={(files) => {
                       setImage(files[0]);
                     }}
-                  /> */}
+                  />
                   <Textfield
                     className={classes.field}
                     id="full_name"

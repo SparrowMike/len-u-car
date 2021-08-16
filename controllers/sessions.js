@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 
-const redisClient = require("../server.js"); // correct?
+const redisClient = require("../server.js");
 
 // login
 router.post("/", async (req, res) => {

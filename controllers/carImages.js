@@ -41,7 +41,6 @@ router.get("/:id", async (req, res) => {
       "SELECT * FROM car_images WHERE images_id = $1",
       [id]
     );
-    //   res.json(userX.rows[0])
     res.status(200).json(carX.rows);
   } catch (error) {
     console.log(error.message);

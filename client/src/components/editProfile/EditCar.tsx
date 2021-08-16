@@ -14,10 +14,6 @@ const useStyles = makeStyles({
   field: {
     marginTop: 10,
   },
-  footer: {
-    marginTop: 40,
-    paddingBottom: 40,
-  },
 });
 
 const validationSchema = yup.object({
@@ -78,6 +74,7 @@ interface currentUserCar {
 
 const EditCar: React.FC = () => {
   const classes = useStyles();
+  const [user, setUser] = useState<string>();
   const [currentUserCar, setCurrentUserCar] = useState<currentUserCar>();
   const [loading, setLoading] = useState<boolean>(false);
   const [initialValues, setinitialValues] = useState<FormValues>({
@@ -120,11 +117,11 @@ const EditCar: React.FC = () => {
       console.log("check useEffect server response", data.sessionDetails);
       const currentUserCarsInfo = data.sessionDetails.currentUserCars;
       console.log("currentUser Data from Redis:", currentUserCarsInfo);
-
+      setUser(data.sessionDetails.currentUser.username);
       setCurrentUserCar(currentUserCarsInfo[0]); // first element in array
       console.log("currentUserCar: ", currentUserCar);
 
-      if( currentUserCar !== undefined ) {
+      if (currentUserCar !== undefined) {
         setinitialValues({
           cars_id: currentUserCar?.cars_id,
           brand: currentUserCar?.brand,
@@ -142,18 +139,19 @@ const EditCar: React.FC = () => {
           username: currentUserCar?.username,
         });
       } else {
-        console.log("currentUserCar: undefined" )
+        console.log("currentUserCar: undefined");
       }
-
-      console.log("initialValues: ", initialValues)
+      console.log("initialValues ", initialValues);
       setLoading(false);
     };
     fetchSession();
+    // eslint-disable-next-line
   }, [currentUserCar?.username, initialValues?.cars_id]);
 
 
   const handleSubmit = (formValue: any) => {
-    let merge = { ...formValue };
+    const carOwner = { username: user };
+    let merge = { ...formValue, ...carOwner };
     console.log(merge);
     const updateCarAccount = async () => {
       try {
@@ -171,7 +169,6 @@ const EditCar: React.FC = () => {
         console.log(error);
       }
     };
-
     const createCarAccount = async () => {
       try {
         const res = await fetch("/cars/", {
@@ -184,7 +181,7 @@ const EditCar: React.FC = () => {
       } catch (error) {
         console.error(error.message);
       }
-    }
+    };
 
     if (currentUserCar?.cars_id === undefined) {
       createCarAccount();
