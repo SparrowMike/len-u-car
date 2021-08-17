@@ -28,7 +28,7 @@ CREATE TABLE cars (
     key_rules varchar(300),
     status varchar(60),
     pick_up_point varchar(300),
-    username varchar(20),
+    username varchar(20)
 )
 
 CREATE TABLE car_images (
@@ -38,14 +38,19 @@ CREATE TABLE car_images (
     cars_id int
 )
 
-CREATE TABLE car_rental_event (
-    event_id SERIAL,
+CREATE TABLE car_rental_rating (
+    rating_id SERIAL,
     rating int,
     review varchar(300),
-    cars_id int
-    start_day DATE
-    end_day DATE
-    user_id int
-)
+    cars_id int,
+    username varchar(20)
+);
 
+CREATE TABLE car_rental_event (
+    event_id SERIAL,
+    day int,
+    month int,
+    year int,
+    cars_id int
+);
 

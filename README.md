@@ -34,6 +34,8 @@
 - npm i js-cookie
 - npm i --save-dev @types/js-cookie
 
+- npm i react-modern-calendar-datepicker
+
 #### React Typesript cheatsheet
 
 - https://github.com/typescript-cheatsheets/react
