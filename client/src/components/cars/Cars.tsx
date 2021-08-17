@@ -20,6 +20,12 @@ interface IProps {
   engineType: Props["engineType"];
 }
 
+interface Filter {
+  type?: string;
+  transmission?: string;
+  engine_type?: string;
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 600,
@@ -64,7 +70,7 @@ const Cars: React.FC<IProps> = ({
   console.log(transmission);
   console.log(engineType);
 
-  let filter = {
+  let filter: Filter = {
     type: carType,
     transmission: transmission,
     engine_type: engineType,
@@ -77,56 +83,27 @@ const Cars: React.FC<IProps> = ({
         <Container className={classes.container} maxWidth="md">
           <Grid container spacing={4}>
             {users
-              ?.filter(
-                (user) =>
-                  carType === undefined &&
-                  transmission === undefined &&
-                  engineType === undefined
-                    ? user.user_type !== "consumer"
-                    : (user.user_type !== "consumer" &&
-                        user.type === carType) ||
-                      user.transmission === transmission ||
-                      user.engine_type === engineType
-
-                // : user.user_type !== "consumer" &&  Object.entries(filter).every(([prop, find]) => find?.includes(user[prop]))
-                // : ((user.user_type !== "consumer" && user.type === carType && user.transmission === transmission && user.engine_type === engineType ) ||  (user.user_type !== "consumer" && user.type === carType && user.transmission === transmission ) || (user.user_type !== "consumer" && user.type === carType))
-              )
-              //         (user.type === carType || user.type === undefined) &&
-              //         (user.transmission === transmission || user.transmission === undefined) &&
-              //         (user.engine_type === engineType || user.engine_type === undefined)
-
-              // let data = [
-              //   {
-              //     "name": "Apple",
-              //     "age": 24,
-              //     "model": "Android",
-              //     "status": "Under development",
-              //   }, {
-              //     "name": "Roboto",
-              //     "age": 24,
-              //     "model": "Apple",
-              //     "status": "Running",
-              //   }, {
-              //     "name": "Samsung",
-              //     "age": 26,
-              //     "model": "Blueberry",
-              //     "status": "Running",
-              //   },
-              // ];
-
-              // let filter = {
-              //     "name": ["Roboto", "Ericsson"],
-              //     "age": [22, 24, 26],
-              // };
-
-              // let res = data.filter(obj =>
-              //     Object.entries(filter).every(([prop, find]) => find.includes(obj[prop])));
-
-              // console.log(res);
-
+              ?.filter((user, index) => {
+                let count = 0;
+                for (var key in filter) {
+                  if (filter[key as keyof typeof filter] === "") {
+                    count += 1;
+                    if (count === 3) {
+                      return true;
+                    }
+                  } else if (
+                    user[key as keyof typeof filter] === "" ||
+                    user[key as keyof typeof filter] !==
+                      filter[key as keyof typeof filter]
+                  ) {
+                    return false;
+                  }
+                }
+                return true;
+              })
               .map((user, index) =>
-                user === null ? (
-                  <h1>No data</h1>
+                user === undefined ? (
+                  <h1>No cars available with specified requirments</h1>
                 ) : (
                   <Grid item key={index} xs={12} sm={6} md={4}>
                     <Card className={classes.root}>
