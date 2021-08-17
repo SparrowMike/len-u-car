@@ -8,12 +8,14 @@ import {
   Divider,
   Avatar,
   Typography,
+  Button,
 } from "@material-ui/core";
 
 import Slider from "react-slick";
 
 import { useLocation } from "react-router";
-import cars from "../../data/cars";
+
+import Calendar from "./Calendar";
 
 export interface IState {
   avatar: string;
@@ -171,7 +173,9 @@ const CarPage = () => {
             </Paper>
           </Grid>
           <Grid item xs={4}>
-            <Paper className={classes.side}>Side</Paper>
+            <Paper className={classes.side}>
+              <Calendar />
+            </Paper>
           </Grid>
         </Grid>
       </Container>
