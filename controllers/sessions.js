@@ -53,20 +53,50 @@ router.get("/check/:sid", (req, res) => {
   } else {
     const sid_get = `sess:${sid}`;
 
-    redisClient.get(sid_get, async (err, jobs) => {
-      if (err) {
-        res.json({
-          message: "Retrieve session data from Redis server not successful",
+    redisClient.exists(sid_get, (err, ok) => {
+      if (err) throw err;
+
+      console.log("ok: ", ok);
+      if (ok) {
+        // if session key exist in Redis server
+        redisClient.get(sid_get, async (err, jobs) => {
+          if (err) {
+            res.json({
+              message: "Retrieve session data from Redis server not successful",
+            });
+          } else {
+            if (jobs) {
+              res.status(200).json({
+                sessionDetails: JSON.parse(jobs),
+                msg: "Retrieved session data from Redis server.",
+                session_exist: "true",
+              });
+            }
+          }
         });
       } else {
-        if (jobs) {
-          res.status(200).json({
-            sessionDetails: JSON.parse(jobs),
-            message: "Retrieved session data from Redis server.",
-          });
-        }
+        // if session key DON't exist in Redis server
+        res.status(400).json({
+          msg: "session key don't exist in Redis server",
+          session_exist: "false",
+        });
       }
     });
+
+    // redisClient.get(sid_get, async (err, jobs) => {
+    //   if (err) {
+    //     res.json({
+    //       message: "Retrieve session data from Redis server not successful",
+    //     });
+    //   } else {
+    //     if (jobs) {
+    //       res.status(200).json({
+    //         sessionDetails: JSON.parse(jobs),
+    //         message: "Retrieved session data from Redis server.",
+    //       });
+    //     }
+    //   }
+    // });
   }
 });
 
