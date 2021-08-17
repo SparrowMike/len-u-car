@@ -38,9 +38,14 @@ CREATE TABLE car_images (
     cars_id int
 )
 
--- CREATE TABLE car_rental_event (
---     event_id SERIAL,
---     rating: int,
---     review: varchar(300),
---     cars_id int
--- )
+CREATE TABLE car_rental_event (
+    event_id SERIAL,
+    rating int,
+    review varchar(300),
+    cars_id int
+    start_day DATE
+    end_day DATE
+    user_id int
+)
+
+
