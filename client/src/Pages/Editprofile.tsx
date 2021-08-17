@@ -1,11 +1,18 @@
 import React from "react";
 import Edit from '../components/editProfile/Edit';
+import { useHistory } from "react-router-dom";
 
 
-const Editprofile = () => {
+interface IProps {
+  loggedIn: boolean
+}
+
+const Editprofile: React.FC<IProps>  = (props) => {
+  const history = useHistory();
+
   return (
     <>
-    <Edit/>
+    { props.loggedIn ? <Edit/> : history.push('/login') }
     </>
   );
 };
