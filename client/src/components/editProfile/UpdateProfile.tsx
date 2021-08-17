@@ -92,7 +92,7 @@ const UpdateProfile: React.FC = () => {
     const fetchSession = async () => {
       // retrieve session ID from custom cookie
       const sidfromCookie = Cookies.get("cook");
-      if (sidfromCookie === undefined) console.log("No cookie available.")        // +
+      if (sidfromCookie === undefined) console.log("No cookie available."); // +
       console.log("Session Id from Cookie: ", sidfromCookie);
 
       const res = await fetch(`/sessions/check/${sidfromCookie}`, {
@@ -101,7 +101,7 @@ const UpdateProfile: React.FC = () => {
           "Content-Type": "application/json",
         },
       });
-      console.log("res: ", res)
+      console.log("res: ", res);
 
       const data = await res.json();
 
@@ -117,7 +117,7 @@ const UpdateProfile: React.FC = () => {
         username: currentUser?.username,
         password: currentUser?.password,
         avatar: currentUser?.avatar,
-        cloudinary_id: currentUser?.cloudinary_id,
+        cloudinary_id: currentUser?.cloudinary_id || "",
         full_name: currentUser?.full_name,
         email: currentUser?.email,
         user_type: currentUser?.user_type,
@@ -137,19 +137,21 @@ const UpdateProfile: React.FC = () => {
     // eslint-disable-next-line
   }, [currentUser?.username, initialValues?.user_id]);
 
-
   const handleSubmit = (formValue: FormValues) => {
     const reader: any = new FileReader();
     if (image) {
       reader.readAsDataURL(image);
+      reader.onloadend = () => {
+        setPreviewSource(reader.result);
+      };
+      if (!previewSource) return;
+    } else {
+      setPreviewSource("");
     }
-    reader.onloadend = () => {
-      setPreviewSource(reader.result);
-    };
-    if (!previewSource) return;
+
     const ImageURL = { avatar: previewSource };
     let merge = { ...formValue, ...ImageURL };
-
+    console.log("this is merge: ", merge);
     const updateUserAccount = async () => {
       try {
         const res = await fetch("/users/" + currentUser?.user_id, {
