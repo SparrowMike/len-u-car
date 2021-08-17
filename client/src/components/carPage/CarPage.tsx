@@ -14,6 +14,14 @@ import Slider from "react-slick";
 
 import { useLocation } from "react-router";
 import cars from "../../data/cars";
+import { IState as Props } from "../../Pages/Browse";
+
+
+interface LocationState {
+  data: Props["users"];
+
+}
+
 
 export interface IState {
   avatar: string;
@@ -93,6 +101,7 @@ const CarPage = () => {
   const location: any = useLocation();
 
   console.log(location);
+  const user = location.state.data.user;
   const userAvatar = location.state.data.user.avatar;
   const username = location.state.data.user.username;
   const email = location.state.data.user.email;
@@ -134,7 +143,7 @@ const CarPage = () => {
         <Paper>
           <div
             className={classes.mainFeaturedPost}
-            style={{ backgroundImage: `url(${secure_url})` }}
+            style={{ backgroundImage: `url(${user.secure_url})` }}
           >
             <div className={classes.overlay} />
           </div>
@@ -151,20 +160,20 @@ const CarPage = () => {
                 <Grid item xs={4}>
                   <Avatar
                     alt="Remy Sharp"
-                    src={userAvatar}
+                    src={user.avatar}
                     className={classes.avatar}
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography>{username}</Typography>
+                  <Typography>{user.username}</Typography>
                   <Divider className={classes.divider} />
-                  <Typography variant="subtitle1">Brand: {brand}</Typography>
-                  <Typography variant="body2">Model: {model}</Typography>
+                  <Typography variant="subtitle1">Brand: {user.brand}</Typography>
+                  <Typography variant="body2">Model: {user.model}</Typography>
                   <Typography variant="subtitle1">
-                    Engine Type: {engine_type}
+                    Engine Type: {user.engine_type}
                   </Typography>
                   <Typography variant="subtitle1">
-                    Transmission: {transmission}
+                    Transmission: {user.transmission}
                   </Typography>
                 </Grid>
               </Grid>
