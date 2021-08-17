@@ -5,6 +5,7 @@ import Footer from "../components/home/Footer";
 import { Typography } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 import NewSession from "../components/login/NewSession";
+import { Dispatch, SetStateAction } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,14 +31,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = () => {
+interface IProps {
+  setloggedIn: Dispatch<SetStateAction<boolean>>;
+  loggedIn: boolean
+}
+
+const Login: React.FC<IProps> = (props) => {
   const classes = useStyles();
   return (
     <div>
       <Grid container justifyContent="center">
         <Grid item xs={12} sm={6} md={6}>
           <Paper className={classes.root} elevation={2}>
-            <NewSession />
+            <NewSession setloggedIn={props.setloggedIn} loggedIn={props.loggedIn} />
           </Paper>
           <Paper className={classes.signup} elevation={2}>
             <Typography variant="subtitle2">

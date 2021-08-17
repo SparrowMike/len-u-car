@@ -1,4 +1,4 @@
-import { useState, KeyboardEvent, MouseEvent, Dispatch, SetStateAction } from "react";
+import { useState, KeyboardEvent, MouseEvent, Dispatch, SetStateAction, useEffect } from "react";
 import clsx from "clsx";
 import {
   createStyles,
@@ -19,6 +19,7 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import { Link as RouterLink } from "react-router-dom";
 import Cookies from "js-cookie";
+import { CollectionsBookmarkOutlined } from "@material-ui/icons";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -60,29 +61,57 @@ const Navbar: React.FC<IProps> = (props) => {
   const theme = useTheme();
   const [mobileBar, setMobileBar] = useState({ top: false });
 
-  const checkLoggedIn = () => {
-    const fetchSession = async () => {
-      // retrieve session ID from custom cookie
-      const sidfromCookie = Cookies.get("cook");
-      if (sidfromCookie === undefined) console.log("No cookie available.")        // +
-      console.log("Session Id from Cookie: ", sidfromCookie);
+  // const [sidvalid, setSidvalid] = useState<boolean>(false);
+  // const [sessionMsg, setSessionMsg] = useState<string>("");
 
-      if( sidfromCookie !== undefined ) {
-        const res = await fetch(`/sessions/check/${sidfromCookie}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await res.json();
+  // const checkLoggedIn = () => {
+  //   const fetchSession = async () => {
+  //     // retrieve session ID from custom cookie
+  //     const sidfromCookie = Cookies.get("cook");
+  //     if (sidfromCookie === undefined) console.log("No cookie available.")        // +
+  //     console.log("Session Id from Cookie: ", sidfromCookie);
+
+  //     if( sidfromCookie !== undefined ) {
+  //       const res = await fetch(`/sessions/check/${sidfromCookie}`, {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       });
+  //       const data = await res.json();
+
+  //       setSessionMsg(data.msg);
+  //       console.log(data.msg)
+  //       console.log( sessionMsg)
+
         
-        props.setloggedIn( data.session_exist )
-        console.log("data.session_exist: ", data.session_exist ) 
-        console.log("loggedIn: ", props.loggedIn )  
-      }
-    }
-    fetchSession();
-  }
+  //       if( data.session_exist === 'true') {
+  //         setSidvalid( true )
+  //       } else {
+  //         setSidvalid( false )
+  //       }
+  //       console.log("data.session_exist: ", data.session_exist ) 
+  //       console.log("sidvalid: ", sidvalid )  
+  //     }
+  //   }
+  //   fetchSession();
+  // }
+
+  // const logoutSession = () => {
+  //   console.log("logging out....")
+  //   setSidvalid(false)
+  //   // props.setloggedIn( false )
+  //   console.log("loggedIn status after logging out: ", props.loggedIn ) 
+  // }
+  
+  // useEffect(() => {
+  //   if ( sidvalid === true ) {
+  //     props.setloggedIn( true )
+  //   } else {
+  //     props.setloggedIn( false )
+  //   }
+  //   console.log("loggedIn: ", props.loggedIn )  
+  // }, [sidvalid, sessionMsg])
 
 
   //*==========================FOR MOBILE NAVBAR==============================
@@ -171,23 +200,39 @@ const Navbar: React.FC<IProps> = (props) => {
                 Register
               </Link>
             </Typography>
-            <Typography className={classes.temp}>
-              <Link
-                component={RouterLink}
-                color="inherit"
-                to="/login"
-                style={{ textDecoration: "none" }}
-              >
-                Login
-              </Link>
-            </Typography>
+            {
+              props.loggedIn ? (
+                <Typography className={classes.temp}>
+                  <Link
+                    component={RouterLink}
+                    color="inherit"
+                    to="/logout"
+                    style={{ textDecoration: "none" }}
+                    // onClick={logoutSession}
+                  >
+                    Logout
+                  </Link>
+                </Typography>
+              ) : (
+                <Typography className={classes.temp}>
+                <Link
+                  component={RouterLink}
+                  color="inherit"
+                  to="/login"
+                  style={{ textDecoration: "none" }}
+                >
+                  Login
+                </Link>
+              </Typography>
+              )
+            }
             <Typography className={classes.temp}>
               <Link
                 component={RouterLink}
                 color="inherit"
                 to="/editprofile"
                 style={{ textDecoration: "none" }}
-                onClick={checkLoggedIn}
+                // onClick={checkLoggedIn}
               >
                 Edit profile
               </Link>

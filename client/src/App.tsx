@@ -66,7 +66,7 @@ function App() {
                 <PaginationTEST />
               </Route>
               <Route path="/carpage/:cars_id">
-              { !loggedIn && <Redirect to="/login" />}
+              { !loggedIn && <Redirect to="/login" />}  
                 <CarPage />
               </Route>
               <Route path="/browse">
@@ -76,7 +76,7 @@ function App() {
                 <Register />
               </Route>
               <Route path="/login">
-                <Login />
+                <Login setloggedIn={setloggedIn} loggedIn={loggedIn} />
               </Route>
               <Route path="/editprofile">
                 <Editprofile loggedIn={loggedIn} />

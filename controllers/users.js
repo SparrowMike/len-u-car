@@ -23,7 +23,6 @@ router.get("/", async (req, res) => {
       .orderBy("users.username");
 
     res.status(200).json(users);
-
   } catch (error) {
     res.status(400).json("Error: " + error);
   }

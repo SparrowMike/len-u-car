@@ -1,6 +1,6 @@
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core";
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction, useEffect } from "react";
 import { Button } from "@material-ui/core";
 import { Container } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
@@ -21,13 +21,20 @@ const useStyles = makeStyles({
   },
 });
 
-export default function NewSession() {
+interface IProps {
+  setloggedIn: Dispatch<SetStateAction<boolean>>;
+  loggedIn: boolean
+}
+
+const NewSession: React.FC<IProps> = (props) => {
   const classes = useStyles();
   const history = useHistory();
   const [signIn, setSignIn] = useState({
     username: "",
     password: "",
   });
+  const [sidvalid, setSidvalid] = useState<boolean>(false);
+
 
   const handleSubmit = (e: React.ChangeEvent<any>) => {
     e.preventDefault();
@@ -44,10 +51,29 @@ export default function NewSession() {
       // console.log(data);
       // set session ID into custom cookie
       Cookies.set("cook", data.currentSID);
+
+      if ( data.currentSID !== undefined ) {
+        // props.setloggedIn(true)
+        setSidvalid(true)
+      } else {
+        // props.setloggedIn(false)
+        setSidvalid(false)
+      }
+      console.log("NewSession sidvalid: ", sidvalid );
+
       history.push('/')
     };
     createNewLogin();
   };
+
+    useEffect(() => {
+      if ( sidvalid === true ) {
+        props.setloggedIn( true )
+      } else {
+        props.setloggedIn( false )
+      }
+      console.log("loggedIn: ", props.loggedIn )  
+    }, [sidvalid])
 
   return (
     <Container>
@@ -98,3 +124,5 @@ export default function NewSession() {
     </Container>
   );
 }
+
+export default NewSession
