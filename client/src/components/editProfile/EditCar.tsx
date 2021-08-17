@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import * as yup from "../../../node_modules/yup";
 import Textfield from "../editProfile/FormsUI/Textfield";
+import MultiStepForm, { FormStep } from "./MultiStepForm";
 
 const useStyles = makeStyles({
   form: {
@@ -212,6 +213,25 @@ const EditCar: React.FC = () => {
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
           >
+            {/*<FormStep
+            stepName="Person"
+            onSubmit={() => console.log("step 1 submit")}
+            validationSchema={validationSchema}
+            >
+            <InputField name="name" label="Name" />
+            <InputField name="email" label="Email" />
+            </FormStep>
+            <FormStep
+            stepName="Address"
+            onSubmit={() => console.log("step 2 submit")}
+            validationSchema={yup.object({
+              street: yup.string().required("Street is required"),
+              country: yup.string().required("Country is required"),
+            })}
+          >
+            <InputField name="street" label="Street" />
+            <InputField name="country" label="Country" />
+          </FormStep> */}
             {(formik) => (
               <form onSubmit={formik.handleSubmit}>
                 <Textfield
