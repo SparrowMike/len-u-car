@@ -6,7 +6,6 @@ import Textfield from "../editProfile/FormsUI/Textfield";
 import { makeStyles } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import { CircularProgress } from "material-ui";
 
 const useStyles = makeStyles({
   form: {
@@ -55,7 +54,6 @@ interface CurrentUser {
 const ChangePassword: React.FC = () => {
   const classes = useStyles();
   const [currentUser, setCurrentUser] = useState<CurrentUser>();
-  const [loading, setLoading] = useState<boolean>(false);
   const [initialValues, setinitialValues] = useState<FormValues>({
     user_id: undefined,
     username: undefined,
@@ -71,8 +69,6 @@ const ChangePassword: React.FC = () => {
   });
 
   useEffect(() => {
-    setLoading(true);
-
     const fetchSession = async () => {
       // retrieve session ID from custom cookie
       const sidfromCookie = Cookies.get("cook");
@@ -108,12 +104,6 @@ const ChangePassword: React.FC = () => {
         driving_license: currentUser?.driving_license,
       });
       console.log("initialValues ", initialValues);
-
-      if (currentUser?.username === undefined) {
-        setLoading(true);
-      } else {
-        setLoading(false);
-      }
     };
     fetchSession();
     // eslint-disable-next-line
@@ -143,39 +133,33 @@ const ChangePassword: React.FC = () => {
   };
 
   return (
-    // <>
-    //   {loading ? (
-    //     <CircularProgress />
-    //   ) : (
-        <div>
-          <Formik
-            initialValues={{ ...initialValues }}
-            onSubmit={handleSubmit}
-            validationSchema={validationSchema}
-          >
-            {(formik) => (
-              <form className={classes.form} onSubmit={formik.handleSubmit}>
-                <Textfield
-                  className={classes.field}
-                  id="password"
-                  name="password_unhashed"
-                  label="Password"
-                  required
-                />
-                <Button
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  style={{ marginTop: 10 }}
-                >
-                  Submit
-                </Button>
-              </form>
-            )}
-          </Formik>
-        </div>
-    //   )}
-    // </>
+    <div>
+      <Formik
+        initialValues={{ ...initialValues }}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+      >
+        {(formik) => (
+          <form className={classes.form} onSubmit={formik.handleSubmit}>
+            <Textfield
+              className={classes.field}
+              id="password"
+              name="password_unhashed"
+              label="Password"
+              required
+            />
+            <Button
+              color="primary"
+              variant="contained"
+              type="submit"
+              style={{ marginTop: 10 }}
+            >
+              Submit
+            </Button>
+          </form>
+        )}
+      </Formik>
+    </div>
   );
 };
 

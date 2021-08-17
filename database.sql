@@ -53,3 +53,4 @@ CREATE TABLE car_rental_event (
     year int,
     cars_id int
 );
+
