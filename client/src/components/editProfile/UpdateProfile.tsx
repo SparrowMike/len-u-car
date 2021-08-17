@@ -92,6 +92,7 @@ const UpdateProfile: React.FC = () => {
     const fetchSession = async () => {
       // retrieve session ID from custom cookie
       const sidfromCookie = Cookies.get("cook");
+      if (sidfromCookie === undefined) console.log("No cookie available.")        // +
       console.log("Session Id from Cookie: ", sidfromCookie);
 
       const res = await fetch(`/sessions/check/${sidfromCookie}`, {
@@ -100,6 +101,7 @@ const UpdateProfile: React.FC = () => {
           "Content-Type": "application/json",
         },
       });
+      console.log("res: ", res)
 
       const data = await res.json();
 

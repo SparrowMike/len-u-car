@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@material-ui/core";
 import { Container } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 import Cookies from "js-cookie";
 
@@ -22,6 +23,7 @@ const useStyles = makeStyles({
 
 export default function NewSession() {
   const classes = useStyles();
+  const history = useHistory();
   const [signIn, setSignIn] = useState({
     username: "",
     password: "",
@@ -29,9 +31,6 @@ export default function NewSession() {
 
   const handleSubmit = (e: React.ChangeEvent<any>) => {
     e.preventDefault();
-    console.log("login ok");
-
-    console.log(JSON.stringify(signIn));
     const createNewLogin = async () => {
       const res = await fetch("http://localhost:4000/sessions", {
         method: "POST",
@@ -42,10 +41,10 @@ export default function NewSession() {
         },
       });
       const data = await res.json();
-      console.log(data);
-
+      // console.log(data);
       // set session ID into custom cookie
       Cookies.set("cook", data.currentSID);
+      history.push('/')
     };
     createNewLogin();
   };

@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { Container, createTheme, ThemeProvider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 import CarPage from "./components/carPage/CarPage";
 import { PaginationTEST } from "./components/cars/PaginationTEST";
@@ -12,6 +13,7 @@ import Editprofile from "./Pages/Editprofile";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
+
 
 
 const theme = createTheme({
@@ -47,22 +49,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 function App() {
   const classes = useStyles();
-
   const queryClient = new QueryClient();
+  const [loggedIn, setloggedIn] = useState<boolean>(false);
 
   return (
     <div className={classes.toolbar}>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
-          <Navbar />
+          <Navbar setloggedIn={setloggedIn} loggedIn={loggedIn} />
           <Container maxWidth="md">
             <Switch>
               <Route path="/pagination">
                 <PaginationTEST />
               </Route>
               <Route path="/carpage/:cars_id">
+              { !loggedIn && <Redirect to="/login" />}
                 <CarPage />
               </Route>
               <Route path="/browse">
@@ -75,7 +79,7 @@ function App() {
                 <Login />
               </Route>
               <Route path="/editprofile">
-                <Editprofile />
+                <Editprofile loggedIn={loggedIn} />
               </Route>
               <Route path="/">
                 <Home />

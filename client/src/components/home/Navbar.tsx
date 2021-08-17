@@ -1,4 +1,4 @@
-import { useState, KeyboardEvent, MouseEvent } from "react";
+import { useState, KeyboardEvent, MouseEvent, Dispatch, SetStateAction } from "react";
 import clsx from "clsx";
 import {
   createStyles,
@@ -16,10 +16,10 @@ import {
   ListItemText,
   SwipeableDrawer,
 } from "@material-ui/core";
-
 import MenuIcon from "@material-ui/icons/Menu";
-
 import { Link as RouterLink } from "react-router-dom";
+import Cookies from "js-cookie";
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,10 +48,42 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function Navbar() {
+
+interface IProps {
+  setloggedIn: Dispatch<SetStateAction<boolean>>;
+  loggedIn: boolean
+}
+
+
+const Navbar: React.FC<IProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileBar, setMobileBar] = useState({ top: false });
+
+  const checkLoggedIn = () => {
+    const fetchSession = async () => {
+      // retrieve session ID from custom cookie
+      const sidfromCookie = Cookies.get("cook");
+      if (sidfromCookie === undefined) console.log("No cookie available.")        // +
+      console.log("Session Id from Cookie: ", sidfromCookie);
+
+      if( sidfromCookie !== undefined ) {
+        const res = await fetch(`/sessions/check/${sidfromCookie}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await res.json();
+        
+        props.setloggedIn( data.session_exist )
+        console.log("data.session_exist: ", data.session_exist ) 
+        console.log("loggedIn: ", props.loggedIn )  
+      }
+    }
+    fetchSession();
+  }
+
 
   //*==========================FOR MOBILE NAVBAR==============================
   const toggleDrawer =
@@ -155,6 +187,7 @@ export default function Navbar() {
                 color="inherit"
                 to="/editprofile"
                 style={{ textDecoration: "none" }}
+                onClick={checkLoggedIn}
               >
                 Edit profile
               </Link>
@@ -179,3 +212,6 @@ export default function Navbar() {
     </AppBar>
   );
 }
+
+
+export default Navbar
