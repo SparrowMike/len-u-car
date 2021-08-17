@@ -112,15 +112,12 @@ const EditCar: React.FC = () => {
       const sidfromCookie = Cookies.get("cook");
       console.log("Session Id from Cookie: ", sidfromCookie);
 
-      const res = await fetch(
-        `http://localhost:4000/sessions/check/${sidfromCookie}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(`/sessions/check/${sidfromCookie}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await res.json();
 
