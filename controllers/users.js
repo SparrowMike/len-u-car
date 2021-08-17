@@ -122,7 +122,7 @@ router.get("/:id", async (req, res) => {
 //*========================UPDATE a user - PUT ROUTE=======================
 
 router.put("/:id", async (req, res) => {
-  console.log("req.body avatar - " + req.body.avatar + "req.body avatar - ");
+  // console.log("req.body avatar - " + req.body.avatar + "req.body avatar - ");
   try {
     const { id } = req.params;
     const fileStr = req.body.avatar; // not tested yet
@@ -131,24 +131,34 @@ router.put("/:id", async (req, res) => {
       [id]
     );
 
+    console.log(fileStr);
+
     let result;
     let avatar;
     let cloudinary_id;
     const cloudID = userAvatar.rows[0].cloudinary_id;
-    const cloudAvatar = userAvatar.rows[0].avatar;
-    if (fileStr) {
+    console.log("this is userAvatar: ", userAvatar);
+
+    if (fileStr && cloudID !== null) {
       await cloudinary.uploader.destroy(cloudID);
       result = await cloudinary.uploader.upload(fileStr, {
         upload_preset: "userAvatar",
       });
-    }
-    if (result === undefined) {
-      avatar = cloudAvatar;
-      cloudinary_id = cloudID;
-    } else {
       avatar = result.secure_url;
       cloudinary_id = result.public_id;
+    } else if (fileStr && cloudID === null) {
+      result = await cloudinary.uploader.upload(fileStr, {
+        upload_preset: "userAvatar",
+      });
+      avatar = result.secure_url;
+      cloudinary_id = result.public_id;
+    } else {
+      avatar = "";
+      cloudinary_id = "";
     }
+
+    console.log("Avatar :", avatar);
+    console.log("cloudinary_id :", cloudinary_id);
 
     const {
       username,
@@ -161,6 +171,8 @@ router.put("/:id", async (req, res) => {
       driving_license,
     } = req.body;
 
+    console.log(req.body);
+
     const user_rowCount = await knexPg("users")
       .where("user_id", "=", id)
       .update({
@@ -169,13 +181,15 @@ router.put("/:id", async (req, res) => {
         password: password,
         full_name: full_name,
         email: email,
-        // avatar: avatar,
+        avatar: avatar,
         user_type: user_type,
         mobile: mobile,
         identification_card: identification_card,
         driving_license: driving_license,
-        // cloudinary_id: cloudinary_id,
+        cloudinary_id: cloudinary_id,
       });
+
+    console.log(user_rowCount);
 
     res.status(200).send(`User modified with ID: ${id}`);
   } catch (error) {

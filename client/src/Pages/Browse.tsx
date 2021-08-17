@@ -66,19 +66,16 @@ const useStyles = makeStyles((theme) => ({
 
 const Browse = () => {
   const classes = useStyles();
-  const [carType, setCarType] = useState<string>();
-  const [transmission, setTransmission] = useState<string>();
-  const [engineType, setEngineType] = useState<string>();
+  const [carType, setCarType] = useState<string>("");
+  const [transmission, setTransmission] = useState<string>("");
+  const [engineType, setEngineType] = useState<string>("");
 
   const fetchUsers = async () => {
     const { data } = await axios.get("http://localhost:4000/users");
     return data;
   };
 
-  const { isLoading, isSuccess, error, isError, data } = useQuery(
-    "users",
-    fetchUsers
-  );
+  const { isLoading, data } = useQuery("users", fetchUsers);
 
   return (
     <>

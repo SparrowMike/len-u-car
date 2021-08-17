@@ -70,6 +70,17 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//*========================GET a car via Username - GET ROUTE=======================
+router.get("/imageusername/:username", async (req, res) => {
+  try {
+    const { username } = req.params;
+    const cars = await knexPg("cars").where("username", username);
+    res.status(200).json(cars[0]);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
 //!========================UPDATE a car - PUT ROUTE========================
 router.put("/:id", async (req, res) => {
   try {
