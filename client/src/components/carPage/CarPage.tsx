@@ -12,15 +12,45 @@ import {
 
 import Slider from "react-slick";
 
+import { useLocation } from "react-router";
 import cars from "../../data/cars";
 import { IState as Props } from "../../Pages/Browse";
-import { useLocation } from "react-router";
+
 
 interface LocationState {
   data: Props["users"];
 
 }
 
+
+export interface IState {
+  avatar: string;
+  brand: string;
+  cars_id: number;
+  cloudinary_id: string;
+  driving_license: string;
+  email: string;
+  engine_type: string;
+  full_name: string;
+  identification_card: string;
+  images_id: number;
+  key_features: string;
+  key_rules: string;
+  mileage: string;
+  mobile: number;
+  model: string;
+  passenger_capacity: number;
+  password: string;
+  pick_up_point: string;
+  price_per_day: number;
+  secure_url: string;
+  status: string;
+  transmission: string;
+  type: string;
+  user_id: number;
+  user_type: string;
+  username: string;
+}
 
 const useStyles = makeStyles((theme) => ({
   mainFeaturedPost: {
@@ -65,12 +95,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CarPage() {
-  const location = useLocation()
-  const notify = location.state.data;
-  console.log(location.state);
-  console.log(location.state.data.brand)
+// const CarPage: React.FC<IState> = ({ user }) => {
+const CarPage = () => {
   const classes = useStyles();
+  const location: any = useLocation();
+
+  console.log(location);
+  const userAvatar = location.state.data.user.avatar;
+  const username = location.state.data.user.username;
+  const email = location.state.data.user.email;
+  const mobile = location.state.data.user.mobile;
+  const status = location.state.data.user.mobile;
+
+  const brand = location.state.data.user.brand;
+  const model = location.state.data.user.model;
+  const passenger_capacity = location.state.data.user.passenger_capacity;
+  const secure_url = location.state.data.user.secure_url;
+  const pick_up_point = location.state.data.user.pick_up_point;
+  const price_per_day = location.state.data.user.price_per_day;
+
+  const engine_type = location.state.data.user.engine_type;
+  const mileage = location.state.data.user.mileage;
+  const key_features = location.state.data.user.key_features;
+  const transmission = location.state.data.user.transmission;
+  const type = location.state.data.user.type;
+
+  console.log("avatar", userAvatar, "and the brand", brand);
 
   const slickSettings = {
     dots: true,
@@ -87,18 +137,18 @@ function CarPage() {
   return (
     <div>
       <Slider {...slickSettings}>
-        {cars.map((car, index) => {
-          return (
-            <Paper key={index}>
-              <div
-                className={classes.mainFeaturedPost}
-                style={{ backgroundImage: `url(${car.image})` }}
-              >
-                <div className={classes.overlay} />
-              </div>
-            </Paper>
-          );
-        })}
+        {/* {cars.map((car, index) => {
+          return ( */}
+        <Paper>
+          <div
+            className={classes.mainFeaturedPost}
+            style={{ backgroundImage: `url(${secure_url})` }}
+          >
+            <div className={classes.overlay} />
+          </div>
+        </Paper>
+        {/* );
+        })} */}
       </Slider>
 
       <Container className={classes.container}>
@@ -109,15 +159,23 @@ function CarPage() {
                 <Grid item xs={4}>
                   <Avatar
                     alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
+                    src={userAvatar}
                     className={classes.avatar}
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography>Johnny Bravo</Typography>
+                  <Typography>{username}</Typography>
+                  <Divider className={classes.divider} />
+                  <Typography variant="subtitle1">Brand: {brand}</Typography>
+                  <Typography variant="body2">Model: {model}</Typography>
+                  <Typography variant="subtitle1">
+                    Engine Type: {engine_type}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    Transmission: {transmission}
+                  </Typography>
                 </Grid>
               </Grid>
-              <Divider className={classes.divider} />
             </Paper>
           </Grid>
           <Grid item xs={4}>
@@ -125,6 +183,11 @@ function CarPage() {
           </Grid>
         </Grid>
       </Container>
+      <Grid container spacing={3}>
+        <Grid item xs={8}>
+          <Paper className={classes.main}></Paper>
+        </Grid>
+      </Grid>
     </div>
   );
 };
