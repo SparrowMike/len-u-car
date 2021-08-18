@@ -5,35 +5,34 @@ const pool = require("../db");
 //*========================READ ALL EVENT - GET ROUTE========================
 router.get("/", async (req, res) => {
   try {
-    const carRentalEvent = await pool.query("SELECT * FROM car_rental_event;");
-    res.send(carRentalEvent.rows);
+    const newReviewEvent = await pool.query("SELECT * FROM car_rental_review;");
+    res.send(newReviewEvent.rows);
   } catch (error) {
     console.log(error.message);
   }
 });
 
-//*========================CREATE NEW EVENT - POST ROUTE========================
+//*========================CREATE NEW REVIEW - POST ROUTE========================
 router.post("/", async (req, res) => {
   try {
-    const { day, month, year, username, cars_id } = req.body;
-    const newRentalEvent = await pool.query(
-      "INSERT INTO car_rental_event (day, month, year,username , cars_id ) VALUES ($1,$2,$3,$4,$5)",
-      [day, month, year, username, cars_id]
+    const { rating, review, username, cars_id, event_id } = req.body;
+    const newReviewEvent = await pool.query(
+      "INSERT INTO car_rental_review (rating, review, username, cars_id, event_id ) VALUES ($1,$2,$3,$4,$5)",
+      [rating, review, username, cars_id, event_id]
     );
-    res.status(200).send(`User modified with cars_ID: ${cars_id}`);
-    // res.json(newRentalEvent);
-    console.log(newRentalEvent);
+    res.status(200).send(`User modified with cars_ID: ${event_id}`);
+    console.log(newReviewEvent);
   } catch (error) {
     res.status(400).json({ error: err.message });
   }
 });
 
-//*========================GET A EVENT - GET ROUTE=======================
+//*========================GET A REVIEW - GET ROUTE=======================
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const event = await pool.query(
-      "SELECT * FROM car_rental_event WHERE cars_id = $1",
+      "SELECT * FROM car_rental_review WHERE cars_id = $1",
       [id]
     );
     //   res.json(event.rows[0])
@@ -43,7 +42,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// //*========================UPDATE A EVENT - PUT ROUTE=========================
+// //!========================UPDATE A REVIEW - PUT ROUTE=========================
 // router.put("/:id", async (req, res) => {
 //   try {
 //     const { id } = req.params;
@@ -58,12 +57,12 @@ router.get("/:id", async (req, res) => {
 //   }
 // });
 
-//*========================DELETE A EVENT - DELETE ROUTE========================
+//*========================DELETE A REVIEW - DELETE ROUTE========================
 router.delete("/:id/", async (req, res) => {
   try {
     const { id } = req.params;
     const event = await pool.query(
-      "DELETE FROM car_rental_event WHERE cars_id = $1",
+      "DELETE FROM car_rental_review WHERE cars_id = $1",
       [id]
     );
     res.status(200).send(`Event deleted with ID: ${id}`);

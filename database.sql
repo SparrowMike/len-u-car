@@ -38,12 +38,13 @@ CREATE TABLE car_images (
     cars_id int
 )
 
-CREATE TABLE car_rental_rating (
+CREATE TABLE car_rental_review (
     rating_id SERIAL,
     rating int,
     review varchar(300),
+    username varchar(20),
     cars_id int,
-    username varchar(20)
+    even_id int
 );
 
 CREATE TABLE car_rental_event (
@@ -51,6 +52,7 @@ CREATE TABLE car_rental_event (
     day int,
     month int,
     year int,
+    username varchar(20),
     cars_id int
 );
 
