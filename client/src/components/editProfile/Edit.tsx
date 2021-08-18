@@ -61,22 +61,20 @@ function a11yProps(index: any) {
 }
 
 export interface IState {
- user:
- {
-  user_id: number;
-  username: string;
-  password: string;
-  full_name: string;
-  email: string;
-  avatar: string;
-  user_type: string;
-  mobile: number;
-  identification_card: string;
-  driving_license: string;
-  cloudinary_id: string;
+  user: {
+    user_id: number;
+    username: string;
+    password: string;
+    full_name: string;
+    email: string;
+    avatar: string;
+    user_type: string;
+    mobile: number;
+    identification_card: string;
+    driving_license: string;
+    cloudinary_id: string;
+  };
 }
-}
-
 
 export default function Edit() {
   const classes = useStyles();
@@ -89,18 +87,16 @@ export default function Edit() {
   const sidfromCookie = Cookies.get("cook");
   if (sidfromCookie === undefined) console.log("No cookie available."); // +
   console.log("Session Id from Cookie: ", sidfromCookie);
-  
+
   const fetchUsers = async () => {
-    const { data } = await axios.get(
-      `/sessions/check/${sidfromCookie}`
-    );
+    const { data } = await axios.get(`/sessions/check/${sidfromCookie}`);
     return data;
   };
 
-const {isLoading: islLoading1, data : data1 } = useQuery("sessions/check", fetchUsers);
-console.log(data1);
-const user = data1?.sessionDetails.currentUser;
-console.log(user);
+  const { data: data1 } = useQuery("sessions/check", fetchUsers);
+  console.log(data1);
+  const user = data1?.sessionDetails.currentUser;
+  console.log(user);
 
   return (
     <div className={classes.root}>
@@ -132,7 +128,7 @@ console.log(user);
           <ChangePassword />
         </TabPanel>
         <TabPanel value={value} index={4}>
-          <Booking user={user}/>
+          <Booking user={user} />
         </TabPanel>
       </Container>
     </div>

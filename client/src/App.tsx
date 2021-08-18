@@ -13,7 +13,6 @@ import Editprofile from "./Pages/Editprofile";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
-import Booking from "./components/editProfile/Booking";
 
 const theme = createTheme({
   palette: {
@@ -47,8 +46,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 70,
   },
 }));
-
-
 
 function App() {
   const classes = useStyles();

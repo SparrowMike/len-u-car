@@ -72,6 +72,7 @@ const NewSession: React.FC<IProps> = (props) => {
       props.setloggedIn(false);
     }
     console.log("loggedIn: ", props.loggedIn);
+    // eslint-disable-next-line
   }, [sidvalid]);
 
   return (

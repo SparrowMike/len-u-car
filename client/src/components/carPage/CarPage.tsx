@@ -5,16 +5,13 @@ import {
   Grid,
   Paper,
   Container,
-  Divider,
+
   Avatar,
   Typography,
-  Card,
-  CardContent,
 
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableRow
 } from "@material-ui/core";
 
@@ -216,9 +213,6 @@ const CarPage = () => {
                   </TableRow>
                 </TableBody>
               </Table>
-              {/*  */}
-              {/* <Divider className={classes.divider} /> */}
-              
             </Paper>
           </Grid>
           <Grid item xs={4}>

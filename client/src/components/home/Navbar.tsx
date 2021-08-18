@@ -1,4 +1,10 @@
-import { useState, KeyboardEvent, MouseEvent, Dispatch, SetStateAction, useEffect } from "react";
+import {
+  useState,
+  KeyboardEvent,
+  MouseEvent,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import clsx from "clsx";
 import {
   createStyles,
@@ -19,8 +25,6 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
-import { CollectionsBookmarkOutlined } from "@material-ui/icons";
-
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,10 +53,9 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-
 interface IProps {
   setloggedIn: Dispatch<SetStateAction<boolean>>;
-  loggedIn: boolean
+  loggedIn: boolean;
 }
 
 const Navbar: React.FC<IProps> = (props) => {
@@ -61,13 +64,14 @@ const Navbar: React.FC<IProps> = (props) => {
   const [mobileBar, setMobileBar] = useState({ top: false });
   const history = useHistory();
 
-  const logoutSession = () => {                       // +
+  const logoutSession = () => {
+    // +
     // retrieve session ID from custom cookie
     const sidfromCookie = Cookies.get("cook");
     if (sidfromCookie === undefined) console.log("No cookie available."); // +
     console.log("Session Id from Cookie: ", sidfromCookie);
 
-    console.log("logging out....")
+    console.log("logging out....");
     const deleteLogin = async () => {
       const res = await fetch(`/sessions/${sidfromCookie}`, {
         method: "DELETE",
@@ -77,11 +81,11 @@ const Navbar: React.FC<IProps> = (props) => {
     };
     deleteLogin();
 
-    props.setloggedIn( false )
-    Cookies.remove('cook')
+    props.setloggedIn(false);
+    Cookies.remove("cook");
     history.push("/");
-    console.log("loggedIn status after logging out: ", props.loggedIn ) 
-  }
+    console.log("loggedIn status after logging out: ", props.loggedIn);
+  };
 
   //*==========================FOR MOBILE NAVBAR==============================
   const toggleDrawer =
@@ -100,10 +104,9 @@ const Navbar: React.FC<IProps> = (props) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const list = (anchor: string) => {
-    
     return (
       <div
-        className= {clsx(classes.list, {
+        className={clsx(classes.list, {
           [classes.fullList]: anchor === "top" || anchor === "bottom",
         })}
         role="presentation"
@@ -120,25 +123,27 @@ const Navbar: React.FC<IProps> = (props) => {
           <ListItem button component={RouterLink} to="/register">
             <ListItemText primary="Register" />
           </ListItem>
-            {props.loggedIn ? (
-              <ListItem 
-                button component={RouterLink} 
-                to="/logout"
-                onClick={logoutSession} >
-                <ListItemText primary="Logout" />
-              </ListItem>
-            ) : (
-              <ListItem button component={RouterLink} to="/login">
-                <ListItemText primary="Login" />
-              </ListItem>
-            )}
+          {props.loggedIn ? (
+            <ListItem
+              button
+              component={RouterLink}
+              to="/logout"
+              onClick={logoutSession}
+            >
+              <ListItemText primary="Logout" />
+            </ListItem>
+          ) : (
+            <ListItem button component={RouterLink} to="/login">
+              <ListItemText primary="Login" />
+            </ListItem>
+          )}
           <ListItem button component={RouterLink} to="/editprofile">
             <ListItemText primary="Profile" />
           </ListItem>
         </List>
       </div>
-    )
-  }
+    );
+  };
 
   //*=========================REGULAR NAVBAR===============================
   return (
@@ -181,21 +186,20 @@ const Navbar: React.FC<IProps> = (props) => {
                 Register
               </Link>
             </Typography>
-            {
-              props.loggedIn ? (
-                <Typography className={classes.temp}>
-                  <Link
-                    component={RouterLink}
-                    color="inherit"
-                    to="/logout"
-                    style={{ textDecoration: "none" }}
-                    onClick={logoutSession}
-                  >
-                    Logout
-                  </Link>
-                </Typography>
-              ) : (
-                <Typography className={classes.temp}>
+            {props.loggedIn ? (
+              <Typography className={classes.temp}>
+                <Link
+                  component={RouterLink}
+                  color="inherit"
+                  to="/logout"
+                  style={{ textDecoration: "none" }}
+                  onClick={logoutSession}
+                >
+                  Logout
+                </Link>
+              </Typography>
+            ) : (
+              <Typography className={classes.temp}>
                 <Link
                   component={RouterLink}
                   color="inherit"
@@ -205,8 +209,7 @@ const Navbar: React.FC<IProps> = (props) => {
                   Login
                 </Link>
               </Typography>
-              )
-            }
+            )}
             <Typography className={classes.temp}>
               <Link
                 component={RouterLink}
@@ -236,7 +239,6 @@ const Navbar: React.FC<IProps> = (props) => {
       </Toolbar>
     </AppBar>
   );
-}
+};
 
-
-export default Navbar
+export default Navbar;

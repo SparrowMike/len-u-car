@@ -96,10 +96,7 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
     return data;
   };
 
-  const { isLoading: islLoading2, data: data2 } = useQuery(
-    "carRentalEvent",
-    fetchEvents
-  );
+  const { data: data2 } = useQuery("carRentalEvent", fetchEvents);
 
   const handleSubmit = async (values: FormValues) => {
     const carData = {
