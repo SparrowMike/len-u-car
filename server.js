@@ -66,10 +66,12 @@ const usersController = require("./controllers/users");
 const carsController = require("./controllers/cars");
 const carImagesController = require("./controllers/carImages");
 const sessionsController = require("./controllers/sessions.js");
+const carRentalEventController = require("./controllers/carRentalEvent.js");
 app.use("/users", usersController);
 app.use("/cars", carsController);
 app.use("/images", carImagesController);
 app.use("/sessions", sessionsController);
+app.use("/carRentalEvent", carRentalEventController);
 
 //*==================LISTENER=====================
 app.listen(PORT, () => {
