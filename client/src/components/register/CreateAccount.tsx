@@ -9,10 +9,6 @@ const useStyles = makeStyles({
   field: {
     marginTop: 10,
   },
-  footer: {
-    marginTop: 40,
-    paddingBottom: 40,
-  },
   submitBtn: {
     marginTop: 20,
   },
@@ -42,7 +38,7 @@ const validationSchema = Yup.object().shape({
       "username-backend-validation",
       "Username is taken",
       async (username) => {
-        const msg = await axios.post("http://localhost:4000/users/checkusers", {
+        const msg = await axios.post("/users/checkusers", {
           username: username,
         });
 
@@ -66,10 +62,10 @@ const validationSchema = Yup.object().shape({
       "email-backend-validation",
       "Email address is taken",
       async (email) => {
-        const msg = await axios.post("http://localhost:4000/users/checkemail", {
+        const msg = await axios.post("/users/checkemail", {
           email: email,
         });
-        console.log("msg: ", msg)
+        console.log("msg: ", msg);
 
         if (msg.data.msg === "Email address is available.") {
           return Promise.resolve(true);
@@ -85,7 +81,7 @@ const CreateAccount: React.FC = () => {
   const classes = useStyles();
   const handleSubmit = async (values: FormValues) => {
     try {
-      const res = await fetch("http://localhost:4000/users", {
+      const res = await fetch("/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
@@ -106,7 +102,7 @@ const CreateAccount: React.FC = () => {
         validationSchema={validationSchema}
         validateOnChange={false}
       >
-        {({ dirty, isValid }) => {
+        {() => {
           return (
             <Form>
               <Textfield

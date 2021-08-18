@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-//*========================GET a car image - GET ROUTE=======================
+//*========================GET car images - GET ROUTE=======================
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;

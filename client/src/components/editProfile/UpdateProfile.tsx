@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Formik } from "formik";
+import { Field, Formik } from "formik";
 import * as yup from "../../../node_modules/yup";
 import {
   makeStyles,
   Button,
   CircularProgress,
   Container,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@material-ui/core";
 import Textfield from "../editProfile/FormsUI/Textfield";
 import Cookies from "js-cookie";
@@ -19,6 +22,9 @@ const useStyles = makeStyles({
     marginTop: 10,
   },
 });
+
+//* Variables
+let types_of_users: Array<string> = ["consumer", "provider"];
 
 const validationSchema = yup.object({
   full_name: yup.string().required("Full Name is required"),
@@ -208,13 +214,34 @@ const UpdateProfile: React.FC = () => {
                     label="Email"
                     required
                   />
-                  <Textfield
-                    className={classes.field}
-                    id="user_type"
-                    name="user_type"
-                    label="User_type"
-                    required
-                  />
+
+                  <div>
+                    <InputLabel
+                      id="demo-simple-select-outlined-label"
+                      style={{
+                        fontSize: "12px",
+                        paddingLeft: "12px",
+                      }}
+                    >
+                      Status
+                    </InputLabel>
+                    <Field
+                      name="user_type"
+                      type="select"
+                      label="user_type"
+                      id="user_type"
+                      variant="outlined"
+                      fullWidth
+                      as={Select}
+                    >
+                      {types_of_users.map((item, index) => (
+                        <MenuItem key={index} value={item}>
+                          {item}
+                        </MenuItem>
+                      ))}
+                    </Field>
+                  </div>
+
                   <Textfield
                     className={classes.field}
                     id="mobile"

@@ -71,7 +71,7 @@ const Browse = () => {
   const [engineType, setEngineType] = useState<string>("");
 
   const fetchUsers = async () => {
-    const { data } = await axios.get("http://localhost:4000/users");
+    const { data } = await axios.get("/users");
     return data;
   };
 

@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Formik, Field } from "formik";
-import * as yup from "../../../node_modules/yup";
-import Button from "@material-ui/core/Button";
-import Textfield from "../editProfile/FormsUI/Textfield";
+import {
+  CircularProgress,
+  MenuItem,
+  Select,
+  InputLabel,
+  makeStyles,
+} from "@material-ui/core";
 import Radio from "@material-ui/core/Radio";
-import { makeStyles, CircularProgress } from "@material-ui/core";
+import { Field } from "formik";
 import Cookies from "js-cookie";
+import React, { useEffect, useState } from "react";
+import * as yup from "../../../node_modules/yup";
+import Textfield from "../editProfile/FormsUI/Textfield";
+import MultiStepForm, { FormStep } from "./MultiStepForm";
+import "../../App.css";
 
 const useStyles = makeStyles({
   form: {
@@ -16,15 +23,14 @@ const useStyles = makeStyles({
   },
 });
 
-const validationSchema = yup.object({
+//* Variables
+let passenger_cap: Array<number> = [1, 2, 3, 4, 5, 6];
+let car_status: Array<string> = ["Available", "Not Available"];
+
+const validation_part_1 = yup.object({
   brand: yup.string().required("Brand is required"),
   model: yup.string().required("Model is required"),
   type: yup.string().required("Type is required"),
-  passenger_capacity: yup
-    .number()
-    .required("Passenger capacity is required")
-    .positive()
-    .integer(),
   price_per_day: yup
     .number()
     .required("Price (S$) per day is required")
@@ -32,9 +38,17 @@ const validationSchema = yup.object({
     .integer(),
   mileage: yup.string().required("Mileage is required"),
   engine_type: yup.string().required("Engine type is required"),
-  key_features: yup.string().required("Key features are required"),
-  key_rules: yup.string().required("Key rules are required"),
   status: yup.string().required("Status is required"),
+});
+
+const validation_part_2 = yup.object({
+  passenger_capacity: yup
+    .number()
+    .required("Passenger capacity is required")
+    .positive()
+    .integer(),
+  key_features: yup.string(),
+  key_rules: yup.string(),
   pick_up_point: yup.string().required("Pick up point is required"),
 });
 
@@ -102,15 +116,12 @@ const EditCar: React.FC = () => {
       const sidfromCookie = Cookies.get("cook");
       console.log("Session Id from Cookie: ", sidfromCookie);
 
-      const res = await fetch(
-        `http://localhost:4000/sessions/check/${sidfromCookie}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(`/sessions/check/${sidfromCookie}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await res.json();
 
@@ -148,7 +159,6 @@ const EditCar: React.FC = () => {
     // eslint-disable-next-line
   }, [currentUserCar?.username, initialValues?.cars_id]);
 
-
   const handleSubmit = (formValue: any) => {
     const carOwner = { username: user };
     let merge = { ...formValue, ...carOwner };
@@ -162,7 +172,6 @@ const EditCar: React.FC = () => {
             "Content-Type": "application/json",
           },
         });
-        //  const data = await res.json();
         console.log(res);
         alert("Car profile updated succesfully!");
       } catch (error) {
@@ -192,32 +201,60 @@ const EditCar: React.FC = () => {
 
   return (
     <>
-      {loading ? ( 
+      {loading ? (
         <CircularProgress />
       ) : (
         <div>
-          <Formik
+          <MultiStepForm
             initialValues={{
               ...initialValues,
             }}
             onSubmit={handleSubmit}
-            validationSchema={validationSchema}
           >
-            {(formik) => (
-              <form onSubmit={formik.handleSubmit}>
-                <Textfield
-                  className={classes.field}
-                  id="brand"
-                  name="brand"
-                  label="Brand"
-                />
-                <Textfield
-                  className={classes.field}
-                  id="model"
-                  name="model"
-                  label="Model"
-                />
-                <div>
+            <FormStep
+              stepName="Specs"
+              onSubmit={() => console.log("step 1 submit")}
+              validationSchema={validation_part_1}
+            >
+              <Textfield className={classes.field} name="brand" label="Brand" />
+              <Textfield className={classes.field} name="model" label="Model" />
+              <Textfield
+                className={classes.field}
+                name="price_per_day"
+                label="Price per day"
+              />
+              <Textfield
+                className={classes.field}
+                name="mileage"
+                label="Mileage"
+              />
+              <div>
+                <InputLabel
+                  id="demo-simple-select-outlined-label"
+                  style={{
+                    fontSize: "12px",
+                    paddingLeft: "12px",
+                  }}
+                >
+                  Status
+                </InputLabel>
+                <Field
+                  name="status"
+                  type="select"
+                  label="status"
+                  variant="outlined"
+                  fullWidth
+                  as={Select}
+                >
+                  {car_status.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </Field>
+              </div>
+              <div className="Radio-options">
+                <div className={classes.field}>
                   Type:
                   <label>
                     <Field name="type" type="radio" value="sport" as={Radio} />
@@ -228,13 +265,7 @@ const EditCar: React.FC = () => {
                     Sedan
                   </label>
                 </div>
-                <Textfield
-                  className={classes.field}
-                  id="passenger_capacity"
-                  name="passenger_capacity"
-                  label="Passenger_capacity"
-                />
-                <div>
+                <div className={classes.field}>
                   Tranmission:
                   <label>
                     <Field
@@ -255,20 +286,7 @@ const EditCar: React.FC = () => {
                     Manual
                   </label>
                 </div>
-                <Textfield
-                  className={classes.field}
-                  id="price_per_day"
-                  name="price_per_day"
-                  label="Price_per_day"
-                />
-
-                <Textfield
-                  className={classes.field}
-                  id="mileage"
-                  name="mileage"
-                  label="Mileage"
-                />
-                <div>
+                <div className={classes.field}>
                   Engine Type:
                   <label>
                     <Field
@@ -298,47 +316,61 @@ const EditCar: React.FC = () => {
                     Hybrid
                   </label>
                 </div>
-
-                <Textfield
-                  className={classes.field}
-                  id="key_features"
-                  name="key_features"
-                  label="Key_features"
-                />
-
-                <Textfield
-                  className={classes.field}
-                  id="key_rules"
-                  name="key_rules"
-                  label="Key_rules"
-                />
-
-                <Textfield
-                  className={classes.field}
-                  id="status"
-                  name="status"
-                  label="Status"
-                />
-
-                <Textfield
-                  className={classes.field}
-                  id="pick_up_point"
-                  name="pick_up_point"
-                  label="Pick_up_point"
-                />
-
-                <Button
-                  className={classes.form}
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  style={{ marginTop: 10 }}
+              </div>
+            </FormStep>
+            <FormStep
+              stepName="Rules"
+              onSubmit={() => console.log("step 2 submit")}
+              validationSchema={validation_part_2}
+            >
+              <div>
+                <InputLabel
+                  id="demo-simple-select-outlined-label"
+                  style={{
+                    fontSize: "12px",
+                    paddingLeft: "12px",
+                  }}
                 >
-                  Submit
-                </Button>
-              </form>
-            )}
-          </Formik>
+                  Passenger capacity
+                </InputLabel>
+                <Field
+                  name="passenger_capacity"
+                  type="select"
+                  label="passenger_capacity"
+                  variant="outlined"
+                  fullWidth
+                  as={Select}
+                >
+                  {passenger_cap.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </Field>
+              </div>
+              <Textfield
+                className={classes.field}
+                name="key_features"
+                label="Key features"
+                multiline={true}
+                rows={4}
+              />
+              <Textfield
+                className={classes.field}
+                name="key_rules"
+                label="Key rules"
+                multiline={true}
+                rows={4}
+              />
+              <Textfield
+                className={classes.field}
+                name="pick_up_point"
+                label="Pickup point"
+                multiline={true}
+                rows={4}
+              />
+            </FormStep>
+          </MultiStepForm>
         </div>
       )}
     </>

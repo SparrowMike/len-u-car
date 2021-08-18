@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 
 interface IProps {
   setloggedIn: Dispatch<SetStateAction<boolean>>;
-  loggedIn: boolean
+  loggedIn: boolean;
 }
 
 const NewSession: React.FC<IProps> = (props) => {
@@ -35,11 +35,10 @@ const NewSession: React.FC<IProps> = (props) => {
   });
   const [sidvalid, setSidvalid] = useState<boolean>(false);
 
-
   const handleSubmit = (e: React.ChangeEvent<any>) => {
     e.preventDefault();
     const createNewLogin = async () => {
-      const res = await fetch("http://localhost:4000/sessions", {
+      const res = await fetch("/sessions", {
         method: "POST",
         body: JSON.stringify(signIn),
         headers: {
@@ -52,28 +51,28 @@ const NewSession: React.FC<IProps> = (props) => {
       // set session ID into custom cookie
       Cookies.set("cook", data.currentSID);
 
-      if ( data.currentSID !== undefined ) {
+      if (data.currentSID !== undefined) {
         // props.setloggedIn(true)
-        setSidvalid(true)
+        setSidvalid(true);
       } else {
         // props.setloggedIn(false)
-        setSidvalid(false)
+        setSidvalid(false);
       }
-      console.log("NewSession sidvalid: ", sidvalid );
+      console.log("NewSession sidvalid: ", sidvalid);
 
-      history.push('/')
+      history.push("/");
     };
     createNewLogin();
   };
 
-    useEffect(() => {
-      if ( sidvalid === true ) {
-        props.setloggedIn( true )
-      } else {
-        props.setloggedIn( false )
-      }
-      console.log("loggedIn: ", props.loggedIn )  
-    }, [sidvalid])
+  useEffect(() => {
+    if (sidvalid === true) {
+      props.setloggedIn(true);
+    } else {
+      props.setloggedIn(false);
+    }
+    console.log("loggedIn: ", props.loggedIn);
+  }, [sidvalid]);
 
   return (
     <Container>
@@ -123,6 +122,6 @@ const NewSession: React.FC<IProps> = (props) => {
       </Typography>
     </Container>
   );
-}
+};
 
-export default NewSession
+export default NewSession;

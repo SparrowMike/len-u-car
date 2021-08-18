@@ -6,7 +6,16 @@ import Link from "@material-ui/core/Link";
 import Rating from "@material-ui/lab/Rating";
 import Slider from "react-slick";
 import cars from "../data/cars";
-// import Cars from "../components/cars/Cars";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardMedia,
+  CardHeader,
+  Container,
+  CssBaseline,
+} from "@material-ui/core";
+import StarIcon from "@material-ui/icons/Star";
 
 const useStyles = makeStyles((theme) => ({
   mainFeaturedPost: {
@@ -34,9 +43,28 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 0,
     },
   },
+  media: {
+    height: 0,
+    paddingTop: "56.25%", // 16:9
+    transition: ".3s ease-in-out",
+    "&:hover": {
+      transform: "scale(1.1)",
+      cursor: "pointer",
+    },
+  },
 }));
 
+interface displayValues {
+  cars_id: number;
+  price_per_day: number;
+  brand: string;
+  model: string;
+  secure_url: string;
+}
+
 const Home = () => {
+  const classes = useStyles();
+  const [display, setDisplay] = useState<displayValues[] | []>([]);
   const slickSettings = {
     dots: true,
     infinite: true,
@@ -49,7 +77,20 @@ const Home = () => {
     arrows: false,
   };
 
-  const classes = useStyles();
+  const getFetchData = async () => {
+    try {
+      const fetchData = await axios.get("http://localhost:4000/users/random");
+      console.log(fetchData.data);
+      setDisplay(fetchData.data);
+      console.log(display);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getFetchData();
+  }, []);
 
   return (
     <>
@@ -74,13 +115,10 @@ const Home = () => {
                         Brand: {car.brand}
                       </Typography>
                       <Typography variant="h5" color="inherit" paragraph>
-                        Features: {car.key_features}
-                      </Typography>
-                      <Typography variant="h5" color="inherit" paragraph>
                         <Rating
                           name="half-rating-read"
                           defaultValue={car.rating}
-                          precision={0.25}
+                          precision={0.5}
                           readOnly
                         />
                       </Typography>
@@ -95,7 +133,9 @@ const Home = () => {
           );
         })}
       </Slider>
-      {/* <Cars /> */}
+      {display.map((car) => {
+        <p>{car.brand}</p>;
+      })}
     </>
   );
 };
