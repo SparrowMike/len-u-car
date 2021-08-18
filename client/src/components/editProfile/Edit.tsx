@@ -1,12 +1,13 @@
-import React from "react";
-import { makeStyles, Theme, Container } from "@material-ui/core";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
+import { Container, makeStyles, Theme } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
-import UpdateProfile from "./UpdateProfile";
-import EditCar from "./EditCar";
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
+import Typography from "@material-ui/core/Typography";
+import React from "react";
 import ChangePassword from "./ChangePassword";
+import EditCar from "./EditCar";
+import UpdateProfile from "./UpdateProfile";
+import UploadCars from "./UploadCars";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -74,9 +75,10 @@ export default function Edit() {
         aria-label="Vertical tabs example"
         className={classes.tabs}
       >
-        <Tab label="update profile" {...a11yProps(0)} />
-        <Tab label="edit car" {...a11yProps(1)} />
-        <Tab label="change password" {...a11yProps(2)} />
+        <Tab label="my info" {...a11yProps(0)} />
+        <Tab label="my car " {...a11yProps(1)} />
+        <Tab label="car images" {...a11yProps(2)} />
+        <Tab label="password" {...a11yProps(3)} />
       </Tabs>
       <Container className={classes.container}>
         <TabPanel value={value} index={0}>
@@ -86,6 +88,9 @@ export default function Edit() {
           <EditCar />
         </TabPanel>
         <TabPanel value={value} index={2}>
+          <UploadCars />
+        </TabPanel>
+        <TabPanel value={value} index={3}>
           <ChangePassword />
         </TabPanel>
       </Container>
