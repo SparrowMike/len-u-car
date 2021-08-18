@@ -17,7 +17,7 @@ import {
   SwipeableDrawer,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
 import { CollectionsBookmarkOutlined } from "@material-ui/icons";
 
@@ -59,20 +59,27 @@ const Navbar: React.FC<IProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileBar, setMobileBar] = useState({ top: false });
+  const history = useHistory();
 
   const logoutSession = () => {                       // +
+    // retrieve session ID from custom cookie
+    const sidfromCookie = Cookies.get("cook");
+    if (sidfromCookie === undefined) console.log("No cookie available."); // +
+    console.log("Session Id from Cookie: ", sidfromCookie);
+
     console.log("logging out....")
     const deleteLogin = async () => {
-      const res = await fetch("/sessions", {
+      const res = await fetch(`/sessions/${sidfromCookie}`, {
         method: "DELETE",
       });
       const data = await res.json();
       console.log("session deleted", data);
     };
     deleteLogin();
+
     props.setloggedIn( false )
     Cookies.remove('cook')
-    window.location.reload();
+    history.push("/");
     console.log("loggedIn status after logging out: ", props.loggedIn ) 
   }
 
@@ -92,34 +99,46 @@ const Navbar: React.FC<IProps> = (props) => {
     };
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const list = (anchor: string) => (
-    <div
-      className={clsx(classes.list, {
-        [classes.fullList]: anchor === "top" || anchor === "bottom",
-      })}
-      role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <List>
-        <ListItem button component={RouterLink} to="/">
-          <ListItemText primary="Home" />
-        </ListItem>
-        <ListItem button component={RouterLink} to="/browse">
-          <ListItemText primary="Browse" />
-        </ListItem>
-        <ListItem button component={RouterLink} to="/register">
-          <ListItemText primary="Register" />
-        </ListItem>
-        <ListItem button component={RouterLink} to="/login">
-          <ListItemText primary="Login" />
-        </ListItem>
-        <ListItem button component={RouterLink} to="/editprofile">
-          <ListItemText primary="Edit profile" />
-        </ListItem>
-      </List>
-    </div>
-  );
+  const list = (anchor: string) => {
+    
+    return (
+      <div
+        className= {clsx(classes.list, {
+          [classes.fullList]: anchor === "top" || anchor === "bottom",
+        })}
+        role="presentation"
+        onClick={toggleDrawer(anchor, false)}
+        onKeyDown={toggleDrawer(anchor, false)}
+      >
+        <List>
+          <ListItem button component={RouterLink} to="/">
+            <ListItemText primary="Home" />
+          </ListItem>
+          <ListItem button component={RouterLink} to="/browse">
+            <ListItemText primary="Browse" />
+          </ListItem>
+          <ListItem button component={RouterLink} to="/register">
+            <ListItemText primary="Register" />
+          </ListItem>
+            {props.loggedIn ? (
+              <ListItem 
+                button component={RouterLink} 
+                to="/logout"
+                onClick={logoutSession} >
+                <ListItemText primary="Logout" />
+              </ListItem>
+            ) : (
+              <ListItem button component={RouterLink} to="/login">
+                <ListItemText primary="Login" />
+              </ListItem>
+            )}
+          <ListItem button component={RouterLink} to="/editprofile">
+            <ListItemText primary="Profile" />
+          </ListItem>
+        </List>
+      </div>
+    )
+  }
 
   //*=========================REGULAR NAVBAR===============================
   return (
@@ -195,7 +214,7 @@ const Navbar: React.FC<IProps> = (props) => {
                 to="/editprofile"
                 style={{ textDecoration: "none" }}
               >
-                Edit profile
+                Profile
               </Link>
             </Typography>
           </>
