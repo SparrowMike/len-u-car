@@ -74,7 +74,7 @@ router.get("/:id", async (req, res) => {
 router.get("/imageusername/:username", async (req, res) => {
   try {
     const { username } = req.params;
-    const cars = await knexPg("cars").where("username", username);
+    const cars = await knexPg("cars").where("username", username.trim());
     res.status(200).json(cars[0]);
   } catch (error) {
     console.log(error.message);
