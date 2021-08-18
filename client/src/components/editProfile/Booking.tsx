@@ -115,7 +115,7 @@ const ChangePassword: React.FC = () => {
   }, [currentUser?.username, initialValues?.cars_id]);
 
   const { status, data } = useQuery("carRentalEvent", () =>
-    axios(`/carRentalEvent/${currentUser?.username}`)
+    axios(`/carRentalEvent/username/${currentUser?.username}`)
   );
   const reviewData: any = data?.data;
 
