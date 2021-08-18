@@ -129,12 +129,10 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const result = knexPg("cars")
-      .where("cars_id", id)
-      .del()
-      .then(() => {
-        knexPg.destroy();
-      });
+    const result = await knexPg("cars").where("cars_id", id).del();
+    // .then(() => {
+    //   knexPg.destroy();
+    // });
 
     res.status(200).send(`Car deleted with ID: ${id}`);
   } catch (error) {
