@@ -33,7 +33,7 @@ router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const event = await pool.query(
-      "SELECT * FROM car_rental_event WHERE cars_id = $1",
+      "SELECT * FROM car_rental_event WHERE username = $1",
       [id]
     );
     //   res.json(event.rows[0])

@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const CalendarMutation = ({ carID, pricePerDay, username }: any) => {
   const classes = useStyles();
-  const [open, setModalOpen] = React.useState(false);
+  const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedDays, setSelectedDays] = useState<Day[]>([]);
 
   const [loading, setLoading] = React.useState(false);
@@ -165,7 +165,7 @@ const CalendarMutation = ({ carID, pricePerDay, username }: any) => {
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
             className={classes.modal}
-            open={open}
+            open={modalOpen}
             onClose={handleModalClose}
             closeAfterTransition
             BackdropComponent={Backdrop}
@@ -173,7 +173,7 @@ const CalendarMutation = ({ carID, pricePerDay, username }: any) => {
               timeout: 500,
             }}
           >
-            <Fade in={open}>
+            <Fade in={modalOpen}>
               <div className={classes.paper}>
                 <h2>Selected dates (dd/mm/yyyy):</h2>
                 {selectedDays?.map((user, index) => (
