@@ -17,11 +17,10 @@ import Container from "@material-ui/core/Container";
 
 import Rating from "@material-ui/lab/Rating";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
-import { IState as Props } from "./Edit";
 
+import { IState as Props } from "./Edit";
 interface IProps {
   user: Props["user"];
-
 }
 
 
@@ -40,6 +39,11 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     display: "flex",
     flexDirection: "column",
+    transition: ".3s ease-in-out",
+    "&:hover": {
+      transform: "scale(1.1)",
+      cursor: "pointer",
+    },
   },
   cardContent: {
     flexGrow: 1,
@@ -63,7 +67,6 @@ const validationSchema = yup.object({
 });
 
 interface FormValues {
-  review_id: number | undefined;
   rating: number | undefined;
   review: string | undefined;
   username: string | undefined;
@@ -72,27 +75,30 @@ interface FormValues {
 }
 
 interface CurrentUser {
-  review_id: number;
   rating: number;
   review: string;
   username: string;
   cars_id: number;
   event_id: number;
 }
+const initialValues: FormValues = {
+  rating: 5,
+  review: "",
+  username: "",
+  cars_id: 0,
+  event_id: 0,
+};
 
 const ChangePassword: React.FC<IProps> = ({user}) => {
   const classes = useStyles();
   const [currentUser, setCurrentUser] = useState<CurrentUser>();
+  const [username, setUsername] = useState<string>("");
+  const [carsId, setCarsId] = useState<number>();
+  const [eventId, setEventId] = useState<number>();
   const [modalOpen, setModalOpen] = React.useState(false);
-  const [initialValues, setInitialValues] = useState<FormValues>({
-    review_id: undefined,
-    rating: undefined,
-    review: undefined,
-    username: undefined,
-    cars_id: undefined,
-    event_id: undefined,
-  });
-console.log(user);
+
+  
+ console.log(user);
 const fetchEvents = async () => {
     const { data } = await axios.get(
       `/carRentalEvent/username/${user.username}`
@@ -103,31 +109,32 @@ const fetchEvents = async () => {
  const { isLoading: islLoading2, data : data2  } = useQuery("carRentalEvent", fetchEvents);
  console.log("event data", data2);
  // const dd = data2?.rows;
-  const handleSubmit = (formValue: FormValues) => {
-    let merge = { ...initialValues };
-    // merge.password_unhashed = formValue.password_unhashed;
-    // console.log(merge);
-    const updateUserAccount = async () => {
-      try {
-        const res = await fetch("/carRentalreview/" + currentUser?.review_id, {
-          method: "PUT",
-          body: JSON.stringify(merge),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        console.log(merge);
-        console.log(res);
-        alert("User profile updated succesfully!");
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    updateUserAccount();
+ 
+  const handleSubmit = async (values: FormValues) => {
+    const carData = { username: username, cars_id: carsId, event_id: eventId };
+    let merge = { ...values, ...carData };
+    console.log(merge);
+    try {
+      const res = await fetch("/carRentalreview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(merge),
+      });
+
+      console.log(res);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
-  const handleModalOpen = () => {
+  const handleModalOpen = (e: any) => {
     setModalOpen(true);
+    console.log(e.card);
+
+    setUsername(e.card.username);
+    setCarsId(e.card.cars_id);
+    setEventId(e.card.event_id);
+
   };
   const handleModalClose = () => {
     setModalOpen(false);
@@ -166,17 +173,17 @@ const fetchEvents = async () => {
         <Fade in={modalOpen}>
           <div className={classes.paper}>
             <Formik
-              initialValues={{ ...initialValues }}
+              initialValues={initialValues}
               onSubmit={handleSubmit}
               validationSchema={validationSchema}
             >
               {(formik) => (
                 <form className={classes.form} onSubmit={formik.handleSubmit}>
-                  <Box component="fieldset" mb={3} borderColor="transparent">
+                  <Box component="fieldset" mb={5} borderColor="transparent">
                     <Typography component="legend">Rating</Typography>
                     <Rating
                       name="customized-empty"
-                      defaultValue={3}
+                      defaultValue={5}
                       precision={0.25}
                       emptyIcon={<StarBorderIcon fontSize="inherit" />}
                       size="large"

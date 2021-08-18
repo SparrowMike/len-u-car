@@ -39,10 +39,18 @@ router.post("/", async (req, res) => {
 });
 
 //*========================GET A EVENT - GET ROUTE=======================
-router.get("/:id", async (req, res) => {
+router.get("/username/:name", async (req, res) => {
+  // const event = await pool.query(
+  //   "SELECT * FROM car_rental_event WHERE username = $1",
+  //   [id]
+  // );
+  //   res.json(event.rows[0])
   try {
-    const { id } = req.params;
-    const events = await knexPg("car_rental_event").where("cars_id", id);
+    const { name } = req.params;
+    const events = await knexPg("car_rental_event").where(
+      "username",
+      name.trim()
+    );
     res.status(200).json(events);
   } catch (error) {
     console.log(error.message);

@@ -10,6 +10,12 @@ import {
   Typography,
   Card,
   CardContent,
+
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow
 } from "@material-ui/core";
 
 import Slider from "react-slick";
@@ -68,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
   main: {
     padding: theme.spacing(2),
     textAlign: "center",
-    height: "500px",
+    height: "auto",
   },
 
   side: {
@@ -95,6 +101,12 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContent: {
     flexGrow: 1,
+  },
+  alignright: {
+    display: 'flex',
+    // alignItems: 'center',
+    justifyContent: 'flex-end',
+    justify: "center"
   },
 }));
 
@@ -141,33 +153,72 @@ const CarPage = () => {
         <Grid container spacing={3}>
           <Grid item xs={8}>
             <Paper className={classes.main}>
-              <Grid container spacing={1}>
-                <Grid item xs={4}>
+              <Grid>
+                <Grid item xs={12} >
                   <Avatar
                     alt="Remy Sharp"
                     src={data.avatar}
                     className={classes.avatar}
                   />
-                  <Typography gutterBottom variant="h5" component="h2">
+                </Grid>
+                <Grid item xs={12} >
+                  <Typography gutterBottom variant="subtitle2" component="h2" align='left'>
                     {data.username}
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
-                  <Card className={classes.card}>
-                    <CardContent className={classes.cardContent}>
-                      <Typography gutterBottom variant="h5" component="h2">
-                        Brand: {data.brand}
-                      </Typography>
-                      <Typography>Model: {data.model}</Typography>
-                      <Typography> Engine Type: {data.engine_type}</Typography>
-                      <Typography>Transmission: {data.transmission}</Typography>
-                    </CardContent>
-                  </Card>
-
-                  {/*  */}
-                  <Divider className={classes.divider} />
-                </Grid>
               </Grid>
+
+            
+              <Typography gutterBottom variant="h4" component="h2" align='left'>
+                {`${data.brand}, ${data.model}` }
+              </Typography>
+              <Table size="small">
+                <TableBody>
+                  <TableRow>
+                    <TableCell style={{width: '30%'}}>Type:</TableCell>
+                    <TableCell>{data.type}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{width: '30%'}}>Passenger Capacity:</TableCell>
+                    <TableCell>{data.passenger_capacity}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{width: '30%'}}>Transmission:</TableCell>
+                    <TableCell>{data.transmission}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{width: '30%'}}>Price per day:</TableCell>
+                    <TableCell>{data.price_per_day}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{width: '30%'}}>Mileage:</TableCell>
+                    <TableCell>{data.mileage}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{width: '30%'}}>Engine Type:</TableCell>
+                    <TableCell>{data.engine_type}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{width: '30%'}}>Key Features:</TableCell>
+                    <TableCell>{data.key_features}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{width: '30%'}}>Key Rules:</TableCell>
+                    <TableCell>{data.key_rules}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{width: '30%'}}>Status:</TableCell>
+                    <TableCell>{data.status}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{width: '30%'}}>Pick Up Point:</TableCell>
+                    <TableCell>{data.pick_up_point}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+              {/*  */}
+              {/* <Divider className={classes.divider} /> */}
+              
             </Paper>
           </Grid>
           <Grid item xs={4}>
