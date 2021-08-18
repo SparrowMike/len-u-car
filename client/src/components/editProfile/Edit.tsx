@@ -9,7 +9,9 @@ import EditCar from "./EditCar";
 import UpdateProfile from "./UpdateProfile";
 import UploadCars from "./UploadCars";
 import Booking from "./Booking";
-
+import { useQuery } from "react-query";
+import Cookies from "js-cookie";
+import axios from "axios";
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
@@ -58,6 +60,24 @@ function a11yProps(index: any) {
   };
 }
 
+export interface IState {
+ user:
+ {
+  user_id: number;
+  username: string;
+  password: string;
+  full_name: string;
+  email: string;
+  avatar: string;
+  user_type: string;
+  mobile: number;
+  identification_card: string;
+  driving_license: string;
+  cloudinary_id: string;
+}
+}
+
+
 export default function Edit() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -65,6 +85,22 @@ export default function Edit() {
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
+
+  const sidfromCookie = Cookies.get("cook");
+  if (sidfromCookie === undefined) console.log("No cookie available."); // +
+  console.log("Session Id from Cookie: ", sidfromCookie);
+  
+  const fetchUsers = async () => {
+    const { data } = await axios.get(
+      `/sessions/check/${sidfromCookie}`
+    );
+    return data;
+  };
+
+const {isLoading: islLoading1, data : data1 } = useQuery("sessions/check", fetchUsers);
+console.log(data1);
+const user = data1?.sessionDetails.currentUser;
+console.log(user);
 
   return (
     <div className={classes.root}>
@@ -96,7 +132,7 @@ export default function Edit() {
           <ChangePassword />
         </TabPanel>
         <TabPanel value={value} index={4}>
-          <Booking />
+          <Booking user={user}/>
         </TabPanel>
       </Container>
     </div>

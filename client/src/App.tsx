@@ -48,6 +48,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 function App() {
   const classes = useStyles();
   const queryClient = new QueryClient();
@@ -78,9 +80,6 @@ function App() {
               </Route>
               <Route path="/editprofile">
                 <Editprofile loggedIn={loggedIn} />
-              </Route>
-              <Route path="/booking">
-                <Booking />
               </Route>
               <Route path="/">
                 <Home />
