@@ -13,8 +13,7 @@ import Editprofile from "./Pages/Editprofile";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
-
-
+import Booking from "./components/editProfile/Booking";
 
 const theme = createTheme({
   palette: {
@@ -49,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 function App() {
   const classes = useStyles();
   const queryClient = new QueryClient();
@@ -66,7 +64,7 @@ function App() {
                 <PaginationTEST />
               </Route>
               <Route path="/carpage/:cars_id">
-              { !loggedIn && <Redirect to="/login" />}  
+                {!loggedIn && <Redirect to="/login" />}
                 <CarPage />
               </Route>
               <Route path="/browse">
@@ -80,6 +78,9 @@ function App() {
               </Route>
               <Route path="/editprofile">
                 <Editprofile loggedIn={loggedIn} />
+              </Route>
+              <Route path="/booking">
+                <Booking />
               </Route>
               <Route path="/">
                 <Home />

@@ -41,10 +41,10 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 //* ===========HEROKU DEPLOYMENT MIDDLEWARE==================
-app.use(express.static(path.join(__dirname, "./client/build")));
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./client/build", "index.html"));
-});
+// app.use(express.static(path.join(__dirname, "./client/build")));
+// app.get("/*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "./client/build", "index.html"));
+// });
 
 app.use(
   session({
@@ -67,11 +67,13 @@ const carsController = require("./controllers/cars");
 const carImagesController = require("./controllers/carImages");
 const sessionsController = require("./controllers/sessions.js");
 const carRentalEventController = require("./controllers/carRentalEvent.js");
+const carRentalReviewController = require("./controllers/carRentalReview");
 app.use("/users", usersController);
 app.use("/cars", carsController);
 app.use("/images", carImagesController);
 app.use("/sessions", sessionsController);
 app.use("/carRentalEvent", carRentalEventController);
+app.use("/carRentalReview", carRentalReviewController);
 
 //*==================LISTENER=====================
 app.listen(PORT, () => {

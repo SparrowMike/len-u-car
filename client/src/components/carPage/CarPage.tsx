@@ -8,6 +8,8 @@ import {
   Divider,
   Avatar,
   Typography,
+  Card,
+  CardContent,
 } from "@material-ui/core";
 
 import Slider from "react-slick";
@@ -86,6 +88,14 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(7),
     height: theme.spacing(7),
   },
+  card: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
 }));
 
 // const CarPage: React.FC<IState> = ({ user }) => {
@@ -138,20 +148,24 @@ const CarPage = () => {
                     src={data.avatar}
                     className={classes.avatar}
                   />
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {data.username}
+                  </Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography>{data.username}</Typography>
+                  <Card className={classes.card}>
+                    <CardContent className={classes.cardContent}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        Brand: {data.brand}
+                      </Typography>
+                      <Typography>Model: {data.model}</Typography>
+                      <Typography> Engine Type: {data.engine_type}</Typography>
+                      <Typography>Transmission: {data.transmission}</Typography>
+                    </CardContent>
+                  </Card>
+
+                  {/*  */}
                   <Divider className={classes.divider} />
-                  <Typography variant="subtitle1">
-                    Brand: {data.brand}
-                  </Typography>
-                  <Typography variant="body2">Model: {data.model}</Typography>
-                  <Typography variant="subtitle1">
-                    Engine Type: {data.engine_type}
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    Transmission: {data.transmission}
-                  </Typography>
                 </Grid>
               </Grid>
             </Paper>
