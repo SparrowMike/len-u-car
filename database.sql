@@ -51,6 +51,7 @@ CREATE TABLE car_rental_event (
     day int,
     month int,
     year int,
+    x varchar(20),
     cars_id int
 );
 

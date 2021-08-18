@@ -6,7 +6,7 @@ import Link from "@material-ui/core/Link";
 import Rating from "@material-ui/lab/Rating";
 import Slider from "react-slick";
 import cars from "../data/cars";
-import Cars from "../components/cars/Cars";
+// import Cars from "../components/cars/Cars";
 
 const useStyles = makeStyles((theme) => ({
   mainFeaturedPost: {

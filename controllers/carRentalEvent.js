@@ -15,10 +15,10 @@ router.get("/", async (req, res) => {
 //*========================CREATE NEW EVENT - POST ROUTE========================
 router.post("/", async (req, res) => {
   try {
-    const { day, month, year, cars_id } = req.body;
+    const { day, month, year, username, cars_id } = req.body;
     const newRentalEvent = await pool.query(
-      "INSERT INTO car_rental_event (day, month, year, cars_id ) VALUES ($1,$2,$3,$4)",
-      [day, month, year, cars_id]
+      "INSERT INTO car_rental_event (day, month, year,username , cars_id ) VALUES ($1,$2,$3,$4,$5)",
+      [day, month, year, username, cars_id]
     );
     res.status(200).send(`User modified with cars_ID: ${cars_id}`);
     // res.json(newRentalEvent);

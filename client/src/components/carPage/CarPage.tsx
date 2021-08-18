@@ -8,7 +8,6 @@ import {
   Divider,
   Avatar,
   Typography,
-  Button,
 } from "@material-ui/core";
 
 import Slider from "react-slick";
@@ -94,27 +93,10 @@ const CarPage = () => {
   const classes = useStyles();
   const location: any = useLocation();
 
-  console.log(location);
-  const userAvatar = location.state.data.user.avatar;
-  const username = location.state.data.user.username;
-  const email = location.state.data.user.email;
-  const mobile = location.state.data.user.mobile;
-  const status = location.state.data.user.mobile;
+  console.log("location", location);
+  console.log("state", location.state);
 
-  const brand = location.state.data.user.brand;
-  const model = location.state.data.user.model;
-  const passenger_capacity = location.state.data.user.passenger_capacity;
-  const secure_url = location.state.data.user.secure_url;
-  const pick_up_point = location.state.data.user.pick_up_point;
-  const price_per_day = location.state.data.user.price_per_day;
-
-  const engine_type = location.state.data.user.engine_type;
-  const mileage = location.state.data.user.mileage;
-  const key_features = location.state.data.user.key_features;
-  const transmission = location.state.data.user.transmission;
-  const type = location.state.data.user.type;
-
-  console.log("avatar", userAvatar, "and the brand", brand);
+  const data: IState = location.state.data.user;
 
   const slickSettings = {
     dots: true,
@@ -136,7 +118,7 @@ const CarPage = () => {
         <Paper>
           <div
             className={classes.mainFeaturedPost}
-            style={{ backgroundImage: `url(${secure_url})` }}
+            style={{ backgroundImage: `url(${data.secure_url})` }}
           >
             <div className={classes.overlay} />
           </div>
@@ -153,20 +135,22 @@ const CarPage = () => {
                 <Grid item xs={4}>
                   <Avatar
                     alt="Remy Sharp"
-                    src={userAvatar}
+                    src={data.avatar}
                     className={classes.avatar}
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography>{username}</Typography>
+                  <Typography>{data.username}</Typography>
                   <Divider className={classes.divider} />
-                  <Typography variant="subtitle1">Brand: {brand}</Typography>
-                  <Typography variant="body2">Model: {model}</Typography>
                   <Typography variant="subtitle1">
-                    Engine Type: {engine_type}
+                    Brand: {data.brand}
+                  </Typography>
+                  <Typography variant="body2">Model: {data.model}</Typography>
+                  <Typography variant="subtitle1">
+                    Engine Type: {data.engine_type}
                   </Typography>
                   <Typography variant="subtitle1">
-                    Transmission: {transmission}
+                    Transmission: {data.transmission}
                   </Typography>
                 </Grid>
               </Grid>
@@ -174,7 +158,11 @@ const CarPage = () => {
           </Grid>
           <Grid item xs={4}>
             <Paper className={classes.side}>
-              <Calendar />
+              <Calendar
+                carID={data.cars_id}
+                pricePerDay={data.price_per_day}
+                username={data.username}
+              />
             </Paper>
           </Grid>
         </Grid>
