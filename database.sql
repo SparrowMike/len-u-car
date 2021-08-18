@@ -40,7 +40,7 @@ CREATE TABLE car_images (
 
 CREATE TABLE car_rental_review (
     review_id SERIAL,
-    rating int,
+    rating decimal,
     review varchar(300),
     username varchar(20),
     cars_id int,

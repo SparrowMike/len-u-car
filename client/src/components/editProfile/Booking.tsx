@@ -4,8 +4,7 @@ import * as yup from "../../../node_modules/yup";
 import Button from "@material-ui/core/Button";
 import Textfield from "../editProfile/FormsUI/Textfield";
 import { makeStyles, Modal, Fade, Backdrop } from "@material-ui/core";
-import { useState, useEffect } from "react";
-import Cookies from "js-cookie";
+import { useState } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
 
@@ -22,7 +21,6 @@ import { IState as Props } from "./Edit";
 interface IProps {
   user: Props["user"];
 }
-
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -62,8 +60,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const validationSchema = yup.object({
-  rating: yup.string().required("Password is required"),
-  review: yup.string().required("Password is required"),
+  rating: yup.string().required("Rating is required"),
+  review: yup.string().required("Review is required"),
 });
 
 interface FormValues {
@@ -74,13 +72,6 @@ interface FormValues {
   event_id: number | undefined;
 }
 
-interface CurrentUser {
-  rating: number;
-  review: string;
-  username: string;
-  cars_id: number;
-  event_id: number;
-}
 const initialValues: FormValues = {
   rating: 5,
   review: "",
@@ -89,29 +80,34 @@ const initialValues: FormValues = {
   event_id: 0,
 };
 
-const ChangePassword: React.FC<IProps> = ({user}) => {
+const ChangePassword: React.FC<IProps> = ({ user }) => {
   const classes = useStyles();
-  const [currentUser, setCurrentUser] = useState<CurrentUser>();
   const [username, setUsername] = useState<string>("");
+  const [rating, setRating] = useState<number>();
   const [carsId, setCarsId] = useState<number>();
   const [eventId, setEventId] = useState<number>();
   const [modalOpen, setModalOpen] = React.useState(false);
 
-  
- console.log(user);
-const fetchEvents = async () => {
+  console.log(user);
+  const fetchEvents = async () => {
     const { data } = await axios.get(
       `/carRentalEvent/username/${user.username}`
     );
     return data;
   };
 
- const { isLoading: islLoading2, data : data2  } = useQuery("carRentalEvent", fetchEvents);
- console.log("event data", data2);
- // const dd = data2?.rows;
- 
+  const { isLoading: islLoading2, data: data2 } = useQuery(
+    "carRentalEvent",
+    fetchEvents
+  );
+
   const handleSubmit = async (values: FormValues) => {
-    const carData = { username: username, cars_id: carsId, event_id: eventId };
+    const carData = {
+      username: username,
+      cars_id: carsId,
+      event_id: eventId,
+      rating: rating,
+    };
     let merge = { ...values, ...carData };
     console.log(merge);
     try {
@@ -129,12 +125,11 @@ const fetchEvents = async () => {
 
   const handleModalOpen = (e: any) => {
     setModalOpen(true);
-    console.log(e.card);
+    console.log("WHATS IS GOING ON HEREREERERER!", e.card);
 
     setUsername(e.card.username);
     setCarsId(e.card.cars_id);
     setEventId(e.card.event_id);
-
   };
   const handleModalClose = () => {
     setModalOpen(false);
@@ -144,18 +139,20 @@ const fetchEvents = async () => {
     <div>
       <Container className={classes.cardGrid} maxWidth="md">
         <Grid container spacing={4}>
-          {data2?.map((card: any, index : any) =>(
-              <Grid item key={index} xs={12} sm={6} md={4}>
-                <Card className={classes.card} onClick={handleModalOpen}>
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Car Booking {card.day}/{card.month}/{card.year}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            )
-          )}
+          {data2?.map((card: any, index: any) => (
+            <Grid item key={index} xs={12} sm={6} md={4}>
+              <Card
+                className={classes.card}
+                onClick={() => handleModalOpen({ card })}
+              >
+                <CardContent className={classes.cardContent}>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    Car Booking {card.day}/{card.month}/{card.year}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
         </Grid>
       </Container>
       <Modal
@@ -184,7 +181,8 @@ const fetchEvents = async () => {
                     <Rating
                       name="customized-empty"
                       defaultValue={5}
-                      precision={0.25}
+                      precision={0.5}
+                      onChange={(e: any) => setRating(e.target.value)}
                       emptyIcon={<StarBorderIcon fontSize="inherit" />}
                       size="large"
                     />
