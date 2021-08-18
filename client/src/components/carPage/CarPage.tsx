@@ -8,6 +8,7 @@ import {
   Divider,
   Avatar,
   Typography,
+  Button,
 } from "@material-ui/core";
 
 import Slider from "react-slick";
@@ -15,7 +16,7 @@ import Slider from "react-slick";
 import { useLocation } from "react-router";
 import cars from "../../data/cars";
 import { IState as Props } from "../../Pages/Browse";
-
+import Calendar from "./Calendar";
 
 interface LocationState {
   data: Props["users"];
@@ -180,7 +181,9 @@ const CarPage = () => {
             </Paper>
           </Grid>
           <Grid item xs={4}>
-            <Paper className={classes.side}>Side</Paper>
+            <Paper className={classes.side}>
+              <Calendar />
+            </Paper>
           </Grid>
         </Grid>
       </Container>

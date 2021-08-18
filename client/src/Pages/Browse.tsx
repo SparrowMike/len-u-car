@@ -71,12 +71,20 @@ const Browse = () => {
   const [engineType, setEngineType] = useState<string>("");
 
   const fetchUsers = async () => {
-    const { data } = await axios.get("http://localhost:4000/users");
+    const { data } = await axios.get("/users");
     return data;
   };
 
   const { isLoading, data } = useQuery("users", fetchUsers);
-
+const typeCar = data?.map((item : any) => item.type).filter((value : any, index : any, self : any) => self.indexOf(value) === index)
+const transmissionCar = data?.map((item : any) => item.transmission).filter((value : any, index : any, self : any) => self.indexOf(value) === index)
+const engineTypeCar = data?.map((item : any) => item.engine_type).filter((value : any, index : any, self : any) => self.indexOf(value) === index)
+typeCar?.push("");
+transmissionCar?.push("");
+engineTypeCar?.push("");
+console.log(typeCar);
+console.log(transmissionCar);
+console.log(engineTypeCar);
   return (
     <>
       <Container className={classes.container}>
@@ -93,9 +101,10 @@ const Browse = () => {
                     setCarType(e.target.value as string);
                   }}
                 >
-                  <MenuItem value="sport">Sport</MenuItem>
+                  {/* <MenuItem value="sport">Sport</MenuItem>
                   <MenuItem value="SUV">SUV</MenuItem>
-                  <MenuItem value="sedan">Sedan</MenuItem>
+                  <MenuItem value="sedan">Sedan</MenuItem> */}
+                  {typeCar?.map( (item: any) => (<MenuItem value={item}>{item === "" ? "ANY" : item}</MenuItem>))}
                 </Select>
               </FormControl>
               <FormControl variant="outlined" className={classes.formControl}>
@@ -108,8 +117,9 @@ const Browse = () => {
                     setTransmission(e.target.value as string);
                   }}
                 >
-                  <MenuItem value="automatic">Auto</MenuItem>
-                  <MenuItem value="manual">Manual</MenuItem>
+                  {/* <MenuItem value="automatic">Auto</MenuItem>
+                  <MenuItem value="manual">Manual</MenuItem> */}
+                  {transmissionCar?.map( (item: any) => (<MenuItem value={item}>{item === "" ? "ANY" : item}</MenuItem>))}
                 </Select>
               </FormControl>
               <FormControl variant="outlined" className={classes.formControl}>
@@ -122,9 +132,10 @@ const Browse = () => {
                     setEngineType(e.target.value as string);
                   }}
                 >
-                  <MenuItem value="petrol">Petrol</MenuItem>
+                  {/* <MenuItem value="petrol">Petrol</MenuItem>
                   <MenuItem value="diesel">Diesel</MenuItem>
-                  <MenuItem value="hybrid">Hybrid</MenuItem>
+                  <MenuItem value="hybrid">Hybrid</MenuItem> */}
+                  {engineTypeCar?.map( (item: any) => (<MenuItem value={item}>{item === "" ? "ANY" : item}</MenuItem>))}
                 </Select>
               </FormControl>
             </Paper>

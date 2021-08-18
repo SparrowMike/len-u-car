@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { Formik, Field } from "formik";
-import * as yup from "../../../node_modules/yup";
+import {
+  CircularProgress,
+  MenuItem,
+  Select,
+  InputLabel,
+  makeStyles,
+} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import Textfield from "../editProfile/FormsUI/Textfield";
 import Radio from "@material-ui/core/Radio";
-import { makeStyles, CircularProgress } from "@material-ui/core";
+import { Field, Formik } from "formik";
 import Cookies from "js-cookie";
+import React, { useEffect, useState } from "react";
+import * as yup from "../../../node_modules/yup";
+import Textfield from "../editProfile/FormsUI/Textfield";
 
 const useStyles = makeStyles({
   form: {
@@ -15,6 +21,10 @@ const useStyles = makeStyles({
     marginTop: 10,
   },
 });
+
+//* Variables
+let passenger_cap: Array<number> = [1, 2, 3, 4, 5, 6];
+let car_status: Array<string> = ["Available", "Not Available"];
 
 const validationSchema = yup.object({
   brand: yup.string().required("Brand is required"),
@@ -102,15 +112,12 @@ const EditCar: React.FC = () => {
       const sidfromCookie = Cookies.get("cook");
       console.log("Session Id from Cookie: ", sidfromCookie);
 
-      const res = await fetch(
-        `http://localhost:4000/sessions/check/${sidfromCookie}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(`/sessions/check/${sidfromCookie}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await res.json();
 
@@ -147,7 +154,6 @@ const EditCar: React.FC = () => {
     fetchSession();
     // eslint-disable-next-line
   }, [currentUserCar?.username, initialValues?.cars_id]);
-
 
   const handleSubmit = (formValue: any) => {
     const carOwner = { username: user };
@@ -192,7 +198,7 @@ const EditCar: React.FC = () => {
 
   return (
     <>
-      {loading ? ( 
+      {loading ? (
         <CircularProgress />
       ) : (
         <div>
@@ -228,12 +234,32 @@ const EditCar: React.FC = () => {
                     Sedan
                   </label>
                 </div>
-                <Textfield
-                  className={classes.field}
-                  id="passenger_capacity"
-                  name="passenger_capacity"
-                  label="Passenger_capacity"
-                />
+                <div>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    style={{
+                      fontSize: "12px",
+                      paddingLeft: "12px",
+                    }}
+                  >
+                    Passenger capacity
+                  </InputLabel>
+                  <Field
+                    name="passenger_capacity"
+                    type="select"
+                    label="passenger_capacity"
+                    id="passenger_capacity"
+                    variant="outlined"
+                    fullWidth
+                    as={Select}
+                  >
+                    {passenger_cap.map((item, index) => (
+                      <MenuItem key={index} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                </div>
                 <div>
                   Tranmission:
                   <label>
@@ -313,12 +339,32 @@ const EditCar: React.FC = () => {
                   label="Key_rules"
                 />
 
-                <Textfield
-                  className={classes.field}
-                  id="status"
-                  name="status"
-                  label="Status"
-                />
+                <div>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    style={{
+                      fontSize: "12px",
+                      paddingLeft: "12px",
+                    }}
+                  >
+                    Status
+                  </InputLabel>
+                  <Field
+                    name="status"
+                    type="select"
+                    label="status"
+                    id="status"
+                    variant="outlined"
+                    fullWidth
+                    as={Select}
+                  >
+                    {car_status.map((item, index) => (
+                      <MenuItem key={index} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                </div>
 
                 <Textfield
                   className={classes.field}

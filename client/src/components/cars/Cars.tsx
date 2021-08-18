@@ -82,29 +82,44 @@ const Cars: React.FC<IProps> = ({
       <main>
         <Container className={classes.container} maxWidth="md">
           <Grid container spacing={4}>
-            {users
-              ?.filter((user, index) => {
-                let count = 0;
-                for (var key in filter) {
-                  if (filter[key as keyof typeof filter] === "") {
-                    count += 1;
-                    if (count === 3) {
-                      return true;
-                    }
-                  } else if (
-                    user[key as keyof typeof filter] === "" ||
-                    user[key as keyof typeof filter] !==
-                      filter[key as keyof typeof filter]
-                  ) {
-                    return false;
+            {users?.filter((user, index) => {
+              let count = 0;
+              for (var key in filter) {
+                if (filter[key as keyof typeof filter] === "") {
+                  count += 1;
+                  if (count === 3) {
+                    return true;
                   }
+                } else if (
+                  user[key as keyof typeof filter] === "" ||
+                  user[key as keyof typeof filter] !==
+                    filter[key as keyof typeof filter]
+                ) {
+                  return false;
                 }
-                return true;
-              })
-              .map((user, index) =>
-                user === undefined ? (
-                  <h1>No cars available with specified requirments</h1>
-                ) : (
+              }
+              return true;
+            }).length ? (
+              users
+                ?.filter((user, index) => {
+                  let count = 0;
+                  for (var key in filter) {
+                    if (filter[key as keyof typeof filter] === "") {
+                      count += 1;
+                      if (count === 3) {
+                        return true;
+                      }
+                    } else if (
+                      user[key as keyof typeof filter] === "" ||
+                      user[key as keyof typeof filter] !==
+                        filter[key as keyof typeof filter]
+                    ) {
+                      return false;
+                    }
+                  }
+                  return true;
+                })
+                .map((user, index) => (
                   <Grid item key={index} xs={12} sm={6} md={4}>
                     <Card className={classes.root}>
                       <Link
@@ -148,8 +163,13 @@ const Cars: React.FC<IProps> = ({
                       </Grid>
                     </Card>
                   </Grid>
-                )
-              )}
+                ))
+            ) : (
+              <h3>
+                No cars available with specified requirements. Please select
+                again.
+              </h3>
+            )}
           </Grid>
         </Container>
       </main>

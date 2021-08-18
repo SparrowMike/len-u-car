@@ -32,6 +32,44 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//*========================POST a car image - POST ROUTE=======================
+router.post("/", upload.single("secure_url"), async (req, res) => {
+  try {
+    const fileStr = req.body.secure_url; // not tested yet
+    let result;
+    let secure_url;
+    let cloudinary_id;
+
+    if (fileStr) {
+      result = await cloudinary.uploader.upload(fileStr, {
+        upload_preset: "carImages",
+      });
+      secure_url = result.secure_url;
+      cloudinary_id = result.public_id;
+    } else {
+      secure_url = "";
+      cloudinary_id = "";
+    }
+
+    console.log("Avatar :", avatar);
+    console.log("cloudinary_id :", cloudinary_id);
+
+    const { cars_id } = req.body;
+
+    const carImage = await knexPg("car_images").insert({
+      secure_url: secure_url,
+      cloudinary_id: cloudinary_id,
+      cars_id: cars_id,
+    });
+    res.json({
+      msg: "database insert new car image successful",
+      rowCount: carImage.rowCount,
+    });
+  } catch (error) {
+    res.status(400).json("Error: " + error);
+  }
+});
+
 //*=====================UPDATE THE IMAGE=========================
 router.put("/:id", upload.single("secure_url"), async (req, res) => {
   try {
@@ -47,29 +85,38 @@ router.put("/:id", upload.single("secure_url"), async (req, res) => {
     let secure_url;
     let cloudinary_id;
     const cloudID = carImages.rows[0].cloudinary_id;
-    const cloudImage = carImages.rows[0].secure_url;
-    if (fileStr) {
-      // previous req.file
+    console.log("this is carImages: ", carImages);
+
+    if (fileStr && cloudID !== null) {
       await cloudinary.uploader.destroy(cloudID);
       result = await cloudinary.uploader.upload(fileStr, {
         upload_preset: "carImages",
       });
-    }
-    if (result === undefined) {
-      secure_url = cloudImage;
-      cloudinary_id = cloudID;
-    } else {
       secure_url = result.secure_url;
       cloudinary_id = result.public_id;
+    } else if (fileStr && cloudID === null) {
+      result = await cloudinary.uploader.upload(fileStr, {
+        upload_preset: "carImages",
+      });
+      secure_url = result.secure_url;
+      cloudinary_id = result.public_id;
+    } else {
+      secure_url = "";
+      cloudinary_id = "";
     }
 
+    console.log("Avatar :", avatar);
+    console.log("cloudinary_id :", cloudinary_id);
+
     const { cars_id } = req.body;
-    const carImage = await knexPg("users").where("user_id", "=", id).update({
-      images_id: id,
-      secure_url: secure_url,
-      cloudinary_id: cloudinary_id,
-      cars_id: cars_id,
-    });
+    const carImage = await knexPg("car_images")
+      .where("images_id", "=", id)
+      .update({
+        images_id: id,
+        secure_url: secure_url,
+        cloudinary_id: cloudinary_id,
+        cars_id: cars_id,
+      });
     res.status(200).send(`Car image modified with ID: ${id}`);
   } catch (err) {
     console.log(err);
