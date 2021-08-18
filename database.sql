@@ -39,12 +39,12 @@ CREATE TABLE car_images (
 )
 
 CREATE TABLE car_rental_review (
-    rating_id SERIAL,
+    review_id SERIAL,
     rating int,
     review varchar(300),
     username varchar(20),
     cars_id int,
-    even_id int
+    event_id int
 );
 
 CREATE TABLE car_rental_event (

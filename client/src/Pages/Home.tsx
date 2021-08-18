@@ -1,23 +1,62 @@
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
-import Rating from "@material-ui/lab/Rating";
-import Slider from "react-slick";
-import cars from "../data/cars";
-import axios from "axios";
-import { useState, useEffect } from "react";
 import {
   Card,
   CardMedia,
   CardHeader,
   Container,
-  CssBaseline,
+  Grid,
+  Typography,
+  Paper,
 } from "@material-ui/core";
+import Rating from "@material-ui/lab/Rating";
+import { Link } from "react-router-dom";
+import Slider from "react-slick";
+import axios from "axios";
+import { useState, useEffect } from "react";
 import StarIcon from "@material-ui/icons/Star";
 
+// import { IState as Props } from "../Pages/Browse";
+
+export interface IState {
+  users: {
+    avatar: string;
+    brand: string;
+    cars_id: number;
+    cloudinary_id: string;
+    driving_license: string;
+    email: string;
+    engine_type: string;
+    full_name: string;
+    identification_card: string;
+    images_id: number;
+    key_features: string;
+    key_rules: string;
+    mileage: string;
+    mobile: number;
+    model: string;
+    passenger_capacity: number;
+    password: string;
+    pick_up_point: string;
+    price_per_day: number;
+    secure_url: string;
+    status: string;
+    transmission: string;
+    type: string;
+    user_id: number;
+    user_type: string;
+    username: string;
+  }[];
+}
+
 const useStyles = makeStyles((theme) => ({
+  root: {
+    maxWidth: 600,
+    borderRadius: "10px",
+  },
+  container: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
   mainFeaturedPost: {
     position: "relative",
     backgroundColor: theme.palette.grey[800],
@@ -26,6 +65,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     height: "450px",
+    transition: ".3s ease-in-out",
+    "&:hover": {
+      transform: "scale(1.05)",
+      cursor: "pointer",
+    },
   },
   overlay: {
     position: "absolute",
@@ -72,7 +116,7 @@ const Home = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 1800,
     cssEase: "linear",
     arrows: false,
   };
@@ -80,13 +124,13 @@ const Home = () => {
   const getFetchData = async () => {
     try {
       const fetchData = await axios.get("http://localhost:4000/users/random");
-      console.log(fetchData.data);
       setDisplay(fetchData.data);
-      console.log(display);
     } catch (error) {
       console.log(error);
     }
   };
+
+  console.log("cards", display);
 
   useEffect(() => {
     getFetchData();
@@ -95,7 +139,7 @@ const Home = () => {
   return (
     <>
       <Slider {...slickSettings}>
-        {cars.map((car, index) => {
+        {display.map((car, index) => {
           return (
             <Paper key={index}>
               <div
@@ -117,14 +161,11 @@ const Home = () => {
                       <Typography variant="h5" color="inherit" paragraph>
                         <Rating
                           name="half-rating-read"
-                          defaultValue={car.rating}
+                          defaultValue={4.6}
                           precision={0.5}
                           readOnly
                         />
                       </Typography>
-                      <Link variant="subtitle1" href="#">
-                        Check out
-                      </Link>
                     </div>
                   </Grid>
                 </Grid>
@@ -133,9 +174,52 @@ const Home = () => {
           );
         })}
       </Slider>
-      {display.map((car) => {
-        <p>{car.brand}</p>;
-      })}
+      <Container className={classes.container} maxWidth="md">
+        <Grid container spacing={4}>
+          {display.map((user, index) => (
+            <Grid item key={index} xs={12} sm={6} md={4}>
+              <Card className={classes.root}>
+                <Link
+                  style={{ textDecoration: "none" }}
+                  to={{
+                    pathname: `/carpage/${user.cars_id}`,
+                    state: { data: { user } },
+                  }}
+                >
+                  <CardMedia
+                    className={classes.media}
+                    image={user.secure_url}
+                  />
+                </Link>
+                <Grid container>
+                  <Grid item xs>
+                    <CardHeader title={user.brand} subheader={user.model} />
+                  </Grid>
+                  <Grid item>
+                    <CardHeader
+                      avatar={
+                        <StarIcon
+                          style={{
+                            color: "#FDCC0D",
+                            position: "relative",
+                            width: "15px",
+                            left: 70,
+                            top: 12,
+                          }}
+                        />
+                      }
+                      align="right"
+                      title={`$ ${user.price_per_day} / day`}
+                      // subheader={`${user.rating.toFixed(1)}`}
+                      subheader="4.7"
+                    />
+                  </Grid>
+                </Grid>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
     </>
   );
 };
