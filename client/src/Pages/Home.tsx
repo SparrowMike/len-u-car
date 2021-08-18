@@ -109,6 +109,7 @@ interface displayValues {
 const Home = () => {
   const classes = useStyles();
   const [display, setDisplay] = useState<displayValues[] | []>([]);
+  const [displaySlick, setDisplaySlick] = useState<displayValues[] | []>([]);
   const slickSettings = {
     dots: true,
     infinite: true,
@@ -129,17 +130,28 @@ const Home = () => {
       console.log(error);
     }
   };
+  const getRandomSlick = async () => {
+    try {
+      const fetchData = await axios.get(
+        "http://localhost:4000/users/randomSlick"
+      );
+      setDisplaySlick(fetchData.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   console.log("cards", display);
 
   useEffect(() => {
     getFetchData();
+    getRandomSlick();
   }, []);
 
   return (
     <>
       <Slider {...slickSettings}>
-        {display.map((car, index) => {
+        {displaySlick.map((car, index) => {
           return (
             <Paper key={index}>
               <div

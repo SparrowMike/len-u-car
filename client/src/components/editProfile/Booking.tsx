@@ -141,15 +141,22 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
         <Grid container spacing={4}>
           {data2?.map((card: any, index: any) => (
             <Grid item key={index} xs={12} sm={6} md={4}>
-              <Card
-                className={classes.card}
-                onClick={() => handleModalOpen({ card })}
-              >
+              <Card className={classes.card}>
                 <CardContent className={classes.cardContent}>
                   <Typography gutterBottom variant="h5" component="h2">
                     Car Booking {card.day}/{card.month}/{card.year}
                   </Typography>
                 </CardContent>
+                <Button
+                  onClick={() => handleModalOpen({ card })}
+                  variant="contained"
+                  color="primary"
+                >
+                  Review
+                </Button>
+                <Button variant="contained" color="primary">
+                  Delete
+                </Button>
               </Card>
             </Grid>
           ))}
