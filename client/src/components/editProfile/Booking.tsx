@@ -18,6 +18,12 @@ import Container from "@material-ui/core/Container";
 import Rating from "@material-ui/lab/Rating";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 
+import { IState as Props } from "./Edit";
+interface IProps {
+  user: Props["user"];
+}
+
+
 const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: 20,
@@ -75,7 +81,6 @@ interface CurrentUser {
   cars_id: number;
   event_id: number;
 }
-
 const initialValues: FormValues = {
   rating: 5,
   review: "",
@@ -84,7 +89,7 @@ const initialValues: FormValues = {
   event_id: 0,
 };
 
-const ChangePassword: React.FC = () => {
+const ChangePassword: React.FC<IProps> = ({user}) => {
   const classes = useStyles();
   const [currentUser, setCurrentUser] = useState<CurrentUser>();
   const [username, setUsername] = useState<string>("");
@@ -92,33 +97,19 @@ const ChangePassword: React.FC = () => {
   const [eventId, setEventId] = useState<number>();
   const [modalOpen, setModalOpen] = React.useState(false);
 
+  
+ console.log(user);
+const fetchEvents = async () => {
+    const { data } = await axios.get(
+      `/carRentalEvent/username/${user.username}`
+    );
+    return data;
+  };
+
+ const { isLoading: islLoading2, data : data2  } = useQuery("carRentalEvent", fetchEvents);
+ console.log("event data", data2);
+ // const dd = data2?.rows;
  
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      // retrieve session ID from custom cookie
-      const sidfromCookie = Cookies.get("cook");
-      const res = await fetch(`/sessions/check/${sidfromCookie}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await res.json();
-      const currentUserInfo = data.sessionDetails.currentUser;
-      setCurrentUser(currentUserInfo);
-    };
-    fetchSession();
-    // eslint-disable-next-line
-  }, [currentUser?.username]);
-
-  const { status, data } = useQuery("carRentalEvent", () =>
-    axios(`/carRentalEvent/username/${currentUser?.username}`)
-  );
-  const reviewData: any = data?.data;
-
-  console.log(reviewData);
-
   const handleSubmit = async (values: FormValues) => {
     const carData = { username: username, cars_id: carsId, event_id: eventId };
     let merge = { ...values, ...carData };
@@ -143,6 +134,7 @@ const ChangePassword: React.FC = () => {
     setUsername(e.card.username);
     setCarsId(e.card.cars_id);
     setEventId(e.card.event_id);
+
   };
   const handleModalClose = () => {
     setModalOpen(false);
@@ -152,15 +144,9 @@ const ChangePassword: React.FC = () => {
     <div>
       <Container className={classes.cardGrid} maxWidth="md">
         <Grid container spacing={4}>
-          {reviewData?.map((card: any, index: number) =>
-            status === "loading" ? (
-              <h1>loading!</h1>
-            ) : (
+          {data2?.map((card: any, index : any) =>(
               <Grid item key={index} xs={12} sm={6} md={4}>
-                <Card
-                  className={classes.card}
-                  onClick={() => handleModalOpen({ card })}
-                >
+                <Card className={classes.card} onClick={handleModalOpen}>
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
                       Car Booking {card.day}/{card.month}/{card.year}
