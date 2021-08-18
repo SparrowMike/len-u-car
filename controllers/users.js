@@ -208,12 +208,8 @@ router.delete("/:id", async (req, res) => {
     const cloudID = userAvatar[0].cloudinary_id || null;
     await cloudinary.uploader.destroy(cloudID);
 
-    const result = knexPg("users")
-      .where("user_id", id)
-      .del()
-      .then(() => {
-        knexPg.destroy();
-      });
+    const result = await knexPg("users").where("user_id", id).del();
+
     res.status(200).send(`User deleted with ID: ${id}`);
   } catch (error) {
     res.status(400).json("Error: " + error);

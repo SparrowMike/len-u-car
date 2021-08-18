@@ -1,12 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../db");
+const knexPg = require("knex")({
+  client: "pg",
+  connection: {
+    connectionString: process.env.HEROKU_POSTGRESQL_URL,
+    ssl: { rejectUnauthorized: false },
+  },
+});
 
 //*========================READ ALL EVENT - GET ROUTE========================
 router.get("/", async (req, res) => {
   try {
-    const carRentalEvent = await pool.query("SELECT * FROM car_rental_event;");
-    res.send(carRentalEvent.rows);
+    console.log("carRentalEvent triggered");
+    const carRentalEvent = await knexPg.from("car_rental_event");
+    res.send(carRentalEvent);
   } catch (error) {
     console.log(error.message);
   }
@@ -16,10 +23,13 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const { day, month, year, username, cars_id } = req.body;
-    const newRentalEvent = await pool.query(
-      "INSERT INTO car_rental_event (day, month, year,username , cars_id ) VALUES ($1,$2,$3,$4,$5)",
-      [day, month, year, username, cars_id]
-    );
+    const newRentalEvent = await knexPg("car_rental_event").insert({
+      day: day,
+      month: month,
+      year: year,
+      username: username,
+      cars_id: cars_id,
+    });
     res.status(200).send(`User modified with cars_ID: ${cars_id}`);
     // res.json(newRentalEvent);
     console.log(newRentalEvent);
@@ -32,40 +42,38 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const event = await pool.query(
-      "SELECT * FROM car_rental_event WHERE cars_id = $1",
-      [id]
-    );
-    //   res.json(event.rows[0])
-    res.status(200).json(event.rows);
+    const events = await knexPg("car_rental_event").where("cars_id", id);
+    res.status(200).json(events);
   } catch (error) {
     console.log(error.message);
   }
 });
 
 // //*========================UPDATE A EVENT - PUT ROUTE=========================
-// router.put("/:id", async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { day, month, year, cars_id } = req.body;
-//     const event = await pool.query(
-//       "UPDATE car_rental_event SET day = $2, month = $3, year = $4, cars_id = $5 WHERE event_id = $1",
-//       [id, day, month, year, cars_id]
-//     );
-//     res.status(200).send(`Event modified with ID: ${id}`);
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// });
-
-//*========================DELETE A EVENT - DELETE ROUTE========================
-router.delete("/:id/", async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const event = await pool.query(
-      "DELETE FROM car_rental_event WHERE cars_id = $1",
-      [id]
-    );
+    const { day, month, year, cars_id } = req.body;
+    const carRentalEvent_rowCount = await knexPg("car_rental_event")
+      .where("event_id", "=", id)
+      .update({
+        event_id: id,
+        day: day,
+        month: month,
+        year: year,
+        cars_id: cars_id,
+      });
+    res.status(200).send(`Event modified with ID: ${id}`);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
+//*========================DELETE A EVENT - DELETE ROUTE========================
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const event = await knexPg("car_rental_event").where("event_id", id).del();
     res.status(200).send(`Event deleted with ID: ${id}`);
   } catch (error) {
     console.log(error.message);
