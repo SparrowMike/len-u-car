@@ -14,6 +14,30 @@ const knexPg = require("knex")({
 
 //*========================READ ALL USERS - GET ROUTE========================
 
+router.get("/random", async (req, res) => {
+  try {
+    const users = await knexPg
+      .from("users")
+      .innerJoin("cars", "users.username", "cars.username")
+      .leftJoin("car_images", "car_images.cars_id", "cars.cars_id")
+      .select(
+        "cars.cars_id",
+        "cars.price_per_day",
+        "cars.brand",
+        "cars.model",
+        "car_images.secure_url"
+      )
+      .orderByRaw("RANDOM()")
+      .limit(3);
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(400).json("Error: " + error);
+  }
+});
+
+//*========================READ RANDOM 3 USERS - GET ROUTE========================
+
 router.get("/", async (req, res) => {
   try {
     const users = await knexPg

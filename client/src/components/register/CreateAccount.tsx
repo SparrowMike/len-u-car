@@ -9,10 +9,6 @@ const useStyles = makeStyles({
   field: {
     marginTop: 10,
   },
-  footer: {
-    marginTop: 40,
-    paddingBottom: 40,
-  },
   submitBtn: {
     marginTop: 20,
   },
@@ -106,7 +102,7 @@ const CreateAccount: React.FC = () => {
         validationSchema={validationSchema}
         validateOnChange={false}
       >
-        {({ dirty, isValid }) => {
+        {() => {
           return (
             <Form>
               <Textfield
