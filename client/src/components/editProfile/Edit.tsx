@@ -8,6 +8,7 @@ import ChangePassword from "./ChangePassword";
 import EditCar from "./EditCar";
 import UpdateProfile from "./UpdateProfile";
 import UploadCars from "./UploadCars";
+import Booking from "./Booking";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -79,6 +80,7 @@ export default function Edit() {
         <Tab label="my car " {...a11yProps(1)} />
         <Tab label="car images" {...a11yProps(2)} />
         <Tab label="password" {...a11yProps(3)} />
+        <Tab label="booking" {...a11yProps(4)} />
       </Tabs>
       <Container className={classes.container}>
         <TabPanel value={value} index={0}>
@@ -92,6 +94,9 @@ export default function Edit() {
         </TabPanel>
         <TabPanel value={value} index={3}>
           <ChangePassword />
+        </TabPanel>
+        <TabPanel value={value} index={4}>
+          <Booking />
         </TabPanel>
       </Container>
     </div>

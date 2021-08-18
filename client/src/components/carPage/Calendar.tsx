@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Day, Calendar, utils } from "react-modern-calendar-datepicker";
 
+import { useEffect } from "react";
+import Cookies from "js-cookie";
+
 import { Button } from "@material-ui/core";
 import { useQuery, useMutation } from "react-query";
 import axios from "axios";
@@ -57,6 +60,30 @@ const CalendarMutation = ({ carID, pricePerDay, username }: any) => {
   const [success, setSuccess] = React.useState(false);
   const timer = React.useRef<number>();
 
+  const [user, setUser] = useState<string>();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      // retrieve session ID from custom cookie
+      const sidfromCookie = Cookies.get("cook");
+      console.log("Session Id from Cookie: ", sidfromCookie);
+
+      const res = await fetch(`/sessions/check/${sidfromCookie}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+      console.log("check useEffect server response", data.sessionDetails);
+      const currentUserCarsInfo = data.sessionDetails.currentUserCars;
+      console.log("currentUser Data from Redis:", currentUserCarsInfo);
+      setUser(data.sessionDetails.currentUser.username);
+    };
+    fetchSession();
+  }, []);
+
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
   });
@@ -78,16 +105,13 @@ const CalendarMutation = ({ carID, pricePerDay, username }: any) => {
 
   const { data } = useQuery("users", fetchDates);
 
-  console.log(username);
-  console.log(carID);
-
   const handleSubmit = () => {
     for (let index of selectedDays) {
       mutation.mutate({
         day: index.day,
         month: index.month,
         year: index.year,
-        username: username,
+        username: user,
         cars_id: carID,
       });
     }

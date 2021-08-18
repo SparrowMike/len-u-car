@@ -175,7 +175,6 @@ const CarPage = () => {
               <Calendar
                 carID={data.cars_id}
                 pricePerDay={data.price_per_day}
-                username={data.username}
               />
             </Paper>
           </Grid>
