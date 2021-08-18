@@ -176,16 +176,34 @@ const Navbar: React.FC<IProps> = (props) => {
                 Browse
               </Link>
             </Typography>
-            <Typography className={classes.temp}>
-              <Link
-                component={RouterLink}
-                color="inherit"
-                to="/register"
-                style={{ textDecoration: "none" }}
-              >
-                Register
-              </Link>
-            </Typography>
+            {props.loggedIn ? (
+              ""
+            ) : (
+              <Typography className={classes.temp}>
+                <Link
+                  component={RouterLink}
+                  color="inherit"
+                  to="/register"
+                  style={{ textDecoration: "none" }}
+                >
+                  Register
+                </Link>
+              </Typography>
+            )}
+            {props.loggedIn ? (
+              <Typography className={classes.temp}>
+                <Link
+                  component={RouterLink}
+                  color="inherit"
+                  to="/editprofile"
+                  style={{ textDecoration: "none" }}
+                >
+                  My Profile
+                </Link>
+              </Typography>
+            ) : (
+              ""
+            )}
             {props.loggedIn ? (
               <Typography className={classes.temp}>
                 <Link
@@ -210,16 +228,6 @@ const Navbar: React.FC<IProps> = (props) => {
                 </Link>
               </Typography>
             )}
-            <Typography className={classes.temp}>
-              <Link
-                component={RouterLink}
-                color="inherit"
-                to="/editprofile"
-                style={{ textDecoration: "none" }}
-              >
-                Profile
-              </Link>
-            </Typography>
           </>
         ) : (
           <>

@@ -14,7 +14,7 @@ import Slider from "react-slick";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import StarIcon from "@material-ui/icons/Star";
-
+import Footer from "../components/home/Footer";
 // import { IState as Props } from "../Pages/Browse";
 
 export interface IState {
@@ -57,6 +57,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
   },
+  footer: {
+    textAlign: "center",
+    marginTop: theme.spacing(6),
+  },
   mainFeaturedPost: {
     position: "relative",
     backgroundColor: theme.palette.grey[800],
@@ -64,8 +68,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
-    height: "450px",
-    transition: ".3s ease-in-out",
+    height: "350px",
+    transition: "2s ease-in-out",
     "&:hover": {
       transform: "scale(1.05)",
       cursor: "pointer",
@@ -90,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
-    transition: ".3s ease-in-out",
+    transition: "2s ease-in-out",
     "&:hover": {
       transform: "scale(1.1)",
       cursor: "pointer",
@@ -113,11 +117,11 @@ const Home = () => {
   const slickSettings = {
     dots: true,
     infinite: true,
-    speed: 1000,
+    speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 1800,
+    autoplaySpeed: 3000,
     cssEase: "linear",
     arrows: false,
   };
@@ -150,44 +154,44 @@ const Home = () => {
 
   return (
     <>
-      <Slider {...slickSettings}>
-        {displaySlick.map((car, index) => {
-          return (
-            <Paper key={index}>
-              <div
-                className={classes.mainFeaturedPost}
-                style={{ backgroundImage: `url(${car.secure_url})` }}
-              >
-                <div className={classes.overlay} />
-                <Grid container>
-                  <Grid item md={6}>
-                    <div className={classes.mainFeaturedPostContent}>
-                      <Typography
-                        component="h2"
-                        variant="h4"
-                        color="inherit"
-                        gutterBottom
-                      >
-                        Brand: {car.brand}
-                      </Typography>
-                      <Typography variant="h5" color="inherit" paragraph>
-                        <Rating
-                          name="half-rating-read"
-                          defaultValue={4.6}
-                          precision={0.5}
-                          readOnly
-                        />
-                      </Typography>
-                    </div>
-                  </Grid>
-                </Grid>
-              </div>
-            </Paper>
-          );
-        })}
-      </Slider>
       <Container className={classes.container} maxWidth="md">
-        <Grid container spacing={4}>
+        <Slider {...slickSettings}>
+          {displaySlick.map((car, index) => {
+            return (
+              <Paper key={index}>
+                <div
+                  className={classes.mainFeaturedPost}
+                  style={{ backgroundImage: `url(${car.secure_url})` }}
+                >
+                  <div className={classes.overlay} />
+                  <Grid container>
+                    <Grid item md={6}>
+                      <div className={classes.mainFeaturedPostContent}>
+                        <Typography
+                          component="h2"
+                          variant="h4"
+                          color="inherit"
+                          gutterBottom
+                        >
+                          Brand: {car.brand}
+                        </Typography>
+                        <Typography variant="h5" color="inherit" paragraph>
+                          <Rating
+                            name="half-rating-read"
+                            defaultValue={4.6}
+                            precision={0.5}
+                            readOnly
+                          />
+                        </Typography>
+                      </div>
+                    </Grid>
+                  </Grid>
+                </div>
+              </Paper>
+            );
+          })}
+        </Slider>
+        <Grid container spacing={4} style={{ marginTop: "30px" }}>
           {display.map((user, index) => (
             <Grid item key={index} xs={12} sm={6} md={4}>
               <Card className={classes.root}>
@@ -231,6 +235,9 @@ const Home = () => {
             </Grid>
           ))}
         </Grid>
+        <div className={classes.footer}>
+          <Footer />
+        </div>
       </Container>
     </>
   );
