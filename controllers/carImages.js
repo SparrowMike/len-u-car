@@ -22,11 +22,11 @@ router.get("/", async (req, res) => {
 });
 
 //*========================GET car images - GET ROUTE=======================
-router.get("/:id", async (req, res) => {
+router.get("/image/:cars_id", async (req, res) => {
   try {
-    const { id } = req.params;
-    const cars = await knexPg("car_images").where("images_id", id);
-    res.status(200).json(cars[0]);
+    const { cars_id } = req.params;
+    const car_images = await knexPg("car_images").where("cars_id", cars_id);
+    res.status(200).json(car_images);
   } catch (error) {
     console.log(error.message);
   }
