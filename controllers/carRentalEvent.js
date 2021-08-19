@@ -96,11 +96,11 @@ router.put("/:id", async (req, res) => {
 });
 
 //*========================DELETE A EVENT - DELETE ROUTE========================
-router.delete("/:id", async (req, res) => {
+router.delete("/username/:name/:eventid", async (req, res) => {
   try {
-    const { id } = req.params;
-    const event = await knexPg("car_rental_event").where("event_id", id).del();
-    res.status(200).send(`Event deleted with ID: ${id}`);
+    const { name, eventid } = req.params;
+    const event = await knexPg("car_rental_event").where("event_id", eventid).where("username", name).del();
+    res.status(200).send(`Event deleted with ID: ${eventid}`);
   } catch (error) {
     console.log(error.message);
   }
