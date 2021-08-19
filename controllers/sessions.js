@@ -40,6 +40,8 @@ router.post("/", (req, res) => {
               req.session.currentSID = req.sessionID;
               console.log("req.session.currentSID: ", req.session.currentSID);
               return res.json({ currentSID: req.session.currentSID });
+            } else {
+              return res.json({ msg: "no cars found" });
             }
           });
       });
