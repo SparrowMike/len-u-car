@@ -1,0 +1,39 @@
+{
+  "name": "len-u-car",
+  "version": "1.0.0",
+  "description": "Car renting services",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "install-client": "cd client && npm install",
+    "build": "cd client && npm run build",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm run install-client && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SparrowMike/len-u-car.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SparrowMike/len-u-car/issues"
+  },
+  "homepage": "https://github.com/SparrowMike/len-u-car#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cloudinary": "^1.26.3",
+    "connect-redis": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "knex": "^0.21.21",
+    "multer": "^1.4.3",
+    "nodemon": "^2.0.12",
+    "pg": "^8.7.1",
+    "redis": "^3.1.2"
+  }
+}
