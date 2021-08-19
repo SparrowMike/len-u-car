@@ -6,7 +6,7 @@ const pool = require("../db");
 const redisClient = require("../server.js");
 
 // login
-router.post("/", async (req, res) => {
+router.post("/", (req, res) => {
   try {
     const existingUsers = pool
       .query("SELECT * FROM users WHERE username = $1", [req.body.username])
