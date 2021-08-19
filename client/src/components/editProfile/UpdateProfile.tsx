@@ -16,10 +16,15 @@ import { DropzoneArea } from "material-ui-dropzone";
 
 const useStyles = makeStyles({
   form: {
-    marginTop: 20,
+    marginTop: 10,
+    textAlign: "center",
   },
   field: {
-    marginTop: 10,
+    marginBottom: 10,
+  },
+  selectType: {
+    textAlign: "left",
+    marginBottom: 10,
   },
 });
 
@@ -192,14 +197,6 @@ const UpdateProfile: React.FC = () => {
             {(formik) => (
               <Container>
                 <form onSubmit={formik.handleSubmit} className={classes.form}>
-                  <DropzoneArea
-                    acceptedFiles={["image/*"]}
-                    dropzoneText={"Drag and drop an avatar here or click"}
-                    filesLimit={1}
-                    onChange={(files) => {
-                      setImage(files[0]);
-                    }}
-                  />
                   <Textfield
                     className={classes.field}
                     id="full_name"
@@ -214,8 +211,28 @@ const UpdateProfile: React.FC = () => {
                     label="Email"
                     required
                   />
-
-                  <div>
+                  <Textfield
+                    className={classes.field}
+                    id="mobile"
+                    name="mobile"
+                    label="Mobile"
+                    required
+                  />
+                  <Textfield
+                    className={classes.field}
+                    id="identification_card"
+                    name="identification_card"
+                    label="Identification_card"
+                    required
+                  />
+                  <Textfield
+                    className={classes.field}
+                    id="driving_license"
+                    name="driving_license"
+                    label="Driving_license"
+                    required
+                  />
+                  <div className={classes.selectType}>
                     <InputLabel
                       id="demo-simple-select-outlined-label"
                       style={{
@@ -241,29 +258,13 @@ const UpdateProfile: React.FC = () => {
                       ))}
                     </Field>
                   </div>
-
-                  <Textfield
-                    className={classes.field}
-                    id="mobile"
-                    name="mobile"
-                    label="Mobile"
-                    required
-                  />
-
-                  <Textfield
-                    className={classes.field}
-                    id="identification_card"
-                    name="identification_card"
-                    label="Identification_card"
-                    required
-                  />
-
-                  <Textfield
-                    className={classes.field}
-                    id="driving_license"
-                    name="driving_license"
-                    label="Driving_license"
-                    required
+                  <DropzoneArea
+                    acceptedFiles={["image/*"]}
+                    dropzoneText={"Drag and drop an avatar here or click"}
+                    filesLimit={1}
+                    onChange={(files) => {
+                      setImage(files[0]);
+                    }}
                   />
                   <Button
                     className={classes.form}
