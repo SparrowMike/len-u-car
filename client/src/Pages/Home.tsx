@@ -72,7 +72,6 @@ const useStyles = makeStyles((theme) => ({
     transition: ".3s ease-in-out",
     "&:hover": {
       transform: "scale(1.01)",
-      cursor: "pointer",
     },
   },
   overlay: {

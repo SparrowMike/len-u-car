@@ -54,6 +54,7 @@ CREATE TABLE car_rental_event (
     year int,
     username varchar(20),
     reviewDone boolean,
+    archive boolean
     cars_id int
 );
 
