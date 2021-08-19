@@ -6,7 +6,8 @@ import Textfield from "../editProfile/FormsUI/Textfield";
 import { makeStyles, Modal, Fade, Backdrop } from "@material-ui/core";
 import { useState } from "react";
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
+import { Link } from "react-router-dom";
 
 import { Card, CardActions } from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
@@ -78,7 +79,8 @@ const initialValues: FormValues = {
 const ChangePassword: React.FC<IProps> = ({ user }) => {
   const classes = useStyles();
   const [username, setUsername] = useState<string>("");
-  const [rating, setRating] = useState<number>();
+  const [rating, setRating] = useState<number>(5);
+
   const [carsId, setCarsId] = useState<number>();
   const [eventId, setEventId] = useState<number>();
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -91,9 +93,18 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
     return data;
   };
 
-  const { data: data2 } = useQuery("carRentalEvent", fetchEvents);
+  const { data: bookings } = useQuery("carRentalEvent", fetchEvents);
+
+  const mutation: any = useMutation((reviewdone) =>
+    axios.put(`/carRentalEvent/${eventId}`, reviewdone)
+  );
 
   const handleSubmit = async (values: FormValues) => {
+    mutation.mutate({
+      reviewdone: true,
+    });
+
+    setModalOpen(false);
     const carData = {
       username: username,
       cars_id: carsId,
@@ -128,12 +139,13 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
 
   const handleModalDelete = (e: any) => {
     setModalDeleteOpen(true);
+    setUsername(e.card.username);
     setEventId(e.card.event_id);
   };
 
   const handleDelete = () => {
     setModalDeleteOpen(false);
-    fetch(`/carRentalEvent/${eventId}`, {
+    fetch(`/carRentalEvent/username/${username}/${eventId}`, {
       method: "DELETE",
     })
       .then((res) => res.json())
@@ -144,33 +156,47 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
     <div>
       <Container className={classes.cardGrid} maxWidth="md">
         <Grid container spacing={4}>
-          {data2?.map((card: any, index: any) => (
-            <Grid item key={index} md={12}>
-              <Card className={classes.card}>
-                <CardContent className={classes.cardContent}>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    Car Booking {card.day}/{card.month}/{card.year}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    onClick={() => handleModalOpen({ card })}
-                    variant="contained"
-                    color="primary"
-                  >
-                    Review
+          {bookings?.map((card: any, index: any) =>
+            bookings.length === 0 ? (
+              <>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Currently you have no bookings
+                </Typography>
+                <Link to="/browse" style={{ textDecoration: "none" }}>
+                  <Button color="primary" variant="contained">
+                    Explore new cars!
                   </Button>
-                  <Button
-                    onClick={() => handleModalDelete({ card })}
-                    variant="contained"
-                    color="primary"
-                  >
-                    Cancel
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
+                </Link>
+              </>
+            ) : (
+              <Grid item key={index} md={12}>
+                <Card className={classes.card}>
+                  <CardContent className={classes.cardContent}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      Car Booking {card.day}/{card.month}/{card.year}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      onClick={() => handleModalOpen({ card })}
+                      variant="contained"
+                      color="primary"
+                      disabled={card.reviewdone}
+                    >
+                      Review The Car {card.reviewdone}
+                    </Button>
+                    <Button
+                      onClick={() => handleModalDelete({ card })}
+                      variant="contained"
+                      color="primary"
+                    >
+                      Cancel Booking
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            )
+          )}
         </Grid>
       </Container>
       <Modal
@@ -198,7 +224,7 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
                     <Typography component="legend">Rating</Typography>
                     <Rating
                       name="customized-empty"
-                      defaultValue={5}
+                      defaultValue={rating}
                       precision={0.5}
                       onChange={(e: any) => setRating(e.target.value)}
                       emptyIcon={<StarBorderIcon fontSize="inherit" />}

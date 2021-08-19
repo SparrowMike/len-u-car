@@ -53,6 +53,7 @@ CREATE TABLE car_rental_event (
     month int,
     year int,
     username varchar(20),
+    reviewDone boolean,
     cars_id int
 );
 

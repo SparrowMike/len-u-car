@@ -22,13 +22,14 @@ router.get("/", async (req, res) => {
 //*========================CREATE NEW EVENT - POST ROUTE========================
 router.post("/", async (req, res) => {
   try {
-    const { day, month, year, username, cars_id } = req.body;
+    const { day, month, year, username, cars_id, reviewdone } = req.body;
     const newRentalEvent = await knexPg("car_rental_event").insert({
       day: day,
       month: month,
       year: year,
       username: username,
       cars_id: cars_id,
+      reviewdone: reviewdone,
     });
     res.status(200).send(`User modified with cars_ID: ${cars_id}`);
     // res.json(newRentalEvent);
@@ -65,10 +66,7 @@ router.get("/username/car/:id", async (req, res) => {
   //   res.json(event.rows[0])
   try {
     const { id } = req.params;
-    const events = await knexPg("car_rental_event").where(
-      "cars_id",
-      id
-    );
+    const events = await knexPg("car_rental_event").where("cars_id", id);
     res.status(200).json(events);
   } catch (error) {
     console.log(error.message);
@@ -79,7 +77,7 @@ router.get("/username/car/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { day, month, year, cars_id } = req.body;
+    const { day, month, year, cars_id, reviewdone } = req.body;
     const carRentalEvent_rowCount = await knexPg("car_rental_event")
       .where("event_id", "=", id)
       .update({
@@ -88,6 +86,7 @@ router.put("/:id", async (req, res) => {
         month: month,
         year: year,
         cars_id: cars_id,
+        reviewdone: reviewdone,
       });
     res.status(200).send(`Event modified with ID: ${id}`);
   } catch (error) {
@@ -99,7 +98,10 @@ router.put("/:id", async (req, res) => {
 router.delete("/username/:name/:eventid", async (req, res) => {
   try {
     const { name, eventid } = req.params;
-    const event = await knexPg("car_rental_event").where("event_id", eventid).where("username", name).del();
+    const event = await knexPg("car_rental_event")
+      .where("event_id", eventid)
+      .where("username", name)
+      .del();
     res.status(200).send(`Event deleted with ID: ${eventid}`);
   } catch (error) {
     console.log(error.message);

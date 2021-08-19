@@ -69,9 +69,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     height: "350px",
-    transition: "2s ease-in-out",
+    transition: ".3s ease-in-out",
     "&:hover": {
-      transform: "scale(1.05)",
+      transform: "scale(1.01)",
       cursor: "pointer",
     },
   },
@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
-    transition: "2s ease-in-out",
+    transition: ".3s ease-in-out",
     "&:hover": {
       transform: "scale(1.1)",
       cursor: "pointer",
