@@ -8,7 +8,11 @@ const pool = new Pool({
   port: 5432,
   database: "dc1arqanp0ep12",
   password: process.env.POSTGRESPW,
+  // ssl: {
+  //   rejectUnauthorized: false,
+  // },
   ssl: {
+    required: true,
     rejectUnauthorized: false,
   },
 
