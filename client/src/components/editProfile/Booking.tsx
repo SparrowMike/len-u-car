@@ -80,11 +80,10 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
   const classes = useStyles();
   const [username, setUsername] = useState<string>("");
   const [rating, setRating] = useState<number>(5);
-
   const [carsId, setCarsId] = useState<number>();
   const [eventId, setEventId] = useState<number>();
   const [modalOpen, setModalOpen] = React.useState(false);
-  const [modalDeleteOpen, setModalDeleteOpen] = React.useState(false);
+  const [modalArchiveOpen, setModalArchiveOpen] = React.useState(false);
 
   const fetchEvents = async () => {
     const { data } = await axios.get(
@@ -134,41 +133,51 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
   };
   const handleModalClose = () => {
     setModalOpen(false);
-    setModalDeleteOpen(false);
+    setModalArchiveOpen(false);
   };
 
-  const handleModalDelete = (e: any) => {
-    setModalDeleteOpen(true);
+  const handleModal = (e: any) => {
+    setModalArchiveOpen(true);
     setUsername(e.card.username);
     setEventId(e.card.event_id);
   };
 
-  const handleDelete = () => {
-    setModalDeleteOpen(false);
-    fetch(`/carRentalEvent/username/${username}/${eventId}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((res) => console.log(res));
+  const handleArchive = () => {
+    setModalArchiveOpen(false);
+    mutation.mutate({
+      archive: true,
+    });
   };
+
+  //! DELETE ROUTE
+  // const handleDelete = () => {
+  //   setModalArchiveOpen(false);
+  //   fetch(`/carRentalEvent/username/${username}/${eventId}`, {
+  //     method: "DELETE",
+  //   })
+  //     .then((res) => res.json())
+  //     .then((res) => console.log(res));
+  // };
 
   return (
     <div>
       <Container className={classes.cardGrid} maxWidth="md">
+        {/* {bookings.length === 0 ? (
+          <>
+            <Typography gutterBottom variant="h5" component="h2">
+              Currently you have no bookings
+            </Typography>
+            <Link to="/browse" style={{ textDecoration: "none" }}>
+              <Button color="primary" variant="contained">
+                Explore new cars!
+              </Button>
+            </Link>
+          </>
+        ) : ( */}
         <Grid container spacing={4}>
-          {bookings?.map((card: any, index: any) =>
-            bookings.length === 0 ? (
-              <>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Currently you have no bookings
-                </Typography>
-                <Link to="/browse" style={{ textDecoration: "none" }}>
-                  <Button color="primary" variant="contained">
-                    Explore new cars!
-                  </Button>
-                </Link>
-              </>
-            ) : (
+          {bookings
+            ?.filter((card: any) => card.archive === false)
+            .map((card: any, index: any) => (
               <Grid item key={index} md={12}>
                 <Card className={classes.card}>
                   <CardContent className={classes.cardContent}>
@@ -186,18 +195,19 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
                       Review The Car {card.reviewdone}
                     </Button>
                     <Button
-                      onClick={() => handleModalDelete({ card })}
+                      onClick={() => handleModal({ card })}
                       variant="contained"
                       color="primary"
+                      disabled={card.archive}
                     >
-                      Cancel Booking
+                      Archive
                     </Button>
                   </CardActions>
                 </Card>
               </Grid>
-            )
-          )}
+            ))}
         </Grid>
+        {/* )} */}
       </Container>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -258,7 +268,7 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
-        open={modalDeleteOpen}
+        open={modalArchiveOpen}
         onClose={handleModalClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -266,14 +276,14 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
           timeout: 500,
         }}
       >
-        <Fade in={modalDeleteOpen}>
+        <Fade in={modalArchiveOpen}>
           <div className={classes.paper}>
             <Container>
               <Typography variant="h5" component="legend">
-                Proceed with booking cancellation?
+                Proceed with archive?
               </Typography>
               <Button
-                onClick={handleDelete}
+                onClick={handleArchive}
                 color="primary"
                 variant="contained"
                 type="submit"

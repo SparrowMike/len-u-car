@@ -114,6 +114,7 @@ const CalendarMutation = ({ carID, pricePerDay, username }: any) => {
         username: user,
         cars_id: carID,
         reviewdone: false,
+        archive: false,
       });
     }
   };
