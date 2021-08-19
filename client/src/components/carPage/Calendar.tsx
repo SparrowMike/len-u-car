@@ -77,7 +77,7 @@ const CalendarMutation = ({ carID, pricePerDay, username }: any) => {
 
       const data = await res.json();
       console.log("check useEffect server response", data.sessionDetails);
-      const currentUserCarsInfo = data.sessionDetails.currentUserCars;
+      const currentUserCarsInfo = data?.sessionDetails.currentUserCars;
       console.log("currentUser Data from Redis:", currentUserCarsInfo);
       setUser(data.sessionDetails.currentUser.username);
     };
@@ -99,7 +99,7 @@ const CalendarMutation = ({ carID, pricePerDay, username }: any) => {
   );
 
   const fetchDates = async () => {
-    const { data } = await axios.get(`/carRentalEvent/${carID}`);
+    const { data } = await axios.get(`/carRentalEvent/username/car/${carID}`);
     return data;
   };
 

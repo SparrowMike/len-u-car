@@ -8,9 +8,11 @@ const redisClient = require("../server.js");
 // login
 router.post("/", (req, res) => {
   try {
+    console.log("session login(POST) route triggered");
     const existingUsers = pool
       .query("SELECT * FROM users WHERE username = $1", [req.body.username])
       .then((foundUsers) => {
+        console.log("foundUsers", foundUsers);
         if (foundUsers.rowCount) {
           if (
             bcrypt.compareSync(req.body.password, foundUsers.rows[0].password)
@@ -18,9 +20,11 @@ router.post("/", (req, res) => {
             // store user's profile details in session
             req.session.currentUser = foundUsers.rows[0];
           } else {
+            console.log("Username exist, but password wrong");
             return res.json({ msg: "Username exist, but password wrong" });
           }
         } else {
+          console.log("Username don't exist");
           return res.json({ msg: "Username don't exist" });
         }
       })
@@ -29,17 +33,19 @@ router.post("/", (req, res) => {
           .query("SELECT * FROM cars WHERE username = $1", [req.body.username])
           .then((foundCars) => {
             req.session.currentUserCars = foundCars.rows;
-
+            console.log("found cars row ", foundCars.rows);
             // if car information is retrieved from database, update car details into session
             if (req.session.currentUser !== undefined) {
               // store car (user's) details in session
               req.session.currentSID = req.sessionID;
+              console.log("req.session.currentSID: ", req.session.currentSID);
               return res.json({ currentSID: req.session.currentSID });
             }
           });
       });
   } catch (error) {
     // console.error(error);
+    console.log("Error at session login: " + error);
     res.status(400).json("Error at session login: " + error);
   }
 });
