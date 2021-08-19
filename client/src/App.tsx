@@ -6,7 +6,6 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { Route, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 import CarPage from "./components/carPage/CarPage";
-import { PaginationTEST } from "./components/cars/PaginationTEST";
 import Navbar from "./components/home/Navbar";
 import Browse from "./Pages/Browse";
 import Editprofile from "./Pages/Editprofile";
@@ -59,9 +58,6 @@ function App() {
           <Navbar setloggedIn={setloggedIn} loggedIn={loggedIn} />
           <Container maxWidth="md">
             <Switch>
-              <Route path="/pagination">
-                <PaginationTEST />
-              </Route>
               <Route path="/carpage/:cars_id">
                 {!loggedIn && <Redirect to="/login" />}
                 <CarPage />

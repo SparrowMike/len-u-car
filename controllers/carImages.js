@@ -51,11 +51,7 @@ router.post("/", upload.single("secure_url"), async (req, res) => {
       cloudinary_id = "";
     }
 
-    console.log("Image :", secure_url);
-    console.log("cloudinary_id :", cloudinary_id);
-
     const { cars_id } = req.body;
-
     const carImage = await knexPg("car_images").insert({
       secure_url: secure_url,
       cloudinary_id: cloudinary_id,
@@ -86,7 +82,6 @@ router.put("/image/:id", upload.single("secure_url"), async (req, res) => {
     let secure_url;
     let cloudinary_id;
     const cloudID = carImages.rows[0].cloudinary_id;
-    console.log("this is carImages: ", carImages);
 
     if (fileStr && cloudID !== null) {
       await cloudinary.uploader.destroy(cloudID);
@@ -105,8 +100,6 @@ router.put("/image/:id", upload.single("secure_url"), async (req, res) => {
       secure_url = "";
       cloudinary_id = "";
     }
-
-    console.log("cloudinary_id :", cloudinary_id);
 
     const { cars_id } = req.body;
     const carImage = await knexPg("car_images")

@@ -1,15 +1,15 @@
-import React from "react";
 import {
-  makeStyles,
   Card,
+  CardHeader,
   CardMedia,
+  Container,
   CssBaseline,
   Grid,
-  Container,
-  CardHeader,
+  makeStyles,
 } from "@material-ui/core";
 import { red } from "@material-ui/core/colors";
 import StarIcon from "@material-ui/icons/Star";
+import React from "react";
 import { Link } from "react-router-dom";
 import { IState as Props } from "../../Pages/Browse";
 
@@ -65,10 +65,6 @@ const Cars: React.FC<IProps> = ({
   engineType,
 }) => {
   const classes = useStyles();
-
-  console.log(carType);
-  console.log(transmission);
-  console.log(engineType);
 
   let filter: Filter = {
     type: carType,

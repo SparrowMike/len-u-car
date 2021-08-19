@@ -1,21 +1,17 @@
-import React, { useState } from "react";
-import { Day, Calendar, utils } from "react-modern-calendar-datepicker";
-
-import { useEffect } from "react";
-import Cookies from "js-cookie";
-
 import { Button } from "@material-ui/core";
-import { useQuery, useMutation } from "react-query";
-import axios from "axios";
-
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
-import { Link } from "react-router-dom";
-import clsx from "clsx";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
+import Fade from "@material-ui/core/Fade";
+import Modal from "@material-ui/core/Modal";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import axios from "axios";
+import clsx from "clsx";
+import Cookies from "js-cookie";
+import React, { useEffect, useState } from "react";
+import { Calendar, Day, utils } from "react-modern-calendar-datepicker";
+import { useMutation, useQuery } from "react-query";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,19 +62,13 @@ const CalendarMutation = ({ carID, pricePerDay, username }: any) => {
     const fetchSession = async () => {
       // retrieve session ID from custom cookie
       const sidfromCookie = Cookies.get("cook");
-      console.log("Session Id from Cookie: ", sidfromCookie);
-
       const res = await fetch(`/sessions/check/${sidfromCookie}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
-
       const data = await res.json();
-      console.log("check useEffect server response", data.sessionDetails);
-      const currentUserCarsInfo = data?.sessionDetails.currentUserCars;
-      console.log("currentUser Data from Redis:", currentUserCarsInfo);
       setUser(data.sessionDetails.currentUser.username);
     };
     fetchSession();
@@ -152,7 +142,6 @@ const CalendarMutation = ({ carID, pricePerDay, username }: any) => {
             shouldHighlightWeekends
           />
           {mutation.isError ? <div>An error occurred</div> : null}
-
           {mutation.isSuccess ? <div>Booked</div> : null}
           <Button
             disabled={selectedDays.length > 0 ? false : true}
@@ -162,7 +151,6 @@ const CalendarMutation = ({ carID, pricePerDay, username }: any) => {
           >
             Checkout
           </Button>
-
           <Modal
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"

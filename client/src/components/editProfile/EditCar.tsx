@@ -1,18 +1,18 @@
 import {
   CircularProgress,
-  MenuItem,
-  Select,
   InputLabel,
   makeStyles,
+  MenuItem,
+  Select,
 } from "@material-ui/core";
 import Radio from "@material-ui/core/Radio";
 import { Field } from "formik";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import * as yup from "../../../node_modules/yup";
+import "../../App.css";
 import Textfield from "../editProfile/FormsUI/Textfield";
 import MultiStepForm, { FormStep } from "./MultiStepForm";
-import "../../App.css";
 
 const useStyles = makeStyles({
   form: {
@@ -114,8 +114,6 @@ const EditCar: React.FC = () => {
     const fetchSession = async () => {
       // retrieve session ID from custom cookie
       const sidfromCookie = Cookies.get("cook");
-      console.log("Session Id from Cookie: ", sidfromCookie);
-
       const res = await fetch(`/sessions/check/${sidfromCookie}`, {
         method: "GET",
         headers: {
@@ -125,12 +123,9 @@ const EditCar: React.FC = () => {
 
       const data = await res.json();
 
-      console.log("check useEffect server response", data.sessionDetails);
       const currentUserCarsInfo = data.sessionDetails.currentUserCars;
-      console.log("currentUser Data from Redis:", currentUserCarsInfo);
       setUser(data.sessionDetails.currentUser.username);
       setCurrentUserCar(currentUserCarsInfo[0]); // first element in array
-      console.log("currentUserCar: ", currentUserCar);
 
       if (currentUserCar !== undefined) {
         setinitialValues({
@@ -152,7 +147,6 @@ const EditCar: React.FC = () => {
       } else {
         console.log("currentUserCar: undefined");
       }
-      console.log("initialValues ", initialValues);
       setLoading(false);
     };
     fetchSession();

@@ -1,19 +1,19 @@
-import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
-  CardMedia,
   CardHeader,
+  CardMedia,
   Container,
   Grid,
-  Typography,
   Paper,
+  Typography,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import StarIcon from "@material-ui/icons/Star";
 import Rating from "@material-ui/lab/Rating";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
-import axios from "axios";
-import { useState, useEffect } from "react";
-import StarIcon from "@material-ui/icons/Star";
 import Footer from "../components/home/Footer";
 // import { IState as Props } from "../Pages/Browse";
 
@@ -141,8 +141,6 @@ const Home = () => {
       console.log(error);
     }
   };
-
-  console.log("cards", display);
 
   useEffect(() => {
     getFetchData();

@@ -1,23 +1,27 @@
-import React from "react";
-import { Formik } from "formik";
-import * as yup from "../../../node_modules/yup";
+import {
+  Backdrop,
+  Card,
+  CardActions,
+  Fade,
+  makeStyles,
+  Modal,
+} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import Textfield from "../editProfile/FormsUI/Textfield";
-import { makeStyles, Modal, Fade, Backdrop } from "@material-ui/core";
-import { useState } from "react";
-import axios from "axios";
-import { useQuery, useMutation } from "react-query";
-
-import { Card, CardActions } from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
+import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import { useHistory } from "react-router";
-import Rating from "@material-ui/lab/Rating";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
-
+import Rating from "@material-ui/lab/Rating";
+import axios from "axios";
+import { Formik } from "formik";
+import React, { useState } from "react";
+import { useMutation, useQuery } from "react-query";
+import { useHistory } from "react-router";
+import * as yup from "../../../node_modules/yup";
+import Textfield from "../editProfile/FormsUI/Textfield";
 import { IState as Props } from "./Edit";
+
 interface IProps {
   user: Props["user"];
 }
@@ -110,14 +114,12 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
       rating: rating,
     };
     let merge = { ...values, ...carData };
-    console.log(merge);
     try {
       const res = await fetch("/carRentalreview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(merge),
       });
-
       console.log(res);
     } catch (error) {
       console.error(error.message);

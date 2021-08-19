@@ -1,11 +1,10 @@
-import React from "react";
-import { Formik } from "formik";
-import * as yup from "../../../node_modules/yup";
-import Button from "@material-ui/core/Button";
-import Textfield from "../editProfile/FormsUI/Textfield";
 import { makeStyles } from "@material-ui/core";
-import { useState, useEffect } from "react";
+import Button from "@material-ui/core/Button";
+import { Formik } from "formik";
 import Cookies from "js-cookie";
+import React, { useEffect, useState } from "react";
+import * as yup from "../../../node_modules/yup";
+import Textfield from "../editProfile/FormsUI/Textfield";
 
 const useStyles = makeStyles({
   form: {
@@ -72,8 +71,6 @@ const ChangePassword: React.FC = () => {
     const fetchSession = async () => {
       // retrieve session ID from custom cookie
       const sidfromCookie = Cookies.get("cook");
-      console.log("Session Id from Cookie: ", sidfromCookie);
-
       const res = await fetch(`/sessions/check/${sidfromCookie}`, {
         method: "GET",
         headers: {
@@ -83,13 +80,8 @@ const ChangePassword: React.FC = () => {
 
       const data = await res.json();
 
-      console.log("check useEffect server response", data.sessionDetails);
       const currentUserInfo = data.sessionDetails.currentUser;
-      console.log("currentUser Data from Redis:", currentUserInfo);
-
       setCurrentUser(currentUserInfo);
-      console.log(currentUser);
-
       setinitialValues({
         user_id: currentUser?.user_id,
         username: currentUser?.username,
@@ -103,7 +95,6 @@ const ChangePassword: React.FC = () => {
         identification_card: currentUser?.identification_card,
         driving_license: currentUser?.driving_license,
       });
-      console.log("initialValues ", initialValues);
     };
     fetchSession();
     // eslint-disable-next-line
@@ -112,7 +103,6 @@ const ChangePassword: React.FC = () => {
   const handleSubmit = (formValue: FormValues) => {
     let merge = { ...initialValues };
     merge.password_unhashed = formValue.password_unhashed;
-    console.log(merge);
     const updateUserAccount = async () => {
       try {
         const res = await fetch("/users/" + currentUser?.user_id, {
@@ -122,7 +112,6 @@ const ChangePassword: React.FC = () => {
             "Content-Type": "application/json",
           },
         });
-        console.log(merge);
         console.log(res);
         alert("User profile updated succesfully!");
       } catch (error) {

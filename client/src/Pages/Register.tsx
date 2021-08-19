@@ -1,10 +1,8 @@
+import { makeStyles, Paper, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import { Paper } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core";
-import Footer from "../components/home/Footer";
-import { Typography } from "@material-ui/core";
-import CreateAccount from "../components/register/CreateAccount";
 import { Link as RouterLink } from "react-router-dom";
+import Footer from "../components/home/Footer";
+import CreateAccount from "../components/register/CreateAccount";
 
 const useStyles = makeStyles((theme) => ({
   root: {

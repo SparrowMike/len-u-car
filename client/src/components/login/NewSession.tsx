@@ -1,12 +1,8 @@
+import { Button, Container, makeStyles, Typography } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core";
-import { useState, Dispatch, SetStateAction, useEffect } from "react";
-import { Button } from "@material-ui/core";
-import { Container } from "@material-ui/core";
-import { Typography } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
-
 import Cookies from "js-cookie";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   form: {
@@ -47,8 +43,6 @@ const NewSession: React.FC<IProps> = (props) => {
         },
       });
       const data = await res.json();
-      // console.log(data);
-      // set session ID into custom cookie
       Cookies.set("cook", data.currentSID);
 
       if (data.currentSID !== undefined) {
@@ -58,8 +52,6 @@ const NewSession: React.FC<IProps> = (props) => {
         // props.setloggedIn(false)
         setSidvalid(false);
       }
-      console.log("NewSession sidvalid: ", sidvalid);
-
       history.push("/");
     };
     createNewLogin();
@@ -71,7 +63,6 @@ const NewSession: React.FC<IProps> = (props) => {
     } else {
       props.setloggedIn(false);
     }
-    console.log("loggedIn: ", props.loggedIn);
     // eslint-disable-next-line
   }, [sidvalid]);
 

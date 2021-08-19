@@ -1,11 +1,9 @@
+import { makeStyles, Paper, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import { Paper } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core";
-import Footer from "../components/home/Footer";
-import { Typography } from "@material-ui/core";
-import { Link as RouterLink } from "react-router-dom";
-import NewSession from "../components/login/NewSession";
 import { Dispatch, SetStateAction } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import Footer from "../components/home/Footer";
+import NewSession from "../components/login/NewSession";
 
 const useStyles = makeStyles((theme) => ({
   root: {

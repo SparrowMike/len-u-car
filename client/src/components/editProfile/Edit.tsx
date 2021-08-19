@@ -3,15 +3,15 @@ import Box from "@material-ui/core/Box";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
+import axios from "axios";
+import Cookies from "js-cookie";
 import React from "react";
+import { useQuery } from "react-query";
+import Booking from "./Booking";
 import ChangePassword from "./ChangePassword";
 import EditCar from "./EditCar";
 import UpdateProfile from "./UpdateProfile";
 import UploadCars from "./UploadCars";
-import Booking from "./Booking";
-import { useQuery } from "react-query";
-import Cookies from "js-cookie";
-import axios from "axios";
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
@@ -100,10 +100,8 @@ export default function Edit() {
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
-
   const sidfromCookie = Cookies.get("cook");
   if (sidfromCookie === undefined) console.log("No cookie available."); // +
-  console.log("Session Id from Cookie: ", sidfromCookie);
 
   const fetchUsers = async () => {
     const { data } = await axios.get(`/sessions/check/${sidfromCookie}`);
@@ -111,11 +109,8 @@ export default function Edit() {
   };
 
   const { data: data1 } = useQuery("sessions/check", fetchUsers);
-  console.log(data1);
   const user = data1?.sessionDetails.currentUser;
-  console.log(user);
   const carinfo = data1?.sessionDetails.currentUserCars[0];
-  console.log(carinfo);
 
   return (
     <div className={classes.root}>

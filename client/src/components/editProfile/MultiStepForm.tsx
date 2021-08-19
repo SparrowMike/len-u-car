@@ -1,13 +1,9 @@
+import { Step, StepLabel, Stepper } from "@material-ui/core";
 import {
-  Formik,
-  Form,
-  FormikConfig,
-  FormikValues,
-  FormikHelpers,
+  Form, Formik, FormikConfig, FormikHelpers, FormikValues
 } from "formik";
 import React, { useState } from "react";
 import FormNavigation from "./FormNavigation";
-import { Stepper, Step, StepLabel } from "@material-ui/core";
 
 interface Props extends FormikConfig<FormikValues> {
   children: React.ReactNode;

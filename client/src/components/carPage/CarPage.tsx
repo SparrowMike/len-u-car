@@ -1,27 +1,20 @@
-import React, {useEffect, useState} from "react";
-
 import {
-  makeStyles,
-  Grid,
-  Paper,
-  Container,
-
   Avatar,
-  Typography,
-
+  Container,
+  Grid,
+  makeStyles,
+  Paper,
   Table,
   TableBody,
   TableCell,
+  TableHead,
   TableRow,
-  TableHead
+  Typography,
 } from "@material-ui/core";
-
-import Slider from "react-slick";
-
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router";
-
+import Slider from "react-slick";
 import Calendar from "./Calendar";
-import ActionYoutubeSearchedFor from "material-ui/svg-icons/action/youtube-searched-for";
 
 export interface IState {
   avatar: string;
@@ -54,15 +47,15 @@ export interface IState {
 
 export interface IReview {
   review_id: number;
-  rating: number,
-  review: string,
-  username: string,
-  cars_id: number,
-  event_id: number,
-  day: string
-  month: string
-  year: string,
-  reviewdone: boolean
+  rating: number;
+  review: string;
+  username: string;
+  cars_id: number;
+  event_id: number;
+  day: string;
+  month: string;
+  year: string;
+  reviewdone: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -115,10 +108,10 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   alignright: {
-    display: 'flex',
+    display: "flex",
     // alignItems: 'center',
-    justifyContent: 'flex-end',
-    justify: "center"
+    justifyContent: "flex-end",
+    justify: "center",
   },
 }));
 
@@ -127,9 +120,6 @@ const CarPage = () => {
   const [carReviews, setCarReviews] = useState<IReview[]>([]);
   const classes = useStyles();
   const location: any = useLocation();
-
-  console.log("location", location);
-  console.log("state", location.state);
 
   const data: IState = location.state.data.user;
 
@@ -147,37 +137,23 @@ const CarPage = () => {
 
   useEffect(() => {
     const fetchCarReviews = async () => {
-
       const carId = data.cars_id;
-      console.log("Car Id shown at car page: ", carId);
-
       const res = await fetch(`/carRentalReview/join/${carId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
-
-      console.log("carReviews_res: ", res);
-
       const carReviews_data = await res.json();
-      console.log("carReviews_data (array): ", carReviews_data);
-      console.log("carReviews_data 1st element: ", carReviews_data[0]);
-
-      if( carReviews_data ) setCarReviews( carReviews_data)
-      console.log("carReviews state data: ", carReviews);
-      console.log("carReviews state 1st element: ", carReviews[0]);
-
-      console.log("carReviews.length: ", carReviews.length )
+      if (carReviews_data) setCarReviews(carReviews_data);
     };
     fetchCarReviews();
-  }, [ carReviews[0]?.cars_id] );
+    // eslint-disable-next-line
+  }, [carReviews[0]?.cars_id]);
 
   return (
     <div>
       <Slider {...slickSettings}>
-        {/* {cars.map((car, index) => {
-          return ( */}
         <Paper>
           <div
             className={classes.mainFeaturedPost}
@@ -186,73 +162,83 @@ const CarPage = () => {
             <div className={classes.overlay} />
           </div>
         </Paper>
-        {/* );
-        })} */}
       </Slider>
-
       <Container className={classes.container}>
         <Grid container spacing={3}>
           <Grid item xs={8}>
             <Paper className={classes.main}>
               <Grid>
-                <Grid item xs={12} >
+                <Grid item xs={12}>
                   <Avatar
                     alt="Remy Sharp"
                     src={data.avatar}
                     className={classes.avatar}
                   />
                 </Grid>
-                <Grid item xs={12} >
-                  <Typography gutterBottom variant="subtitle2" component="h2" align='left'>
+                <Grid item xs={12}>
+                  <Typography
+                    gutterBottom
+                    variant="subtitle2"
+                    component="h2"
+                    align="left"
+                  >
                     {data.username}
                   </Typography>
                 </Grid>
               </Grid>
-
-            
-              <Typography gutterBottom variant="h4" component="h2" align='left'>
-                {`${data.brand}, ${data.model}` }
+              <Typography gutterBottom variant="h4" component="h2" align="left">
+                {`${data.brand}, ${data.model}`}
               </Typography>
               <Table size="small">
                 <TableBody>
                   <TableRow>
-                    <TableCell style={{width: '30%'}}>Type:</TableCell>
+                    <TableCell style={{ width: "30%" }}>Type:</TableCell>
                     <TableCell>{data.type}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{width: '30%'}}>Passenger Capacity:</TableCell>
+                    <TableCell style={{ width: "30%" }}>
+                      Passenger Capacity:
+                    </TableCell>
                     <TableCell>{data.passenger_capacity}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{width: '30%'}}>Transmission:</TableCell>
+                    <TableCell style={{ width: "30%" }}>
+                      Transmission:
+                    </TableCell>
                     <TableCell>{data.transmission}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{width: '30%'}}>Price per day:</TableCell>
+                    <TableCell style={{ width: "30%" }}>
+                      Price per day:
+                    </TableCell>
                     <TableCell>{data.price_per_day}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{width: '30%'}}>Mileage:</TableCell>
+                    <TableCell style={{ width: "30%" }}>Mileage:</TableCell>
                     <TableCell>{data.mileage}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{width: '30%'}}>Engine Type:</TableCell>
+                    <TableCell style={{ width: "30%" }}>Engine Type:</TableCell>
                     <TableCell>{data.engine_type}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{width: '30%'}}>Key Features:</TableCell>
+                    <TableCell style={{ width: "30%" }}>
+                      Key Features:
+                    </TableCell>
                     <TableCell>{data.key_features}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{width: '30%'}}>Key Rules:</TableCell>
+                    <TableCell style={{ width: "30%" }}>Key Rules:</TableCell>
                     <TableCell>{data.key_rules}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{width: '30%'}}>Status:</TableCell>
+                    <TableCell style={{ width: "30%" }}>Status:</TableCell>
                     <TableCell>{data.status}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{width: '30%'}}>Pick Up Point:</TableCell>
+                    <TableCell style={{ width: "30%" }}>
+                      Pick Up Point:
+                    </TableCell>
                     <TableCell>{data.pick_up_point}</TableCell>
                   </TableRow>
                 </TableBody>
@@ -261,10 +247,7 @@ const CarPage = () => {
           </Grid>
           <Grid item xs={4}>
             <Paper className={classes.side}>
-              <Calendar
-                carID={data.cars_id}
-                pricePerDay={data.price_per_day}
-              />
+              <Calendar carID={data.cars_id} pricePerDay={data.price_per_day} />
             </Paper>
           </Grid>
         </Grid>
@@ -272,37 +255,49 @@ const CarPage = () => {
       <Grid container spacing={3}>
         <Grid item xs={8}>
           <Paper className={classes.main}>
-          <Typography gutterBottom variant="h6" component="h2" align='left'>
-                Car Reviews
-          </Typography>
-            { 
-              carReviews.length ? (
-                <Table size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align='center' style={{width: '20%'}}>Review Date</TableCell>
-                      <TableCell align='center'>Rating</TableCell>
-                      <TableCell style={{width: '70%'}}>Review</TableCell>
-                      <TableCell style={{width: '5%'}} align='center'>Rentee's username</TableCell>
+            <Typography gutterBottom variant="h6" component="h2" align="left">
+              Car Reviews
+            </Typography>
+            {carReviews.length ? (
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center" style={{ width: "20%" }}>
+                      Review Date
+                    </TableCell>
+                    <TableCell align="center">Rating</TableCell>
+                    <TableCell style={{ width: "70%" }}>Review</TableCell>
+                    <TableCell style={{ width: "5%" }} align="center">
+                      Rentee's username
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {carReviews.map((row) => (
+                    <TableRow key={row.review_id}>
+                      <TableCell align="center">
+                        {row.day !== null
+                          ? row.day.toString() +
+                            "-" +
+                            row.month.toString() +
+                            "-" +
+                            row.year.toString()
+                          : "-"}
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.rating !== null ? row.rating : "-"}
+                      </TableCell>
+                      <TableCell>
+                        {row.review !== null ? row.review : "-"}
+                      </TableCell>
+                      <TableCell align="center">{row.username}</TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {carReviews.map((row) => (
-                      <TableRow key={row.review_id}>
-                        <TableCell align='center'>
-                          {(row.day!==null) ? (row.day.toString() + "-" + row.month.toString() + "-" + row.year.toString()) : "-" }
-                        </TableCell>
-                        <TableCell align='center'>{(row.rating!==null) ? row.rating : "-" }</TableCell>
-                        <TableCell>{(row.review!==null) ? row.review : "-" }</TableCell>
-                        <TableCell align='center'>{row.username}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              ) : (
-                <p>No reviews yet for this car!</p>
-              )
-            }
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <p>No reviews yet for this car!</p>
+            )}
           </Paper>
         </Grid>
       </Grid>

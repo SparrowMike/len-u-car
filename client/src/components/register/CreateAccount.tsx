@@ -1,10 +1,10 @@
 import { Container, makeStyles, Typography } from "@material-ui/core";
 import axios from "axios";
 import { Form, Formik } from "formik";
+import { useHistory } from "react-router";
 import * as Yup from "yup";
 import Button from "../editProfile/FormsUI/Button";
 import Textfield from "../editProfile/FormsUI/Textfield";
-import { useHistory } from "react-router";
 
 const useStyles = makeStyles({
   field: {
@@ -66,7 +66,6 @@ const validationSchema = Yup.object().shape({
         const msg = await axios.post("/users/checkemail", {
           email: email,
         });
-        console.log("msg: ", msg);
 
         if (msg.data.msg === "Email address is available.") {
           return Promise.resolve(true);

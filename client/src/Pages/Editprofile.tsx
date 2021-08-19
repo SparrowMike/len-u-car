@@ -1,6 +1,6 @@
 import React from "react";
-import Edit from '../components/editProfile/Edit';
 import { useHistory } from "react-router-dom";
+import Edit from '../components/editProfile/Edit';
 
 
 interface IProps {

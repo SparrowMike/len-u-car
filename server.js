@@ -1,5 +1,3 @@
-//! BASED ON ======> https://www.youtube.com/watch?v=ldYcgPKEZC8
-
 //*=====================DEPENDENCIES=====================
 const express = require("express");
 const app = express();
@@ -16,9 +14,6 @@ const PORT = process.env.PORT || 4000;
 
 const RedisStore = connectRedis(session);
 const redisClient = redis.createClient({
-  // port: 6379,
-  // host: 'localhost'
-  // for redis cloud version
   host: "ec2-52-54-10-192.compute-1.amazonaws.com",
   port: 16120,
   password: process.env.REDISPW,

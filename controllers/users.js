@@ -22,7 +22,6 @@ router.get("/random", async (req, res) => {
       .leftJoin("car_images", "car_images.cars_id", "cars.cars_id")
       .orderByRaw("RANDOM()")
       .limit(6);
-
     res.status(200).json(users);
   } catch (error) {
     res.status(400).json("Error: " + error);
@@ -44,7 +43,6 @@ router.get("/randomSlick", async (req, res) => {
       )
       .orderByRaw("RANDOM()")
       .limit(3);
-
     res.status(200).json(users);
   } catch (error) {
     res.status(400).json("Error: " + error);
@@ -60,7 +58,6 @@ router.get("/", async (req, res) => {
       .innerJoin("cars", "users.username", "cars.username")
       .leftJoin("car_images", "car_images.cars_id", "cars.cars_id")
       .orderBy("users.username");
-
     res.status(200).json(users);
   } catch (error) {
     res.status(400).json("Error: " + error);
@@ -137,22 +134,18 @@ router.get("/:id", async (req, res) => {
 //*========================UPDATE a user - PUT ROUTE=======================
 
 router.put("/:id", async (req, res) => {
-  // console.log("req.body avatar - " + req.body.avatar + "req.body avatar - ");
   try {
     const { id } = req.params;
-    const fileStr = req.body.avatar; // not tested yet
+    const fileStr = req.body.avatar;
     const userAvatar = await pool.query(
       "SELECT cloudinary_id, avatar FROM users WHERE user_id = $1",
       [id]
     );
 
-    console.log(fileStr);
-
     let result;
     let avatar;
     let cloudinary_id;
     const cloudID = userAvatar.rows[0].cloudinary_id;
-    console.log("this is userAvatar: ", userAvatar);
 
     if (fileStr && cloudID !== null) {
       await cloudinary.uploader.destroy(cloudID);
@@ -171,10 +164,6 @@ router.put("/:id", async (req, res) => {
       avatar = "";
       cloudinary_id = "";
     }
-
-    console.log("Avatar :", avatar);
-    console.log("cloudinary_id :", cloudinary_id);
-
     const {
       username,
       password,
@@ -185,8 +174,6 @@ router.put("/:id", async (req, res) => {
       identification_card,
       driving_license,
     } = req.body;
-
-    console.log(req.body);
 
     const user_rowCount = await knexPg("users")
       .where("user_id", "=", id)
@@ -204,8 +191,6 @@ router.put("/:id", async (req, res) => {
         cloudinary_id: cloudinary_id,
       });
 
-    console.log(user_rowCount);
-
     res.status(200).send(`User modified with ID: ${id}`);
   } catch (error) {
     res.status(400).json("Error: " + error);
@@ -213,18 +198,15 @@ router.put("/:id", async (req, res) => {
 });
 
 //*========================DELETE a user - DELETE ROUTE========================
-
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const userAvatar = await knexPg("users") // not tested yet
+    const userAvatar = await knexPg("users")
       .where("user_id", id)
       .select("cloudinary_id");
     const cloudID = userAvatar[0].cloudinary_id || null;
     await cloudinary.uploader.destroy(cloudID);
-
     const result = await knexPg("users").where("user_id", id).del();
-
     res.status(200).send(`User deleted with ID: ${id}`);
   } catch (error) {
     res.status(400).json("Error: " + error);

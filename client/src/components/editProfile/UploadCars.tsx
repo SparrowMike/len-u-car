@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles, Container, Button } from "@material-ui/core";
-import { DropzoneArea } from "material-ui-dropzone";
+import { Button, Container, makeStyles } from "@material-ui/core";
 import { Formik } from "formik";
+import { DropzoneArea } from "material-ui-dropzone";
+import React, { useEffect, useState } from "react";
 import { IState as Props } from "./Edit";
 interface IProps {
   carinfo: Props["carinfo"];
@@ -47,9 +47,7 @@ const UploadCars: React.FC<IProps> = ({ carinfo, user }) => {
     cars_id: undefined,
   });
 
-  console.log("Upload car", carinfo);
   const car = carinfo?.cars_id;
-  console.log("User info", user);
   const username = user?.username;
 
   useEffect(() => {
@@ -61,15 +59,11 @@ const UploadCars: React.FC<IProps> = ({ carinfo, user }) => {
         },
       });
       const currCarId = await res.json();
-      console.log("retrieve cars_id", currCarId);
       setCurrCar(currCarId.cars_id);
-      console.log(currCar);
     };
     fetchCarId();
     // eslint-disable-next-line
   }, [initialValues?.images_id]);
-
-  console.log(currCar);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -80,7 +74,6 @@ const UploadCars: React.FC<IProps> = ({ carinfo, user }) => {
         },
       });
       const imageData = await res.json();
-      console.log("image front", imageData[0]);
 
       setinitialValues({
         images_id: imageData[0]?.images_id,
@@ -89,11 +82,8 @@ const UploadCars: React.FC<IProps> = ({ carinfo, user }) => {
         cars_id: imageData[0]?.cars_id,
       });
 
-      console.log("initialValues: ", initialValues);
-
       if (imageData.length > 0) {
         setCarImage(imageData[0]);
-        console.log("this is carImage: ", imageData[0]);
       } else {
         console.log("there was nothing in array");
       }
@@ -108,7 +98,6 @@ const UploadCars: React.FC<IProps> = ({ carinfo, user }) => {
       reader.readAsDataURL(image);
       reader.onloadend = () => {
         setPreviewSource(reader.result);
-        // console.log("base64", reader.result);
       };
       if (!previewSource) return;
     } else {
@@ -117,7 +106,6 @@ const UploadCars: React.FC<IProps> = ({ carinfo, user }) => {
 
     const ImageURL = { secure_url: previewSource };
     let merge = { ...initialValues, ...ImageURL };
-    console.log("this is merge: ", merge);
 
     const updateCarImage = async () => {
       try {
@@ -138,7 +126,6 @@ const UploadCars: React.FC<IProps> = ({ carinfo, user }) => {
     const postCarImage = async () => {
       const newCarId = { cars_id: currCar };
       const postMerge = { ...merge, ...newCarId };
-      console.log("this is post-merge: ", postMerge);
       try {
         const res = await fetch("/images", {
           method: "POST",
@@ -158,8 +145,6 @@ const UploadCars: React.FC<IProps> = ({ carinfo, user }) => {
       updateCarImage();
     }
   };
-
-  console.log("initialValues", initialValues);
 
   return (
     <>

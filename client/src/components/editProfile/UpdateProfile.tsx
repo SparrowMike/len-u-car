@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Field, Formik } from "formik";
-import * as yup from "../../../node_modules/yup";
 import {
-  makeStyles,
   Button,
   CircularProgress,
   Container,
   InputLabel,
+  makeStyles,
   MenuItem,
   Select,
 } from "@material-ui/core";
-import Textfield from "../editProfile/FormsUI/Textfield";
+import { Field, Formik } from "formik";
 import Cookies from "js-cookie";
 import { DropzoneArea } from "material-ui-dropzone";
+import React, { useEffect, useState } from "react";
+import * as yup from "../../../node_modules/yup";
+import Textfield from "../editProfile/FormsUI/Textfield";
 
 const useStyles = makeStyles({
   form: {
@@ -104,7 +104,6 @@ const UpdateProfile: React.FC = () => {
       // retrieve session ID from custom cookie
       const sidfromCookie = Cookies.get("cook");
       if (sidfromCookie === undefined) console.log("No cookie available."); // +
-      console.log("Session Id from Cookie: ", sidfromCookie);
 
       const res = await fetch(`/sessions/check/${sidfromCookie}`, {
         method: "GET",
@@ -115,13 +114,9 @@ const UpdateProfile: React.FC = () => {
       console.log("res: ", res);
 
       const data = await res.json();
-
-      console.log("check useEffect server response", data.sessionDetails);
       const currentUserInfo = data.sessionDetails.currentUser;
-      console.log("currentUser Data from Redis:", currentUserInfo);
 
       setCurrentUser(currentUserInfo);
-      console.log(currentUser);
 
       setinitialValues({
         user_id: currentUser?.user_id,
@@ -136,7 +131,6 @@ const UpdateProfile: React.FC = () => {
         identification_card: currentUser?.identification_card,
         driving_license: currentUser?.driving_license,
       });
-      console.log("initialValues ", initialValues);
 
       if (currentUser?.username === undefined) {
         setLoading(true);
@@ -162,7 +156,6 @@ const UpdateProfile: React.FC = () => {
 
     const ImageURL = { avatar: previewSource };
     let merge = { ...formValue, ...ImageURL };
-    console.log("this is merge: ", merge);
     const updateUserAccount = async () => {
       try {
         const res = await fetch("/users/" + currentUser?.user_id, {

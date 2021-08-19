@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../db");
-const upload = require("../utils/multer");
 const knexPg = require("knex")({
   client: "pg",
   connection: {

@@ -1,30 +1,30 @@
 import {
-  useState,
-  KeyboardEvent,
-  MouseEvent,
-  Dispatch,
-  SetStateAction,
-} from "react";
-import clsx from "clsx";
-import {
-  createStyles,
-  makeStyles,
-  Theme,
   AppBar,
-  Toolbar,
-  Typography,
-  Link,
-  useMediaQuery,
-  useTheme,
   Button,
+  createStyles,
+  Link,
   List,
   ListItem,
   ListItemText,
+  makeStyles,
   SwipeableDrawer,
+  Theme,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import clsx from "clsx";
 import Cookies from "js-cookie";
+import {
+  Dispatch,
+  KeyboardEvent,
+  MouseEvent,
+  SetStateAction,
+  useState,
+} from "react";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,13 +65,9 @@ const Navbar: React.FC<IProps> = (props) => {
   const history = useHistory();
 
   const logoutSession = () => {
-    // +
-    // retrieve session ID from custom cookie
     const sidfromCookie = Cookies.get("cook");
     if (sidfromCookie === undefined) console.log("No cookie available."); // +
-    console.log("Session Id from Cookie: ", sidfromCookie);
 
-    console.log("logging out....");
     const deleteLogin = async () => {
       const res = await fetch(`/sessions/${sidfromCookie}`, {
         method: "DELETE",
@@ -84,7 +80,6 @@ const Navbar: React.FC<IProps> = (props) => {
     props.setloggedIn(false);
     Cookies.remove("cook");
     history.push("/");
-    console.log("loggedIn status after logging out: ", props.loggedIn);
   };
 
   //*==========================FOR MOBILE NAVBAR==============================

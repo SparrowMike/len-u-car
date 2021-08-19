@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const event = await knexPg("car_rental_review").where("cars_id", id); // changed from review_id to cars_id
+    const event = await knexPg("car_rental_review").where("cars_id", id);
     res.status(200).json(event);
   } catch (error) {
     console.log(error.message);
