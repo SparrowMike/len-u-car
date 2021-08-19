@@ -141,7 +141,7 @@ export default function Edit() {
           <EditCar />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <UploadCars carinfo={carinfo} />
+          <UploadCars carinfo={carinfo} user={user} />
         </TabPanel>
         <TabPanel value={value} index={3}>
           <ChangePassword />
