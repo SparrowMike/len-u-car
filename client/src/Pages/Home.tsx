@@ -128,7 +128,7 @@ const Home = () => {
 
   const getFetchData = async () => {
     try {
-      const fetchData = await axios.get("http://localhost:4000/users/random");
+      const fetchData = await axios.get("/users/random");
       setDisplay(fetchData.data);
     } catch (error) {
       console.log(error);
@@ -136,9 +136,7 @@ const Home = () => {
   };
   const getRandomSlick = async () => {
     try {
-      const fetchData = await axios.get(
-        "http://localhost:4000/users/randomSlick"
-      );
+      const fetchData = await axios.get("/users/randomSlick");
       setDisplaySlick(fetchData.data);
     } catch (error) {
       console.log(error);

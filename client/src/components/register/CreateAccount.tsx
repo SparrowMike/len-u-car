@@ -4,6 +4,7 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import Button from "../editProfile/FormsUI/Button";
 import Textfield from "../editProfile/FormsUI/Textfield";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles({
   field: {
@@ -79,6 +80,7 @@ const validationSchema = Yup.object().shape({
 
 const CreateAccount: React.FC = () => {
   const classes = useStyles();
+  const history = useHistory();
   const handleSubmit = async (values: FormValues) => {
     try {
       const res = await fetch("/users", {
@@ -87,6 +89,7 @@ const CreateAccount: React.FC = () => {
         body: JSON.stringify(values),
       });
       console.log(res);
+      history.push("/");
     } catch (error) {
       console.error(error.message);
     }
