@@ -7,14 +7,13 @@ import { makeStyles, Modal, Fade, Backdrop } from "@material-ui/core";
 import { useState } from "react";
 import axios from "axios";
 import { useQuery, useMutation } from "react-query";
-import { Link } from "react-router-dom";
 
 import { Card, CardActions } from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-
+import { useHistory } from "react-router";
 import Rating from "@material-ui/lab/Rating";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 
@@ -142,8 +141,10 @@ const ChangePassword: React.FC<IProps> = ({ user }) => {
     setEventId(e.card.event_id);
   };
 
+  let history = useHistory();
   const handleArchive = () => {
     setModalArchiveOpen(false);
+    history.push(`/`);
     mutation.mutate({
       archive: true,
     });
