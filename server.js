@@ -40,12 +40,6 @@ app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-//* ===========HEROKU DEPLOYMENT MIDDLEWARE==================
-app.use(express.static(path.join(__dirname, "./client/build")));
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./client/build", "index.html"));
-});
-
 app.use(
   session({
     store: HerokuRedisStore,
@@ -74,6 +68,12 @@ app.use("/images", carImagesController);
 app.use("/sessions", sessionsController);
 app.use("/carRentalEvent", carRentalEventController);
 app.use("/carRentalReview", carRentalReviewController);
+
+//* ===========HEROKU DEPLOYMENT MIDDLEWARE==================
+app.use(express.static(path.join(__dirname, "./client/build")));
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./client/build", "index.html"));
+});
 
 //*==================LISTENER=====================
 app.listen(PORT, () => {
