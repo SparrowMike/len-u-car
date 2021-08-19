@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 
 import {
   makeStyles,
@@ -12,7 +12,8 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableRow
+  TableRow,
+  TableHead
 } from "@material-ui/core";
 
 import Slider from "react-slick";
@@ -20,6 +21,7 @@ import Slider from "react-slick";
 import { useLocation } from "react-router";
 
 import Calendar from "./Calendar";
+import ActionYoutubeSearchedFor from "material-ui/svg-icons/action/youtube-searched-for";
 
 export interface IState {
   avatar: string;
@@ -48,6 +50,19 @@ export interface IState {
   user_id: number;
   user_type: string;
   username: string;
+}
+
+export interface IReview {
+  review_id: number;
+  rating: number,
+  review: string,
+  username: string,
+  cars_id: number,
+  event_id: number,
+  day: string
+  month: string
+  year: string,
+  reviewdone: boolean
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -109,6 +124,7 @@ const useStyles = makeStyles((theme) => ({
 
 // const CarPage: React.FC<IState> = ({ user }) => {
 const CarPage = () => {
+  const [carReviews, setCarReviews] = useState<IReview[]>([]);
   const classes = useStyles();
   const location: any = useLocation();
 
@@ -128,6 +144,34 @@ const CarPage = () => {
     cssEase: "linear",
     arrows: false,
   };
+
+  useEffect(() => {
+    const fetchCarReviews = async () => {
+
+      const carId = data.cars_id;
+      console.log("Car Id shown at car page: ", carId);
+
+      const res = await fetch(`/carRentalReview/join/${carId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("carReviews_res: ", res);
+
+      const carReviews_data = await res.json();
+      console.log("carReviews_data (array): ", carReviews_data);
+      console.log("carReviews_data 1st element: ", carReviews_data[0]);
+
+      if( carReviews_data ) setCarReviews( carReviews_data)
+      console.log("carReviews state data: ", carReviews);
+      console.log("carReviews state 1st element: ", carReviews[0]);
+
+      console.log("carReviews.length: ", carReviews.length )
+    };
+    fetchCarReviews();
+  }, [ carReviews[0]?.cars_id] );
 
   return (
     <div>
@@ -227,7 +271,39 @@ const CarPage = () => {
       </Container>
       <Grid container spacing={3}>
         <Grid item xs={8}>
-          <Paper className={classes.main}></Paper>
+          <Paper className={classes.main}>
+          <Typography gutterBottom variant="h6" component="h2" align='left'>
+                Car Reviews
+          </Typography>
+            { 
+              carReviews.length ? (
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align='center' style={{width: '20%'}}>Review Date</TableCell>
+                      <TableCell align='center'>Rating</TableCell>
+                      <TableCell style={{width: '70%'}}>Review</TableCell>
+                      <TableCell style={{width: '5%'}} align='center'>Rentee's username</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {carReviews.map((row) => (
+                      <TableRow key={row.review_id}>
+                        <TableCell align='center'>
+                          {(row.day!==null) ? (row.day.toString() + "-" + row.month.toString() + "-" + row.year.toString()) : "-" }
+                        </TableCell>
+                        <TableCell align='center'>{(row.rating!==null) ? row.rating : "-" }</TableCell>
+                        <TableCell>{(row.review!==null) ? row.review : "-" }</TableCell>
+                        <TableCell align='center'>{row.username}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              ) : (
+                <p>No reviews yet for this car!</p>
+              )
+            }
+          </Paper>
         </Grid>
       </Grid>
     </div>
