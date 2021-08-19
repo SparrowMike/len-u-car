@@ -51,7 +51,7 @@ router.post("/", upload.single("secure_url"), async (req, res) => {
       cloudinary_id = "";
     }
 
-    console.log("Avatar :", avatar);
+    console.log("Image :", secure_url);
     console.log("cloudinary_id :", cloudinary_id);
 
     const { cars_id } = req.body;
@@ -75,7 +75,7 @@ router.put("/image/:id", upload.single("secure_url"), async (req, res) => {
   console.log("backend 64code", req.body.secure_url);
   try {
     const { id } = req.params;
-    const fileStr = req.body.avatar; // not tested yet
+    const fileStr = req.body.secure_url; // not tested yet
     const carImages = await pool.query(
       "SELECT secure_url, cloudinary_id FROM car_images WHERE images_id = $1",
       [id]
@@ -106,7 +106,6 @@ router.put("/image/:id", upload.single("secure_url"), async (req, res) => {
       cloudinary_id = "";
     }
 
-    // console.log("Avatar :", avatar);
     console.log("cloudinary_id :", cloudinary_id);
 
     const { cars_id } = req.body;

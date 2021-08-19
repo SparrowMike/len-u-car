@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles, Container, Button } from "@material-ui/core";
-import Cookies from "js-cookie";
 import { DropzoneArea } from "material-ui-dropzone";
 import { Formik } from "formik";
 import { IState as Props } from "./Edit";
@@ -48,7 +47,7 @@ const UploadCars: React.FC<IProps> = ({ carinfo }) => {
   });
 
   console.log("Upload car", carinfo);
-  const car = carinfo.cars_id;
+  const car = carinfo?.cars_id;
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -87,18 +86,18 @@ const UploadCars: React.FC<IProps> = ({ carinfo }) => {
       reader.readAsDataURL(image);
       reader.onloadend = () => {
         setPreviewSource(reader.result);
-        console.log("base64",reader.result);
+        console.log("base64", reader.result);
       };
       if (!previewSource) return;
     } else {
       setPreviewSource("");
     }
 
-    const ImageURL = { avatar: previewSource };
+    const ImageURL = { secure_url: previewSource };
     let merge = { ...initialValues, ...ImageURL };
     console.log("this is merge: ", merge);
 
-    const updateUserAccount = async () => {
+    const updateCarImage = async () => {
       try {
         const res = await fetch("/images/image/" + initialValues.images_id, {
           method: "PUT",
@@ -113,8 +112,29 @@ const UploadCars: React.FC<IProps> = ({ carinfo }) => {
         console.log(error);
       }
     };
-    updateUserAccount();
+
+    const postCarImage = async () => {
+      try {
+        const res = await fetch("/images", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(merge),
+        });
+        console.log(res);
+        alert("New car profile created succesfully!");
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    if (initialValues.images_id === undefined) {
+      postCarImage();
+    } else {
+      updateCarImage();
+    }
   };
+
+  console.log("initialValues", initialValues);
 
   return (
     <>
@@ -142,7 +162,7 @@ const UploadCars: React.FC<IProps> = ({ carinfo }) => {
                 <div className={classes.field}>
                   <DropzoneArea
                     acceptedFiles={["image/*"]}
-                    dropzoneText={"Drag and drop an avatar here or click"}
+                    dropzoneText={"Drag and drop an image here or click"}
                     filesLimit={1}
                     onChange={(files) => {
                       setImage(files[0]);

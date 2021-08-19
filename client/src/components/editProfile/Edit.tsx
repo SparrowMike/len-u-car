@@ -89,9 +89,8 @@ export interface IState {
     status: string;
     transmission: string;
     type: string;
-    username: string
+    username: string;
   };
-
 }
 
 export default function Edit() {
@@ -142,7 +141,7 @@ export default function Edit() {
           <EditCar />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <UploadCars carinfo={carinfo}/>
+          <UploadCars carinfo={carinfo} />
         </TabPanel>
         <TabPanel value={value} index={3}>
           <ChangePassword />
