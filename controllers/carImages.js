@@ -22,11 +22,11 @@ router.get("/", async (req, res) => {
 });
 
 //*========================GET car images - GET ROUTE=======================
-router.get("/:id", async (req, res) => {
+router.get("/image/:cars_id", async (req, res) => {
   try {
-    const { id } = req.params;
-    const cars = await knexPg("car_images").where("images_id", id);
-    res.status(200).json(cars[0]);
+    const { cars_id } = req.params;
+    const car_images = await knexPg("car_images").where("cars_id", cars_id);
+    res.status(200).json(car_images);
   } catch (error) {
     console.log(error.message);
   }
@@ -71,7 +71,8 @@ router.post("/", upload.single("secure_url"), async (req, res) => {
 });
 
 //*=====================UPDATE THE IMAGE=========================
-router.put("/:id", upload.single("secure_url"), async (req, res) => {
+router.put("/image/:id", upload.single("secure_url"), async (req, res) => {
+  console.log("backend 64code", req.body.secure_url);
   try {
     const { id } = req.params;
     const fileStr = req.body.avatar; // not tested yet
@@ -105,12 +106,12 @@ router.put("/:id", upload.single("secure_url"), async (req, res) => {
       cloudinary_id = "";
     }
 
-    console.log("Avatar :", avatar);
+    // console.log("Avatar :", avatar);
     console.log("cloudinary_id :", cloudinary_id);
 
     const { cars_id } = req.body;
     const carImage = await knexPg("car_images")
-      .where("images_id", "=", id)
+      .where("cars_id", "=", id)
       .update({
         images_id: id,
         secure_url: secure_url,
