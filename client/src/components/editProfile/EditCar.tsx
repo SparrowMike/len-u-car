@@ -264,6 +264,10 @@ const EditCar: React.FC = () => {
                     <Field name="type" type="radio" value="sedan" as={Radio} />
                     Sedan
                   </label>
+                  <label>
+                    <Field name="type" type="radio" value="SUV" as={Radio} />
+                    SUV
+                  </label>
                 </div>
                 <div className={classes.field}>
                   Tranmission:
