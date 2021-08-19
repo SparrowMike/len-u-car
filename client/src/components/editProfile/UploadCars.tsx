@@ -3,7 +3,10 @@ import { makeStyles, Container, Button } from "@material-ui/core";
 import Cookies from "js-cookie";
 import { DropzoneArea } from "material-ui-dropzone";
 import { Formik } from "formik";
-
+import { IState as Props } from "./Edit";
+interface IProps {
+  carinfo: Props["carinfo"];
+}
 const useStyles = makeStyles({
   form: {
     marginTop: 20,
@@ -31,10 +34,10 @@ interface currentCarImage {
   cars_id: number;
 }
 
-const UploadCars: React.FC = () => {
+const UploadCars: React.FC<IProps> = ({ carinfo }) => {
   const classes = useStyles();
   const [image, setImage] = useState<any>();
-  const [car, setCar] = useState<number>(0);
+  //const [car, setCar] = useState<number>(0);
   const [previewSource, setPreviewSource] = useState("");
   const [carImage, setCarImage] = useState<currentCarImage>();
   const [initialValues, setinitialValues] = useState<FormValues>({
@@ -44,29 +47,8 @@ const UploadCars: React.FC = () => {
     cars_id: undefined,
   });
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      const sidfromCookie = Cookies.get("cook");
-      console.log("Session Id from Cookie: ", sidfromCookie);
-
-      const res = await fetch(`/sessions/check/${sidfromCookie}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await res.json();
-
-      console.log("check useEffect server response", data.sessionDetails);
-      const currentCarInfo = data.sessionDetails.currentUserCars[0];
-      console.log("currentCar Data from Redis:", currentCarInfo);
-      setCar(data.sessionDetails.currentUserCars[0].cars_id);
-      console.log(car);
-    };
-    fetchSession();
-    // eslint-disable-next-line
-  }, []);
+  console.log("Upload car", carinfo);
+  const car = carinfo.cars_id;
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -77,7 +59,7 @@ const UploadCars: React.FC = () => {
         },
       });
       const imageData = await res.json();
-      console.log(imageData[0]);
+      console.log("image front", imageData[0]);
 
       setinitialValues({
         images_id: imageData[0]?.images_id,
@@ -97,7 +79,7 @@ const UploadCars: React.FC = () => {
     };
     fetchImages();
     // eslint-disable-next-line
-  }, [car, initialValues?.images_id]);
+  }, [initialValues?.images_id]);
 
   const handleSubmit = async (formValue: FormValues) => {
     const reader: any = new FileReader();
@@ -105,19 +87,20 @@ const UploadCars: React.FC = () => {
       reader.readAsDataURL(image);
       reader.onloadend = () => {
         setPreviewSource(reader.result);
+        console.log("base64",reader.result);
       };
       if (!previewSource) return;
     } else {
       setPreviewSource("");
     }
 
-    const ImageURL = { secure_url: previewSource };
+    const ImageURL = { avatar: previewSource };
     let merge = { ...initialValues, ...ImageURL };
     console.log("this is merge: ", merge);
 
     const updateUserAccount = async () => {
       try {
-        const res = await fetch("/images/" + initialValues.images_id, {
+        const res = await fetch("/images/image/" + initialValues.images_id, {
           method: "PUT",
           body: JSON.stringify(merge),
           headers: {

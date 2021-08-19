@@ -74,6 +74,23 @@ export interface IState {
     driving_license: string;
     cloudinary_id: string;
   };
+  carinfo: {
+    cars_id: number;
+    brand: string;
+    engine_type: string;
+    key_features: string;
+    key_rules: string;
+    mileage: string;
+    model: string;
+    passenger_capacity: number;
+    pick_up_point: string;
+    price_per_day: number;
+    status: string;
+    transmission: string;
+    type: string;
+    username: string
+  };
+
 }
 
 export default function Edit() {
@@ -97,6 +114,8 @@ export default function Edit() {
   console.log(data1);
   const user = data1?.sessionDetails.currentUser;
   console.log(user);
+  const carinfo = data1?.sessionDetails.currentUserCars[0];
+  console.log(carinfo);
 
   return (
     <div className={classes.root}>
@@ -122,7 +141,7 @@ export default function Edit() {
           <EditCar />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <UploadCars />
+          <UploadCars carinfo={carinfo}/>
         </TabPanel>
         <TabPanel value={value} index={3}>
           <ChangePassword />
