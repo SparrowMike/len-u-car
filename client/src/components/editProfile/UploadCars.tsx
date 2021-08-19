@@ -96,6 +96,7 @@ const UploadCars: React.FC = () => {
       }
     };
     fetchImages();
+    // eslint-disable-next-line
   }, [car, initialValues?.images_id]);
 
   const handleSubmit = async (formValue: FormValues) => {
