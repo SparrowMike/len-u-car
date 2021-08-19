@@ -89,7 +89,7 @@ const CreateAccount: React.FC = () => {
         body: JSON.stringify(values),
       });
       console.log(res);
-      history.push("/");
+      history.push("/login");
     } catch (error) {
       console.error(error.message);
     }

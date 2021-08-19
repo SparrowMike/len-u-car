@@ -209,7 +209,7 @@ const Navbar: React.FC<IProps> = (props) => {
                 <Link
                   component={RouterLink}
                   color="inherit"
-                  to="/logout"
+                  to="/"
                   style={{ textDecoration: "none" }}
                   onClick={logoutSession}
                 >

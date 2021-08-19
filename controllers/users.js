@@ -20,15 +20,8 @@ router.get("/random", async (req, res) => {
       .from("users")
       .innerJoin("cars", "users.username", "cars.username")
       .leftJoin("car_images", "car_images.cars_id", "cars.cars_id")
-      .select(
-        "cars.cars_id",
-        "cars.price_per_day",
-        "cars.brand",
-        "cars.model",
-        "car_images.secure_url"
-      )
       .orderByRaw("RANDOM()")
-      .limit(9);
+      .limit(6);
 
     res.status(200).json(users);
   } catch (error) {
