@@ -9,6 +9,7 @@ const pool = new Pool({
   database: "dc1arqanp0ep12",
   password: process.env.POSTGRESPW,
   ssl: {
+    required: true,
     rejectUnauthorized: false,
   },
 
