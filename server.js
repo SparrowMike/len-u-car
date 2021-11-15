@@ -14,15 +14,15 @@ const PORT = process.env.PORT || 4000;
 
 const RedisStore = connectRedis(session);
 const redisClient = redis.createClient({
-  host: "ec2-52-54-10-192.compute-1.amazonaws.com",
-  port: 16120,
+  host: "ec2-18-211-194-22.compute-1.amazonaws.com",
+  port: 25870,
   password: process.env.REDISPW,
   tls: {
     rejectUnauthorized: false,
   },
 });
 redisClient.on("error", (err) => {
-  console.log("redisClient Error " + err);
+  console.log("redisClient " + err);
 });
 
 // EXPORT
